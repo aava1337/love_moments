@@ -18,8 +18,10 @@ function calculateDays() {
   const counterEl = document.getElementById('days-counter');
   const labelEl = document.getElementById('days-label');
 
-  counterEl.innerText = diffDays;
-  labelEl.innerText = getRussianPlural(diffDays, ['день вместе', 'дня вместе', 'дней вместе']);
+  if (counterEl && labelEl) {
+    counterEl.innerText = diffDays;
+    labelEl.innerText = getRussianPlural(diffDays, ['день вместе', 'дня вместе', 'дней вместе']);
+  }
 }
 
 function getRussianPlural(number, titles) {
@@ -31,8 +33,8 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 3. Отправка момента дня (Основная кнопка и центральная кнопка в меню)
-function triggerSnapAction() {
+// 3. Обработка клика по центральной круглой кнопке камеры
+document.getElementById('dock-snap-btn').addEventListener('click', () => {
   if (tg?.HapticFeedback) {
     tg.HapticFeedback.notificationOccurred('success');
   }
@@ -41,17 +43,15 @@ function triggerSnapAction() {
 
   setTimeout(() => {
     if (tg) {
+      // Закрываем WebApp и возвращаем пользователя в диалог с ботом для отправки фото
       tg.close();
     } else {
       alert('Открываем камеру диалога бота для отправки фото...');
     }
   }, 400);
-}
+});
 
-document.getElementById('btn-snap').addEventListener('click', triggerSnapAction);
-document.getElementById('dock-snap-btn').addEventListener('click', triggerSnapAction);
-
-// 4. Переключение вкладок в нижнем меню
+// 4. Переключение вкладок в нижнем баре
 const dockItems = document.querySelectorAll('.dock-item');
 dockItems.forEach(item => {
   item.addEventListener('click', () => {
@@ -69,12 +69,12 @@ dockItems.forEach(item => {
   });
 });
 
-// Анимация взлетающего сердечка
+// Анимация взлетающего сердечка при нажатии на камеру
 function createFloatingHeart() {
   const heart = document.createElement('div');
   heart.innerHTML = '💖';
   heart.style.position = 'fixed';
-  heart.style.bottom = '110px';
+  heart.style.bottom = '95px';
   heart.style.left = '50%';
   heart.style.transform = 'translateX(-50%)';
   heart.style.fontSize = '34px';
@@ -84,7 +84,7 @@ function createFloatingHeart() {
   document.body.appendChild(heart);
 
   requestAnimationFrame(() => {
-    heart.style.transform = 'translate(-50%, -130px) scale(1.6)';
+    heart.style.transform = 'translate(-50%, -120px) scale(1.6)';
     heart.style.opacity = '0';
   });
 

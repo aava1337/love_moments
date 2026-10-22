@@ -11,12 +11,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Фоновое неоновое свечение -->
+  <!-- Мягкая неоновая подсветка фона -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <!-- Главный экран с равномерным распределением элементов -->
-  <div class="app-viewport">
+  <div class="app-container">
     
     <!-- Шапка пары -->
     <header class="glass-card header-bar">
@@ -49,7 +48,7 @@
       </div>
     </header>
 
-    <!-- Основная секция с монстриком -->
+    <!-- Сцена с монстриком -->
     <main class="monster-stage">
       
       <!-- Облачко мыслей -->
@@ -57,8 +56,8 @@
         <span>Ррр-мяу! Жду наше общее фото 💖</span>
       </div>
 
-      <!-- Увеличенный монстрик -->
-      <div class="monster-container happy" id="monster-character">
+      <!-- Монстрик -->
+      <div class="monster-wrapper happy" id="monster-character">
         <div class="monster-aura"></div>
 
         <svg class="monster-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
@@ -80,15 +79,15 @@
             </linearGradient>
 
             <radialGradient id="monsterShadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.65"/>
+              <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
               <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
             </radialGradient>
           </defs>
 
           <!-- Тень на земле -->
-          <ellipse class="ground-shadow" cx="120" cy="222" rx="68" ry="13" fill="url(#monsterShadow)" />
+          <ellipse class="ground-shadow" cx="120" cy="222" rx="70" ry="14" fill="url(#monsterShadow)" />
 
-          <!-- Виляющий хвостик -->
+          <!-- Виляющий хвостик с сердечком -->
           <g class="monster-tail">
             <path d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
             <path class="tail-heart" d="M 195 125 C 190 118, 198 112, 202 116 C 206 112, 214 118, 209 125 L 202 132 Z" fill="#FF5E8A"/>
@@ -97,15 +96,15 @@
           <!-- Тело монстрика -->
           <g class="monster-body-group">
 
-            <!-- Светящиеся рожки -->
+            <!-- Рожки-антеннки -->
             <g class="horns">
               <g class="horn horn-left">
                 <path d="M 90 65 Q 75 35 62 42 Q 75 55 85 72" fill="url(#hornGrad)"/>
-                <circle class="horn-glow-tip" cx="62" cy="42" r="6" fill="#FF5E8A"/>
+                <circle class="horn-glow-tip" cx="62" cy="42" r="6.5" fill="#FF5E8A"/>
               </g>
               <g class="horn horn-right">
                 <path d="M 150 65 Q 165 35 178 42 Q 165 55 155 72" fill="url(#hornGrad)"/>
-                <circle class="horn-glow-tip" cx="178" cy="42" r="6" fill="#FF5E8A"/>
+                <circle class="horn-glow-tip" cx="178" cy="42" r="6.5" fill="#FF5E8A"/>
               </g>
             </g>
 
@@ -115,7 +114,7 @@
               <path class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
             </g>
 
-            <!-- Основной силуэт -->
+            <!-- Главный силуэт -->
             <path class="main-body" d="
               M 120 58
               C 168 58, 185 95, 184 148
@@ -128,7 +127,7 @@
             <ellipse class="belly" cx="120" cy="154" rx="42" ry="36" fill="url(#bellyGrad)" />
             <path d="M 120 152 C 117 148, 112 150, 114 154 L 120 160 L 126 154 C 128 150, 123 148, 120 152 Z" fill="#FF7675" opacity="0.8"/>
 
-            <!-- Мордочка -->
+            <!-- Мордашка -->
             <g class="face">
               <g class="eye eye-left">
                 <circle cx="95" cy="115" r="13" fill="#1E142B"/>
@@ -161,7 +160,7 @@
           </g>
         </svg>
 
-        <!-- Чемоданчик -->
+        <!-- Чемоданчик разлуки -->
         <div class="vintage-suitcase" id="suitcase">
           <div class="handle"></div>
           <div class="case-body">
@@ -169,45 +168,32 @@
           </div>
         </div>
       </div>
+    </main>
 
-      <!-- Карточка энергии сытости -->
-      <div class="glass-card status-card">
-        <div class="status-header">
-          <span class="status-title">Сытость монстрика</span>
-          <span class="status-percent" id="energy-val">50%</span>
-        </div>
-        <div class="progress-bar-wrap">
-          <div class="progress-fill" id="energy-progress" style="width: 50%;">
-            <div class="glow-light"></div>
-          </div>
-        </div>
-        <div class="photo-check-row">
-          <div class="user-check done">
-            <span class="check-icon">✓</span> Максим отправил
-          </div>
-          <div class="user-check pending">
-            <span class="check-icon">⏳</span> Соня еще нет
-          </div>
+    <!-- Компактная карточка статуса дня -->
+    <div class="status-card glass-card">
+      <div class="status-header">
+        <span class="status-title">Сытость монстрика</span>
+        <span class="status-percent" id="energy-val">50%</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-fill" id="energy-progress" style="width: 50%;">
+          <div class="glow-light"></div>
         </div>
       </div>
-
-      <!-- Главная кнопка отправки фото -->
-      <button class="cta-button" id="btn-snap">
-        <div class="btn-shine"></div>
-        <div class="btn-content">
-          <span class="camera-icon">📸</span>
-          <div class="btn-texts">
-            <span class="btn-main-txt">Отправить момент дня</span>
-            <span class="btn-sub-txt">Накормить монстрика до 100%</span>
-          </div>
+      <div class="photo-check-row">
+        <div class="user-check done">
+          <span class="check-icon">✓</span> Максим отправил
         </div>
-      </button>
-
-    </main>
+        <div class="user-check pending">
+          <span class="check-icon">⏳</span> Соня еще нет
+        </div>
+      </div>
+    </div>
 
   </div>
 
-  <!-- Увеличенное нижнее меню (Dock Bar) -->
+  <!-- Фиксированное нижнее меню с центральной круглой кнопкой -->
   <nav class="bottom-dock">
     <div class="dock-inner glass-card">
       <button class="dock-item active" id="tab-home">
@@ -220,10 +206,12 @@
         <span class="dock-txt">Альбом</span>
       </button>
 
-      <!-- Центральная большая кнопка камеры -->
-      <div class="dock-center-action" id="dock-snap-btn">
+      <!-- Главная парящая круглая кнопка камеры -->
+      <div class="dock-center-action" id="dock-snap-btn" title="Отправить фото">
         <div class="center-btn-pulse"></div>
-        <span class="center-btn-ico">📸</span>
+        <div class="center-btn-inner">
+          <span class="center-btn-ico">📸</span>
+        </div>
       </div>
 
       <button class="dock-item" id="tab-games">
