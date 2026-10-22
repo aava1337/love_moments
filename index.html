@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Моменты любви</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Фоновое неоновое свечение -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Главный экран с равномерным распределением элементов -->
+  <div class="app-viewport">
+    
+    <!-- Шапка пары -->
+    <header class="glass-card header-bar">
+      <div class="couple-profile">
+        <div class="avatar-group">
+          <div class="avatar-ring male">
+            <span>М</span>
+            <div class="moment-status done" title="Момент отправлен">✓</div>
+          </div>
+          <div class="heart-badge">
+            <svg viewBox="0 0 24 24" class="heart-icon"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <div class="avatar-ring female">
+            <span>С</span>
+            <div class="moment-status waiting" title="Ждет фото">⏳</div>
+          </div>
+        </div>
+        <div class="couple-info">
+          <div class="days-pill">
+            <span class="counter-num" id="days-counter">0</span>
+            <span class="counter-txt" id="days-label">дней вместе</span>
+          </div>
+          <span class="anniversary-date">с 29 ноября 2023</span>
+        </div>
+      </div>
+
+      <div class="streak-chip">
+        <span class="flame-icon">🔥</span>
+        <span class="streak-num" id="streak-count">14</span>
+      </div>
+    </header>
+
+    <!-- Основная секция с монстриком -->
+    <main class="monster-stage">
+      
+      <!-- Облачко мыслей -->
+      <div class="speech-bubble" id="pet-speech">
+        <span>Ррр-мяу! Жду наше общее фото 💖</span>
+      </div>
+
+      <!-- Увеличенный монстрик -->
+      <div class="monster-container happy" id="monster-character">
+        <div class="monster-aura"></div>
+
+        <svg class="monster-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="monsterFur" cx="45%" cy="40%" r="65%">
+              <stop offset="0%" stop-color="#A29BFE" />
+              <stop offset="65%" stop-color="#6C5CE7" />
+              <stop offset="100%" stop-color="#4834D4" />
+            </radialGradient>
+
+            <radialGradient id="bellyGrad" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#FFEAA7" />
+              <stop offset="100%" stop-color="#FDCB6E" />
+            </radialGradient>
+
+            <linearGradient id="hornGrad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#FF7675" />
+              <stop offset="100%" stop-color="#FF5E8A" />
+            </linearGradient>
+
+            <radialGradient id="monsterShadow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Тень на земле -->
+          <ellipse class="ground-shadow" cx="120" cy="222" rx="68" ry="13" fill="url(#monsterShadow)" />
+
+          <!-- Виляющий хвостик -->
+          <g class="monster-tail">
+            <path d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
+            <path class="tail-heart" d="M 195 125 C 190 118, 198 112, 202 116 C 206 112, 214 118, 209 125 L 202 132 Z" fill="#FF5E8A"/>
+          </g>
+
+          <!-- Тело монстрика -->
+          <g class="monster-body-group">
+
+            <!-- Светящиеся рожки -->
+            <g class="horns">
+              <g class="horn horn-left">
+                <path d="M 90 65 Q 75 35 62 42 Q 75 55 85 72" fill="url(#hornGrad)"/>
+                <circle class="horn-glow-tip" cx="62" cy="42" r="6" fill="#FF5E8A"/>
+              </g>
+              <g class="horn horn-right">
+                <path d="M 150 65 Q 165 35 178 42 Q 165 55 155 72" fill="url(#hornGrad)"/>
+                <circle class="horn-glow-tip" cx="178" cy="42" r="6" fill="#FF5E8A"/>
+              </g>
+            </g>
+
+            <!-- Ушки -->
+            <g class="ears">
+              <path class="ear ear-l" d="M 68 95 C 40 85 45 125 70 115 Z" fill="#4834D4"/>
+              <path class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
+            </g>
+
+            <!-- Основной силуэт -->
+            <path class="main-body" d="
+              M 120 58
+              C 168 58, 185 95, 184 148
+              C 183 192, 160 206, 120 206
+              C 80 206, 57 192, 56 148
+              C 55 95, 72 58, 120 58 Z
+            " fill="url(#monsterFur)"/>
+
+            <!-- Пузико -->
+            <ellipse class="belly" cx="120" cy="154" rx="42" ry="36" fill="url(#bellyGrad)" />
+            <path d="M 120 152 C 117 148, 112 150, 114 154 L 120 160 L 126 154 C 128 150, 123 148, 120 152 Z" fill="#FF7675" opacity="0.8"/>
+
+            <!-- Мордочка -->
+            <g class="face">
+              <g class="eye eye-left">
+                <circle cx="95" cy="115" r="13" fill="#1E142B"/>
+                <circle cx="91" cy="111" r="5" fill="#FFFFFF"/>
+                <circle cx="98" cy="118" r="2.5" fill="#FFFFFF"/>
+              </g>
+              <g class="eye eye-right">
+                <circle cx="145" cy="115" r="13" fill="#1E142B"/>
+                <circle cx="141" cy="111" r="5" fill="#FFFFFF"/>
+                <circle cx="148" cy="118" r="2.5" fill="#FFFFFF"/>
+              </g>
+
+              <ellipse class="blush" cx="80" cy="128" rx="8" ry="5" fill="#FF7675" opacity="0.7"/>
+              <ellipse class="blush" cx="160" cy="128" rx="8" ry="5" fill="#FF7675" opacity="0.7"/>
+
+              <ellipse cx="120" cy="122" rx="4" ry="2.5" fill="#1E142B"/>
+
+              <path class="mouth" d="M 112 129 Q 120 137 128 129" fill="none" stroke="#1E142B" stroke-width="3" stroke-linecap="round"/>
+              <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
+
+              <path class="tear" d="M 90 128 C 90 128 94 136 94 139 C 94 142 91 144 89 144 C 87 144 85 142 85 139 C 85 136 90 128 90 128 Z" fill="#74B9FF"/>
+            </g>
+
+            <!-- Лапки -->
+            <g class="feet">
+              <ellipse cx="92" cy="202" rx="14" ry="9" fill="#4834D4"/>
+              <ellipse cx="148" cy="202" rx="14" ry="9" fill="#4834D4"/>
+            </g>
+
+          </g>
+        </svg>
+
+        <!-- Чемоданчик -->
+        <div class="vintage-suitcase" id="suitcase">
+          <div class="handle"></div>
+          <div class="case-body">
+            <span class="sticker">💔</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Карточка энергии сытости -->
+      <div class="glass-card status-card">
+        <div class="status-header">
+          <span class="status-title">Сытость монстрика</span>
+          <span class="status-percent" id="energy-val">50%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-fill" id="energy-progress" style="width: 50%;">
+            <div class="glow-light"></div>
+          </div>
+        </div>
+        <div class="photo-check-row">
+          <div class="user-check done">
+            <span class="check-icon">✓</span> Максим отправил
+          </div>
+          <div class="user-check pending">
+            <span class="check-icon">⏳</span> Соня еще нет
+          </div>
+        </div>
+      </div>
+
+      <!-- Главная кнопка отправки фото -->
+      <button class="cta-button" id="btn-snap">
+        <div class="btn-shine"></div>
+        <div class="btn-content">
+          <span class="camera-icon">📸</span>
+          <div class="btn-texts">
+            <span class="btn-main-txt">Отправить момент дня</span>
+            <span class="btn-sub-txt">Накормить монстрика до 100%</span>
+          </div>
+        </div>
+      </button>
+
+    </main>
+
+  </div>
+
+  <!-- Увеличенное нижнее меню (Dock Bar) -->
+  <nav class="bottom-dock">
+    <div class="dock-inner glass-card">
+      <button class="dock-item active" id="tab-home">
+        <span class="dock-ico">🏠</span>
+        <span class="dock-txt">Дом</span>
+      </button>
+
+      <button class="dock-item" id="tab-album">
+        <span class="dock-ico">🖼️</span>
+        <span class="dock-txt">Альбом</span>
+      </button>
+
+      <!-- Центральная большая кнопка камеры -->
+      <div class="dock-center-action" id="dock-snap-btn">
+        <div class="center-btn-pulse"></div>
+        <span class="center-btn-ico">📸</span>
+      </div>
+
+      <button class="dock-item" id="tab-games">
+        <span class="dock-ico">🎲</span>
+        <span class="dock-txt">Игры</span>
+      </button>
+
+      <button class="dock-item" id="tab-vip">
+        <span class="dock-ico">⭐</span>
+        <span class="dock-txt">VIP</span>
+        <span class="badge-dot"></span>
+      </button>
+    </div>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
