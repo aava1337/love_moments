@@ -561,3 +561,19 @@ body {
   35% { opacity: 1; }
   100% { opacity: 0; transform: translateY(14px); }
 }
+/* Дополнительные стили для аватарок */
+.avatar-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: none; /* Включается через JS, если фото загрузилось */
+}
+
+.avatar-fallback {
+  display: block;
+}
+
+.avatar-ring {
+  overflow: visible;
+}
