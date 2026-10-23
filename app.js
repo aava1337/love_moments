@@ -18,28 +18,25 @@ const paramU1User = urlParams.get('u1_user') || '';
 const paramU2User = urlParams.get('u2_user') || '';
 const paramU1Sent = urlParams.get('u1_sent') === '1';
 const paramU2Sent = urlParams.get('u2_sent') === '1';
+const paramPhotos = urlParams.get('photos') || '';
+const paramBotToken = urlParams.get('bot_token') || '';
 
 // Установка стрика
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
-// 3. Подгрузка аватарок из Telegram
+// 3. Подгрузка аватарок
 function loadAvatars() {
   const currentTgUser = tg?.initDataUnsafe?.user;
 
-  // Функция для безопасной установки аватарки
   function setAvatar(imgId, fallbackId, username) {
     const imgEl = document.getElementById(imgId);
     const fallbackEl = document.getElementById(fallbackId);
-    
     let photoUrl = null;
 
-    // Если это текущий юзер приложения — берем его прямое фото из Telegram WebApp API
     if (currentTgUser && currentTgUser.username && currentTgUser.username.toLowerCase() === username.toLowerCase()) {
       photoUrl = currentTgUser.photo_url;
     }
-    
-    // Если фото нет или это партнер — пробуем аватарку через официальный публичный сервер Telegram
     if (!photoUrl && username) {
       photoUrl = `https://t.me/i/userpic/320/${username}.jpg`;
     }
@@ -57,7 +54,6 @@ function loadAvatars() {
     }
   }
 
-  // Задаем буквы для fallback (если юзернейма или фото нет)
   const fb1 = document.getElementById('avatar-fallback-u1');
   const fb2 = document.getElementById('avatar-fallback-u2');
   if (fb1) fb1.innerText = paramU1Name.charAt(0).toUpperCase();
@@ -67,12 +63,109 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 4. Обновление статусов отправки фото
+// 4. Отрисовка альбома фотографий
+function renderAlbum() {
+  const grid = document.getElementById('photo-grid');
+  const emptyBlock = document.getElementById('empty-album');
+  const counterEl = document.getElementById('album-total-count');
+
+  if (!paramPhotos) {
+    if (grid) grid.style.display = 'none';
+    if (emptyBlock) emptyBlock.style.display = 'block';
+    if (counterEl) counterEl.innerText = '0 кадров';
+    return;
+  }
+
+  const items = paramPhotos.split('~');
+  if (counterEl) counterEl.innerText = `${items.length} ${getRussianPlural(items.length, ['кадр', 'кадра', 'кадров'])}`;
+
+  if (emptyBlock) emptyBlock.style.display = 'none';
+  if (grid) {
+    grid.style.display = 'grid';
+    grid.innerHTML = '';
+
+    items.forEach(rawItem => {
+      const [filePath, dateStr, authorName] = rawItem.split('*');
+      if (!filePath) return;
+
+      const fullPhotoUrl = `https://api.telegram.org/file/bot${paramBotToken}/${filePath}`;
+
+      const card = document.createElement('div');
+      card.className = 'polaroid-card';
+      card.innerHTML = `
+        <img class="polaroid-thumb" src="${fullPhotoUrl}" alt="Момент" loading="lazy">
+        <div class="polaroid-meta">
+          <span class="polaroid-author">${authorName}</span>
+          <span class="polaroid-date">${dateStr}</span>
+        </div>
+      `;
+
+      // Тап по фото открывает полноэкранный зум
+      card.addEventListener('click', () => {
+        openModal(fullPhotoUrl, `${authorName} • ${dateStr}`);
+      });
+
+      grid.appendChild(card);
+    });
+  }
+}
+
+// 5. Полноэкранный просмотр фото
+const modal = document.getElementById('photo-modal');
+const modalImg = document.getElementById('modal-img');
+const modalCaption = document.getElementById('modal-caption');
+
+function openModal(src, caption) {
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  modalImg.src = src;
+  modalCaption.innerText = caption;
+  modal.classList.add('open');
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modalImg.src = '';
+}
+
+document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
+document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
+
+// 6. Переключение экранов «Дом» / «Альбом»
+const tabHome = document.getElementById('tab-home');
+const tabAlbum = document.getElementById('tab-album');
+const screenHome = document.getElementById('screen-home');
+const screenAlbum = document.getElementById('screen-album');
+
+tabHome?.addEventListener('click', () => {
+  tabHome.classList.add('active');
+  tabAlbum.classList.remove('active');
+  screenHome.classList.add('active');
+  screenAlbum.classList.remove('active');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
+tabAlbum?.addEventListener('click', () => {
+  tabAlbum.classList.add('active');
+  tabHome.classList.remove('active');
+  screenAlbum.classList.add('active');
+  screenHome.classList.remove('active');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
+// Кнопки-заглушки
+['tab-games', 'tab-vip'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', (e) => {
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    const txt = e.currentTarget.querySelector('.dock-txt').innerText;
+    alert(`Раздел "${txt}" появится в следующем обновлении! 💖`);
+  });
+});
+
+// 7. Статусы монстрика и счетчик дней
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
 
-  // Бейджи над аватарками
   if (badge1) {
     badge1.className = `moment-status ${paramU1Sent ? 'done' : 'waiting'}`;
     badge1.innerText = paramU1Sent ? '✓' : '⏳';
@@ -82,7 +175,6 @@ function updateStatuses() {
     badge2.innerText = paramU2Sent ? '✓' : '⏳';
   }
 
-  // Текстовый чеклист
   const checkRow = document.getElementById('photo-check-row');
   if (checkRow) {
     checkRow.innerHTML = `
@@ -95,7 +187,6 @@ function updateStatuses() {
     `;
   }
 
-  // Состояние монстрика
   const monster = document.getElementById('monster-character');
   const speech = document.getElementById('pet-speech')?.querySelector('span');
   const energyVal = document.getElementById('energy-val');
@@ -130,7 +221,6 @@ function updateStatuses() {
   }
 }
 
-// 5. Расчет дней вместе
 function setupDaysCounter() {
   const anniversaryEl = document.getElementById('anniversary-date');
   let startDate;
@@ -168,12 +258,9 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 6. Кнопка камеры
+// 8. Круглая кнопка камеры
 document.getElementById('dock-snap-btn').addEventListener('click', () => {
-  if (tg?.HapticFeedback) {
-    tg.HapticFeedback.notificationOccurred('success');
-  }
-
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');
   heart.innerHTML = '💖';
   heart.style.position = 'fixed';
@@ -201,3 +288,4 @@ document.getElementById('dock-snap-btn').addEventListener('click', () => {
 loadAvatars();
 updateStatuses();
 setupDaysCounter();
+renderAlbum();

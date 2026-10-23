@@ -16,11 +16,10 @@
 
   <div class="app-container">
     
-    <!-- Шапка пары с настоящими аватарками -->
+    <!-- Общая шапка пары -->
     <header class="glass-card header-bar">
       <div class="couple-profile">
         <div class="avatar-group">
-          <!-- Аватар партнера 1 -->
           <div class="avatar-ring male">
             <img id="avatar-img-u1" class="avatar-pic" alt="" />
             <span id="avatar-fallback-u1" class="avatar-fallback">М</span>
@@ -29,7 +28,6 @@
           <div class="heart-badge">
             <svg viewBox="0 0 24 24" class="heart-icon"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
           </div>
-          <!-- Аватар партнера 2 -->
           <div class="avatar-ring female">
             <img id="avatar-img-u2" class="avatar-pic" alt="" />
             <span id="avatar-fallback-u2" class="avatar-fallback">С</span>
@@ -51,129 +49,148 @@
       </div>
     </header>
 
-    <!-- Сцена с монстриком -->
-    <main class="monster-stage">
-      <div class="speech-bubble" id="pet-speech">
-        <span>Ррр-мяу! Жду наше общее фото 💖</span>
-      </div>
+    <!-- ЭКРАН 1: ДОМ С МОНСТРИКОМ -->
+    <div class="tab-screen active" id="screen-home">
+      <main class="monster-stage">
+        <div class="speech-bubble" id="pet-speech">
+          <span>Ррр-мяу! Жду наше общее фото 💖</span>
+        </div>
 
-      <div class="monster-wrapper happy" id="monster-character">
-        <div class="monster-aura"></div>
+        <div class="monster-wrapper happy" id="monster-character">
+          <div class="monster-aura"></div>
 
-        <svg class="monster-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="monsterFur" cx="45%" cy="40%" r="65%">
-              <stop offset="0%" stop-color="#A29BFE" />
-              <stop offset="65%" stop-color="#6C5CE7" />
-              <stop offset="100%" stop-color="#4834D4" />
-            </radialGradient>
-            <radialGradient id="bellyGrad" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stop-color="#FFEAA7" />
-              <stop offset="100%" stop-color="#FDCB6E" />
-            </radialGradient>
-            <linearGradient id="hornGrad" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stop-color="#FF7675" />
-              <stop offset="100%" stop-color="#FF5E8A" />
-            </linearGradient>
-            <radialGradient id="monsterShadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
-              <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
+          <svg class="monster-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="monsterFur" cx="45%" cy="40%" r="65%">
+                <stop offset="0%" stop-color="#A29BFE" />
+                <stop offset="65%" stop-color="#6C5CE7" />
+                <stop offset="100%" stop-color="#4834D4" />
+              </radialGradient>
+              <radialGradient id="bellyGrad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#FFEAA7" />
+                <stop offset="100%" stop-color="#FDCB6E" />
+              </radialGradient>
+              <linearGradient id="hornGrad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#FF7675" />
+                <stop offset="100%" stop-color="#FF5E8A" />
+              </linearGradient>
+              <radialGradient id="monsterShadow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
 
-          <ellipse class="ground-shadow" cx="120" cy="222" rx="70" ry="14" fill="url(#monsterShadow)" />
+            <ellipse class="ground-shadow" cx="120" cy="222" rx="70" ry="14" fill="url(#monsterShadow)" />
 
-          <g class="monster-tail">
-            <path d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
-            <path class="tail-heart" d="M 195 125 C 190 118, 198 112, 202 116 C 206 112, 214 118, 209 125 L 202 132 Z" fill="#FF5E8A"/>
-          </g>
-
-          <g class="monster-body-group">
-            <g class="horns">
-              <g class="horn horn-left">
-                <path d="M 90 65 Q 75 35 62 42 Q 75 55 85 72" fill="url(#hornGrad)"/>
-                <circle class="horn-glow-tip" cx="62" cy="42" r="6.5" fill="#FF5E8A"/>
-              </g>
-              <g class="horn horn-right">
-                <path d="M 150 65 Q 165 35 178 42 Q 165 55 155 72" fill="url(#hornGrad)"/>
-                <circle class="horn-glow-tip" cx="178" cy="42" r="6.5" fill="#FF5E8A"/>
-              </g>
+            <g class="monster-tail">
+              <path d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
+              <path class="tail-heart" d="M 195 125 C 190 118, 198 112, 202 116 C 206 112, 214 118, 209 125 L 202 132 Z" fill="#FF5E8A"/>
             </g>
 
-            <g class="ears">
-              <path class="ear ear-l" d="M 68 95 C 40 85 45 125 70 115 Z" fill="#4834D4"/>
-              <path class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
-            </g>
-
-            <path class="main-body" d="
-              M 120 58
-              C 168 58, 185 95, 184 148
-              C 183 192, 160 206, 120 206
-              C 80 206, 57 192, 56 148
-              C 55 95, 72 58, 120 58 Z
-            " fill="url(#monsterFur)"/>
-
-            <ellipse class="belly" cx="120" cy="154" rx="42" ry="36" fill="url(#bellyGrad)" />
-            <path d="M 120 152 C 117 148, 112 150, 114 154 L 120 160 L 126 154 C 128 150, 123 148, 120 152 Z" fill="#FF7675" opacity="0.8"/>
-
-            <g class="face">
-              <g class="eye eye-left">
-                <circle cx="95" cy="115" r="13" fill="#1E142B"/>
-                <circle cx="91" cy="111" r="5" fill="#FFFFFF"/>
-                <circle cx="98" cy="118" r="2.5" fill="#FFFFFF"/>
-              </g>
-              <g class="eye eye-right">
-                <circle cx="145" cy="115" r="13" fill="#1E142B"/>
-                <circle cx="141" cy="111" r="5" fill="#FFFFFF"/>
-                <circle cx="148" cy="118" r="2.5" fill="#FFFFFF"/>
+            <g class="monster-body-group">
+              <g class="horns">
+                <g class="horn horn-left">
+                  <path d="M 90 65 Q 75 35 62 42 Q 75 55 85 72" fill="url(#hornGrad)"/>
+                  <circle class="horn-glow-tip" cx="62" cy="42" r="6.5" fill="#FF5E8A"/>
+                </g>
+                <g class="horn horn-right">
+                  <path d="M 150 65 Q 165 35 178 42 Q 165 55 155 72" fill="url(#hornGrad)"/>
+                  <circle class="horn-glow-tip" cx="178" cy="42" r="6.5" fill="#FF5E8A"/>
+                </g>
               </g>
 
-              <ellipse class="blush" cx="80" cy="128" rx="8" ry="5" fill="#FF7675" opacity="0.7"/>
-              <ellipse class="blush" cx="160" cy="128" rx="8" ry="5" fill="#FF7675" opacity="0.7"/>
+              <g class="ears">
+                <path class="ear ear-l" d="M 68 95 C 40 85 45 125 70 115 Z" fill="#4834D4"/>
+                <path class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
+              </g>
 
-              <ellipse cx="120" cy="122" rx="4" ry="2.5" fill="#1E142B"/>
+              <path class="main-body" d="
+                M 120 58
+                C 168 58, 185 95, 184 148
+                C 183 192, 160 206, 120 206
+                C 80 206, 57 192, 56 148
+                C 55 95, 72 58, 120 58 Z
+              " fill="url(#monsterFur)"/>
 
-              <path class="mouth" d="M 112 129 Q 120 137 128 129" fill="none" stroke="#1E142B" stroke-width="3" stroke-linecap="round"/>
-              <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
+              <ellipse class="belly" cx="120" cy="154" rx="42" ry="36" fill="url(#bellyGrad)" />
+              <path d="M 120 152 C 117 148, 112 150, 114 154 L 120 160 L 126 154 C 128 150, 123 148, 120 152 Z" fill="#FF7675" opacity="0.8"/>
 
-              <path class="tear" d="M 90 128 C 90 128 94 136 94 139 C 94 142 91 144 89 144 C 87 144 85 142 85 139 C 85 136 90 128 90 128 Z" fill="#74B9FF"/>
+              <g class="face">
+                <g class="eye eye-left">
+                  <circle cx="95" cy="115" r="13" fill="#1E142B"/>
+                  <circle cx="91" cy="111" r="5" fill="#FFFFFF"/>
+                  <circle cx="98" cy="118" r="2.5" fill="#FFFFFF"/>
+                </g>
+                <g class="eye eye-right">
+                  <circle cx="145" cy="115" r="13" fill="#1E142B"/>
+                  <circle cx="141" cy="111" r="5" fill="#FFFFFF"/>
+                  <circle cx="148" cy="118" r="2.5" fill="#FFFFFF"/>
+                </g>
+
+                <ellipse class="blush" cx="80" cy="128" rx="8" ry="5" fill="#FF7675" opacity="0.7"/>
+                <ellipse class="blush" cx="160" cy="128" rx="8" ry="5" fill="#FF7675" opacity="0.7"/>
+
+                <ellipse cx="120" cy="122" rx="4" ry="2.5" fill="#1E142B"/>
+
+                <path class="mouth" d="M 112 129 Q 120 137 128 129" fill="none" stroke="#1E142B" stroke-width="3" stroke-linecap="round"/>
+                <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
+
+                <path class="tear" d="M 90 128 C 90 128 94 136 94 139 C 94 142 91 144 89 144 C 87 144 85 142 85 139 C 85 136 90 128 90 128 Z" fill="#74B9FF"/>
+              </g>
+
+              <g class="feet">
+                <ellipse cx="92" cy="202" rx="14" ry="9" fill="#4834D4"/>
+                <ellipse cx="148" cy="202" rx="14" ry="9" fill="#4834D4"/>
+              </g>
             </g>
+          </svg>
 
-            <g class="feet">
-              <ellipse cx="92" cy="202" rx="14" ry="9" fill="#4834D4"/>
-              <ellipse cx="148" cy="202" rx="14" ry="9" fill="#4834D4"/>
-            </g>
-          </g>
-        </svg>
-
-        <div class="vintage-suitcase" id="suitcase">
-          <div class="handle"></div>
-          <div class="case-body">
-            <span class="sticker">💔</span>
+          <div class="vintage-suitcase" id="suitcase">
+            <div class="handle"></div>
+            <div class="case-body">
+              <span class="sticker">💔</span>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <!-- Карточка статуса -->
-    <div class="status-card glass-card">
-      <div class="status-header">
-        <span class="status-title">Сытость монстрика</span>
-        <span class="status-percent" id="energy-val">0%</span>
-      </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-fill" id="energy-progress" style="width: 10%;">
-          <div class="glow-light"></div>
+      <div class="status-card glass-card">
+        <div class="status-header">
+          <span class="status-title">Сытость монстрика</span>
+          <span class="status-percent" id="energy-val">0%</span>
         </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-fill" id="energy-progress" style="width: 10%;">
+            <div class="glow-light"></div>
+          </div>
+        </div>
+        <div class="photo-check-row" id="photo-check-row"></div>
       </div>
-      <div class="photo-check-row" id="photo-check-row">
-        <!-- Заполняется динамически из app.js -->
+    </div>
+
+    <!-- ЭКРАН 2: НАШ АЛЬБОМ ВОСПОМИНАНИЙ -->
+    <div class="tab-screen" id="screen-album">
+      <div class="album-container">
+        <div class="album-head">
+          <h3>Наши моменты 📸</h3>
+          <span class="album-counter" id="album-total-count">0 кадров</span>
+        </div>
+
+        <!-- Сетка фотокарточек -->
+        <div class="photo-grid" id="photo-grid"></div>
+
+        <!-- Заглушка, если фото еще нет -->
+        <div class="empty-album" id="empty-album">
+          <div class="empty-icon">📷</div>
+          <h4>Альбом пока пуст</h4>
+          <p>Отправьте фото в чат бота, и оно бережно сохранится здесь навсегда!</p>
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Меню -->
+  <!-- Нижний бар с кнопками -->
   <nav class="bottom-dock">
     <div class="dock-inner glass-card">
       <button class="dock-item active" id="tab-home">
@@ -205,6 +222,16 @@
       </button>
     </div>
   </nav>
+
+  <!-- Модальное окно просмотра фото во весь экран -->
+  <div class="modal-viewer" id="photo-modal">
+    <div class="modal-backdrop" id="modal-close-bg"></div>
+    <div class="modal-content">
+      <button class="modal-close-btn" id="modal-close-btn">✕</button>
+      <img id="modal-img" src="" alt="Момент">
+      <div class="modal-caption" id="modal-caption"></div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
