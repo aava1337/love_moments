@@ -7,7 +7,62 @@ if (tg) {
   tg.setBackgroundColor('#0D0914');
 }
 
-// 2. Получение параметров из URL
+// 2. Элементы интерфейса
+const tabHome = document.getElementById('tab-home');
+const tabAlbum = document.getElementById('tab-album');
+const screenHome = document.getElementById('screen-home');
+const screenAlbum = document.getElementById('screen-album');
+
+// Функция жесткого переключения экранов
+function showTab(tabName) {
+  if (tabName === 'home') {
+    tabHome?.classList.add('active');
+    tabAlbum?.classList.remove('active');
+    if (screenHome) {
+      screenHome.classList.add('active');
+      screenHome.style.setProperty('display', 'flex', 'important');
+    }
+    if (screenAlbum) {
+      screenAlbum.classList.remove('active');
+      screenAlbum.style.setProperty('display', 'none', 'important');
+    }
+  } else if (tabName === 'album') {
+    tabAlbum?.classList.add('active');
+    tabHome?.classList.remove('active');
+    if (screenAlbum) {
+      screenAlbum.classList.add('active');
+      screenAlbum.style.setProperty('display', 'flex', 'important');
+    }
+    if (screenHome) {
+      screenHome.classList.remove('active');
+      screenHome.style.setProperty('display', 'none', 'important');
+    }
+  }
+}
+
+// ПРИНУДИТЕЛЬНЫЙ СБРОС НА ДОМ ПРИ ЗАГРУЗКЕ
+showTab('home');
+
+// Обработчики кликов по меню
+tabHome?.addEventListener('click', () => {
+  showTab('home');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
+tabAlbum?.addEventListener('click', () => {
+  showTab('album');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
+['tab-games', 'tab-vip'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', (e) => {
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    const txt = e.currentTarget.querySelector('.dock-txt').innerText;
+    alert(`Раздел "${txt}" появится в следующем обновлении! 💖`);
+  });
+});
+
+// 3. Получение параметров из URL
 const urlParams = new URLSearchParams(window.location.search);
 
 const paramStartDate = urlParams.get('start_date');
@@ -21,11 +76,10 @@ const paramU2Sent = urlParams.get('u2_sent') === '1';
 const paramPhotos = urlParams.get('photos') || '';
 const paramBotToken = urlParams.get('bot_token') || '';
 
-// Установка стрика
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
-// 3. Подгрузка аватарок
+// 4. Подгрузка аватарок
 function loadAvatars() {
   const currentTgUser = tg?.initDataUnsafe?.user;
 
@@ -63,7 +117,7 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 4. Отрисовка альбома
+// 5. Отрисовка альбома
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -109,7 +163,7 @@ function renderAlbum() {
   }
 }
 
-// 5. Полноэкранный просмотр фото
+// 6. Полноэкранный просмотр
 const modal = document.getElementById('photo-modal');
 const modalImg = document.getElementById('modal-img');
 const modalCaption = document.getElementById('modal-caption');
@@ -118,46 +172,18 @@ function openModal(src, caption) {
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   modalImg.src = src;
   modalCaption.innerText = caption;
-  modal.style.display = 'flex';
+  modal.classList.add('open');
+  modal.style.setProperty('display', 'flex', 'important');
 }
 
 function closeModal() {
-  modal.style.display = 'none';
+  modal.classList.remove('open');
+  modal.style.setProperty('display', 'none', 'important');
   modalImg.src = '';
 }
 
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
-
-// 6. Переключение экранов «Дом» и «Альбом» с прямой защитой стилей
-const tabHome = document.getElementById('tab-home');
-const tabAlbum = document.getElementById('tab-album');
-const screenHome = document.getElementById('screen-home');
-const screenAlbum = document.getElementById('screen-album');
-
-tabHome?.addEventListener('click', () => {
-  tabHome.classList.add('active');
-  tabAlbum.classList.remove('active');
-  screenHome.style.display = 'flex';
-  screenAlbum.style.display = 'none';
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-});
-
-tabAlbum?.addEventListener('click', () => {
-  tabAlbum.classList.add('active');
-  tabHome.classList.remove('active');
-  screenAlbum.style.display = 'flex';
-  screenHome.style.display = 'none';
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-});
-
-['tab-games', 'tab-vip'].forEach(id => {
-  document.getElementById(id)?.addEventListener('click', (e) => {
-    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-    const txt = e.currentTarget.querySelector('.dock-txt').innerText;
-    alert(`Раздел "${txt}" появится в следующем обновлении! 💖`);
-  });
-});
 
 // 7. Статусы монстрика и счетчик дней
 function updateStatuses() {
@@ -257,7 +283,7 @@ function getRussianPlural(number, titles) {
 }
 
 // 8. Кнопка камеры
-document.getElementById('dock-snap-btn').addEventListener('click', () => {
+document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');
   heart.innerHTML = '💖';
@@ -282,7 +308,7 @@ document.getElementById('dock-snap-btn').addEventListener('click', () => {
   }, 400);
 });
 
-// Запуск
+// Запуск остальных процессов
 loadAvatars();
 updateStatuses();
 setupDaysCounter();

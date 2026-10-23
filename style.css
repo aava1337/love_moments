@@ -226,12 +226,17 @@ body {
   color: #FFA06E;
 }
 
-/* ВКЛАДКИ ЭКРАНОВ */
+/* ВКЛАДКИ ЭКРАНОВ С ЖЕСТКИМ СКРЫТИЕМ */
 .tab-screen {
+  display: none !important;
   flex: 1;
   flex-direction: column;
   justify-content: space-between;
   min-height: 0;
+}
+
+.tab-screen.active {
+  display: flex !important;
 }
 
 /* ЭКРАН МОНСТРИКА */
@@ -640,9 +645,14 @@ body {
   position: fixed;
   inset: 0;
   z-index: 9999;
+  display: none !important;
   align-items: center;
   justify-content: center;
   padding: 20px;
+}
+
+.modal-viewer.open {
+  display: flex !important;
 }
 
 .modal-backdrop {
