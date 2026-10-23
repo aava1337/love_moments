@@ -63,7 +63,7 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 4. Отрисовка альбома фотографий
+// 4. Отрисовка альбома
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -100,7 +100,6 @@ function renderAlbum() {
         </div>
       `;
 
-      // Тап по фото открывает полноэкранный зум
       card.addEventListener('click', () => {
         openModal(fullPhotoUrl, `${authorName} • ${dateStr}`);
       });
@@ -119,18 +118,18 @@ function openModal(src, caption) {
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   modalImg.src = src;
   modalCaption.innerText = caption;
-  modal.classList.add('open');
+  modal.style.display = 'flex';
 }
 
 function closeModal() {
-  modal.classList.remove('open');
+  modal.style.display = 'none';
   modalImg.src = '';
 }
 
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 6. Переключение экранов «Дом» / «Альбом»
+// 6. Переключение экранов «Дом» и «Альбом» с прямой защитой стилей
 const tabHome = document.getElementById('tab-home');
 const tabAlbum = document.getElementById('tab-album');
 const screenHome = document.getElementById('screen-home');
@@ -139,20 +138,19 @@ const screenAlbum = document.getElementById('screen-album');
 tabHome?.addEventListener('click', () => {
   tabHome.classList.add('active');
   tabAlbum.classList.remove('active');
-  screenHome.classList.add('active');
-  screenAlbum.classList.remove('active');
+  screenHome.style.display = 'flex';
+  screenAlbum.style.display = 'none';
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
 tabAlbum?.addEventListener('click', () => {
   tabAlbum.classList.add('active');
   tabHome.classList.remove('active');
-  screenAlbum.classList.add('active');
-  screenHome.classList.remove('active');
+  screenAlbum.style.display = 'flex';
+  screenHome.style.display = 'none';
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
-// Кнопки-заглушки
 ['tab-games', 'tab-vip'].forEach(id => {
   document.getElementById(id)?.addEventListener('click', (e) => {
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -258,7 +256,7 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 8. Круглая кнопка камеры
+// 8. Кнопка камеры
 document.getElementById('dock-snap-btn').addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');

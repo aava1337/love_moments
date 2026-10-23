@@ -34,7 +34,6 @@ body {
   position: relative;
 }
 
-/* Неоновые фоновые пятна */
 .ambient-glow {
   position: fixed;
   border-radius: 50%;
@@ -58,7 +57,6 @@ body {
   right: -50px;
 }
 
-/* Главный контейнер экрана */
 .app-container {
   position: relative;
   z-index: 1;
@@ -81,13 +79,14 @@ body {
   box-shadow: var(--glass-shadow);
 }
 
-/* --- 1. ШАПКА --- */
+/* ШАПКА */
 .header-bar {
   padding: 10px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
 .couple-profile {
@@ -112,6 +111,18 @@ body {
   font-weight: 800;
   font-size: 15px;
   position: relative;
+}
+
+.avatar-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: none;
+}
+
+.avatar-fallback {
+  display: block;
 }
 
 .avatar-ring.male {
@@ -215,7 +226,15 @@ body {
   color: #FFA06E;
 }
 
-/* --- 2. ЦЕНТРАЛЬНАЯ ЗОНА (МОНСТРИК) --- */
+/* ВКЛАДКИ ЭКРАНОВ */
+.tab-screen {
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+/* ЭКРАН МОНСТРИКА */
 .monster-stage {
   flex: 1;
   display: flex;
@@ -332,7 +351,7 @@ body {
   filter: drop-shadow(0 0 8px #FF5E8A);
 }
 
-/* --- 3. КАРТОЧКА СТАТУСА --- */
+/* КАРТОЧКА СТАТУСА */
 .status-card {
   padding: 12px 16px;
   flex-shrink: 0;
@@ -398,7 +417,110 @@ body {
 .user-check.done { color: #00B894; }
 .user-check.pending { color: var(--text-dim); }
 
-/* --- 4. НИЖНЕЕ МЕНЮ С ПАРЯЩЕЙ КНОПКОЙ КАМЕРЫ ПО ЦЕНТРУ --- */
+/* РАЗДЕЛ АЛЬБОМА */
+.album-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 8px 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.album-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.album-head h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.album-counter {
+  font-size: 12px;
+  color: var(--coral-pink);
+  font-weight: 700;
+  background: rgba(255, 94, 138, 0.15);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.polaroid-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.polaroid-card:active {
+  transform: scale(0.96);
+}
+
+.polaroid-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #1A1325;
+}
+
+.polaroid-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding: 0 2px;
+  font-size: 11px;
+}
+
+.polaroid-author {
+  font-weight: 700;
+  color: var(--text-white);
+}
+
+.polaroid-date {
+  color: var(--text-dim);
+  font-size: 10px;
+}
+
+.empty-album {
+  margin: auto;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.empty-album h4 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.empty-album p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* НИЖНЕЕ МЕНЮ */
 .bottom-dock {
   position: fixed;
   bottom: 0;
@@ -469,7 +591,6 @@ body {
   box-shadow: 0 0 6px #FF5E8A;
 }
 
-/* Круглая парящая кнопка камеры по центру */
 .dock-center-action {
   position: relative;
   width: 62px;
@@ -512,10 +633,66 @@ body {
 
 .center-btn-ico {
   font-size: 28px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
-/* Анимации */
+/* МОДАЛЬНОЕ ОКНО */
+.modal-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 6, 15, 0.9);
+  backdrop-filter: blur(12px);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 2;
+  max-width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal-caption {
+  margin-top: 12px;
+  color: var(--text-white);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* АНИМАЦИИ */
 @keyframes monsterBreathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.03, 0.97) translateY(2px); }
@@ -560,200 +737,4 @@ body {
   0% { opacity: 0; transform: translateY(-2px); }
   35% { opacity: 1; }
   100% { opacity: 0; transform: translateY(14px); }
-}
-/* Дополнительные стили для аватарок */
-.avatar-pic {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  display: none; /* Включается через JS, если фото загрузилось */
-}
-
-.avatar-fallback {
-  display: block;
-}
-
-.avatar-ring {
-  overflow: visible;
-}
-/* Переключение экранов (Вкладки) */
-.tab-screen {
-  display: none;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 0;
-}
-.tab-screen.active {
-  display: flex;
-}
-
-/* Стили раздела Альбома */
-.album-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 8px 4px;
-  -webkit-overflow-scrolling: touch;
-}
-
-.album-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.album-head h3 {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--text-white);
-}
-
-.album-counter {
-  font-size: 12px;
-  color: var(--coral-pink);
-  font-weight: 700;
-  background: rgba(255, 94, 138, 0.15);
-  padding: 4px 10px;
-  border-radius: 12px;
-}
-
-/* Сетка карточек-полароидов */
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.polaroid-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease;
-}
-
-.polaroid-card:active {
-  transform: scale(0.96);
-}
-
-.polaroid-thumb {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  object-fit: cover;
-  background: #1A1325;
-}
-
-.polaroid-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
-  padding: 0 2px;
-  font-size: 11px;
-}
-
-.polaroid-author {
-  font-weight: 700;
-  color: var(--text-white);
-}
-
-.polaroid-date {
-  color: var(--text-dim);
-  font-size: 10px;
-}
-
-/* Заглушка пустого альбома */
-.empty-album {
-  margin: auto;
-  text-align: center;
-  padding: 30px 20px;
-}
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 10px;
-  filter: drop-shadow(0 4px 12px rgba(255, 94, 138, 0.5));
-}
-
-.empty-album h4 {
-  font-size: 16px;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.empty-album p {
-  font-size: 13px;
-  color: var(--text-dim);
-  line-height: 1.4;
-}
-
-/* Модальное окно просмотра во весь экран */
-.modal-viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modal-viewer.open {
-  display: flex;
-}
-
-.modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 6, 15, 0.88);
-  backdrop-filter: blur(12px);
-}
-
-.modal-content {
-  position: relative;
-  z-index: 2;
-  max-width: 100%;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.modal-content img {
-  max-width: 100%;
-  max-height: 70vh;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: -44px;
-  right: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.modal-caption {
-  margin-top: 12px;
-  color: var(--text-white);
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
 }

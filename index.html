@@ -16,7 +16,7 @@
 
   <div class="app-container">
     
-    <!-- Общая шапка пары -->
+    <!-- Шапка пары -->
     <header class="glass-card header-bar">
       <div class="couple-profile">
         <div class="avatar-group">
@@ -49,8 +49,8 @@
       </div>
     </header>
 
-    <!-- ЭКРАН 1: ДОМ С МОНСТРИКОМ -->
-    <div class="tab-screen active" id="screen-home">
+    <!-- ЭКРАН 1: ДОМ (По умолчанию открыт) -->
+    <div class="tab-screen" id="screen-home" style="display: flex;">
       <main class="monster-stage">
         <div class="speech-bubble" id="pet-speech">
           <span>Ррр-мяу! Жду наше общее фото 💖</span>
@@ -168,18 +168,16 @@
       </div>
     </div>
 
-    <!-- ЭКРАН 2: НАШ АЛЬБОМ ВОСПОМИНАНИЙ -->
-    <div class="tab-screen" id="screen-album">
+    <!-- ЭКРАН 2: АЛЬБОМ (Жестко скрыт по умолчанию) -->
+    <div class="tab-screen" id="screen-album" style="display: none;">
       <div class="album-container">
         <div class="album-head">
           <h3>Наши моменты 📸</h3>
           <span class="album-counter" id="album-total-count">0 кадров</span>
         </div>
 
-        <!-- Сетка фотокарточек -->
         <div class="photo-grid" id="photo-grid"></div>
 
-        <!-- Заглушка, если фото еще нет -->
         <div class="empty-album" id="empty-album">
           <div class="empty-icon">📷</div>
           <h4>Альбом пока пуст</h4>
@@ -223,8 +221,8 @@
     </div>
   </nav>
 
-  <!-- Модальное окно просмотра фото во весь экран -->
-  <div class="modal-viewer" id="photo-modal">
+  <!-- Модальное окно просмотра фото (Жестко скрыто по умолчанию) -->
+  <div class="modal-viewer" id="photo-modal" style="display: none;">
     <div class="modal-backdrop" id="modal-close-bg"></div>
     <div class="modal-content">
       <button class="modal-close-btn" id="modal-close-btn">✕</button>
