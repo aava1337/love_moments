@@ -49,7 +49,7 @@
       </div>
     </header>
 
-    <!-- ЭКРАН 1: ДОМ (Активен по умолчанию) -->
+    <!-- ЭКРАН 1: ДОМ -->
     <div class="tab-screen active" id="screen-home">
       <main class="monster-stage">
         <div class="speech-bubble" id="pet-speech">
@@ -168,7 +168,7 @@
       </div>
     </div>
 
-    <!-- ЭКРАН 2: АЛЬБОМ (Изначально жестко спрятан) -->
+    <!-- ЭКРАН 2: АЛЬБОМ -->
     <div class="tab-screen" id="screen-album" style="display: none !important;">
       <div class="album-container">
         <div class="album-head">
@@ -183,6 +183,59 @@
           <h4>Альбом пока пуст</h4>
           <p>Отправьте фото в чат бота, и оно бережно сохранится здесь навсегда!</p>
         </div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН 3: ИГРЫ (ВОПРОС ДНЯ) -->
+    <div class="tab-screen" id="screen-games" style="display: none !important;">
+      <div class="games-container">
+        
+        <!-- Верхняя карточка вопроса -->
+        <div class="glass-card question-card">
+          <div class="q-badge">
+            <span class="q-sparkle">🎲</span> ВОПРОС ДНЯ
+          </div>
+          <h2 class="q-title" id="daily-q-text">Загружаем вопрос дня...</h2>
+          <span class="q-hint">Ответ партнера откроется, когда оба напишут ответ 🔒</span>
+        </div>
+
+        <!-- Две карточки с ответами -->
+        <div class="answers-wrapper">
+          
+          <!-- Мой ответ -->
+          <div class="glass-card answer-card my-card">
+            <div class="card-author-row">
+              <span class="card-author-label" id="my-card-name">Мой ответ</span>
+              <span class="card-status-dot" id="my-card-status">⏳</span>
+            </div>
+            <div class="card-content" id="my-answer-content">
+              <p class="ans-text empty">Вы еще не ответили на этот вопрос</p>
+            </div>
+          </div>
+
+          <!-- Ответ половинки -->
+          <div class="glass-card answer-card partner-card">
+            <div class="card-author-row">
+              <span class="card-author-label" id="partner-card-name">Ответ половинки</span>
+              <span class="card-status-dot" id="partner-card-status">⏳</span>
+            </div>
+            <div class="card-content" id="partner-answer-content">
+              <!-- Блюр-заглушка или текст -->
+              <div class="secret-blur-box" id="partner-blur-box">
+                <span class="lock-icon">🔒</span>
+                <span class="lock-txt">Ответ скрыт до взаимности</span>
+              </div>
+              <p class="ans-text" id="partner-real-text" style="display: none;"></p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Кнопка действия: написать ответ -->
+        <button class="cta-button game-btn" id="btn-answer-game">
+          <span class="btn-main-txt">✍️ Ответить на вопрос</span>
+        </button>
+
       </div>
     </div>
 

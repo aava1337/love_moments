@@ -7,43 +7,42 @@ if (tg) {
   tg.setBackgroundColor('#0D0914');
 }
 
-// 2. Элементы интерфейса
+// 2. Элементы навигации
 const tabHome = document.getElementById('tab-home');
 const tabAlbum = document.getElementById('tab-album');
+const tabGames = document.getElementById('tab-games');
+
 const screenHome = document.getElementById('screen-home');
 const screenAlbum = document.getElementById('screen-album');
+const screenGames = document.getElementById('screen-games');
 
-// Функция жесткого переключения экранов
 function showTab(tabName) {
-  if (tabName === 'home') {
-    tabHome?.classList.add('active');
-    tabAlbum?.classList.remove('active');
-    if (screenHome) {
-      screenHome.classList.add('active');
-      screenHome.style.setProperty('display', 'flex', 'important');
+  const tabs = [
+    { btn: tabHome, scr: screenHome, name: 'home' },
+    { btn: tabAlbum, scr: screenAlbum, name: 'album' },
+    { btn: tabGames, scr: screenGames, name: 'games' }
+  ];
+
+  tabs.forEach(t => {
+    if (t.name === tabName) {
+      t.btn?.classList.add('active');
+      if (t.scr) {
+        t.scr.classList.add('active');
+        t.scr.style.setProperty('display', 'flex', 'important');
+      }
+    } else {
+      t.btn?.classList.remove('active');
+      if (t.scr) {
+        t.scr.classList.remove('active');
+        t.scr.style.setProperty('display', 'none', 'important');
+      }
     }
-    if (screenAlbum) {
-      screenAlbum.classList.remove('active');
-      screenAlbum.style.setProperty('display', 'none', 'important');
-    }
-  } else if (tabName === 'album') {
-    tabAlbum?.classList.add('active');
-    tabHome?.classList.remove('active');
-    if (screenAlbum) {
-      screenAlbum.classList.add('active');
-      screenAlbum.style.setProperty('display', 'flex', 'important');
-    }
-    if (screenHome) {
-      screenHome.classList.remove('active');
-      screenHome.style.setProperty('display', 'none', 'important');
-    }
-  }
+  });
 }
 
-// ПРИНУДИТЕЛЬНЫЙ СБРОС НА ДОМ ПРИ ЗАГРУЗКЕ
+// По умолчанию всегда открываем «Дом»
 showTab('home');
 
-// Обработчики кликов по меню
 tabHome?.addEventListener('click', () => {
   showTab('home');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -54,12 +53,14 @@ tabAlbum?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
-['tab-games', 'tab-vip'].forEach(id => {
-  document.getElementById(id)?.addEventListener('click', (e) => {
-    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-    const txt = e.currentTarget.querySelector('.dock-txt').innerText;
-    alert(`Раздел "${txt}" появится в следующем обновлении! 💖`);
-  });
+tabGames?.addEventListener('click', () => {
+  showTab('games');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
+document.getElementById('tab-vip')?.addEventListener('click', () => {
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  alert('Раздел VIP скоро станет доступен! ⭐');
 });
 
 // 3. Получение параметров из URL
@@ -67,6 +68,8 @@ const urlParams = new URLSearchParams(window.location.search);
 
 const paramStartDate = urlParams.get('start_date');
 const paramStreak = urlParams.get('streak') || '1';
+const paramU1Id = parseInt(urlParams.get('u1_id') || '0');
+const paramU2Id = parseInt(urlParams.get('u2_id') || '0');
 const paramU1Name = urlParams.get('u1_name') || 'Партнер 1';
 const paramU2Name = urlParams.get('u2_name') || 'Партнер 2';
 const paramU1User = urlParams.get('u1_user') || '';
@@ -75,6 +78,11 @@ const paramU1Sent = urlParams.get('u1_sent') === '1';
 const paramU2Sent = urlParams.get('u2_sent') === '1';
 const paramPhotos = urlParams.get('photos') || '';
 const paramBotToken = urlParams.get('bot_token') || '';
+
+// Параметры вопроса дня
+const paramQText = urlParams.get('q_text') || 'Какой момент из нашего прошлого самый ценный?';
+const paramU1Ans = urlParams.get('u1_ans') || '';
+const paramU2Ans = urlParams.get('u2_ans') || '';
 
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
@@ -117,7 +125,85 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 5. Отрисовка альбома
+// 5. Отрисовка раздела «Игры»
+function setupGamesSection() {
+  const qTitleEl = document.getElementById('daily-q-text');
+  if (qTitleEl) qTitleEl.innerText = paramQText;
+
+  const currentTgId = tg?.initDataUnsafe?.user?.id;
+  // Определяем, кто сейчас открыл приложение: Партнер 1 или Партнер 2
+  const isUser1 = (currentTgId && currentTgId === paramU1Id) || true; // По умолчанию U1, если тесты в браузере
+
+  const myName = isUser1 ? paramU1Name : paramU2Name;
+  const partnerName = isUser1 ? paramU2Name : paramU1Name;
+  const myAns = isUser1 ? paramU1Ans : paramU2Ans;
+  const partnerAns = isUser1 ? paramU2Ans : paramU1Ans;
+
+  // Имена в карточках
+  const myNameEl = document.getElementById('my-card-name');
+  const partnerNameEl = document.getElementById('partner-card-name');
+  if (myNameEl) myNameEl.innerText = `${myName} (Ты)`;
+  if (partnerNameEl) partnerNameEl.innerText = partnerName;
+
+  // 1. Мой ответ
+  const myContentEl = document.getElementById('my-answer-content');
+  const myStatusDot = document.getElementById('my-card-status');
+  if (myAns) {
+    if (myContentEl) myContentEl.innerHTML = `<p class="ans-text">«${myAns}»</p>`;
+    if (myStatusDot) myStatusDot.innerText = '✓';
+    const btnAns = document.getElementById('btn-answer-game');
+    if (btnAns) btnAns.querySelector('.btn-main-txt').innerText = '✍️ Изменить свой ответ';
+  } else {
+    if (myContentEl) myContentEl.innerHTML = `<p class="ans-text empty">Нажмите кнопку внизу, чтобы ответить...</p>`;
+    if (myStatusDot) myStatusDot.innerText = '⏳';
+  }
+
+  // 2. Ответ партнера (Секретный блюр)
+  const blurBox = document.getElementById('partner-blur-box');
+  const realTextEl = document.getElementById('partner-real-text');
+  const partnerStatusDot = document.getElementById('partner-card-status');
+
+  if (myAns && partnerAns) {
+    // ОБА ОТВЕТИЛИ: Снимаем замок и блюр!
+    if (blurBox) blurBox.style.display = 'none';
+    if (realTextEl) {
+      realTextEl.style.display = 'block';
+      realTextEl.innerText = `«${partnerAns}»`;
+    }
+    if (partnerStatusDot) partnerStatusDot.innerText = '✓';
+  } else if (!myAns && partnerAns) {
+    // Партнер ответил, а ты еще нет: замок с призывом ответить
+    if (blurBox) {
+      blurBox.style.display = 'flex';
+      blurBox.querySelector('.lock-txt').innerText = 'Ответьте, чтобы увидеть ответ!';
+    }
+    if (partnerStatusDot) partnerStatusDot.innerText = '✓';
+  } else {
+    // Партнер еще не ответил
+    if (blurBox) {
+      blurBox.style.display = 'flex';
+      blurBox.querySelector('.lock-txt').innerText = 'Партнер еще пишет ответ... ⏳';
+    }
+    if (partnerStatusDot) partnerStatusDot.innerText = '⏳';
+  }
+}
+
+// Кнопка «Ответить на вопрос»: открывает диалог бота с готовой командой
+document.getElementById('btn-answer-game')?.addEventListener('click', () => {
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+  // Дип-линк для мгновенного ответа через чат бота
+  const botUser = tg?.initDataUnsafe?.bot_username || 'our_couple_bot';
+  const answerLink = `https://t.me/${botUser}?start=ans`;
+
+  if (tg?.openTelegramLink) {
+    tg.openTelegramLink(answerLink);
+  } else {
+    window.location.href = answerLink;
+  }
+});
+
+// 6. Отрисовка альбома
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -163,7 +249,6 @@ function renderAlbum() {
   }
 }
 
-// 6. Полноэкранный просмотр
 const modal = document.getElementById('photo-modal');
 const modalImg = document.getElementById('modal-img');
 const modalCaption = document.getElementById('modal-caption');
@@ -308,8 +393,9 @@ document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   }, 400);
 });
 
-// Запуск остальных процессов
+// Запуск
 loadAvatars();
 updateStatuses();
 setupDaysCounter();
 renderAlbum();
+setupGamesSection();
