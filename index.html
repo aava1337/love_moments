@@ -8,8 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Добавлен сброс кэша ?v=2.1 -->
-  <link rel="stylesheet" href="style.css?v=2.1">
+  <link rel="stylesheet" href="style.css?v=2.2">
 </head>
 <body>
   <div class="ambient-glow glow-1"></div>
@@ -53,6 +52,13 @@
     <!-- ЭКРАН 1: ДОМ -->
     <div class="tab-screen active" id="screen-home">
       <main class="monster-stage">
+        
+        <!-- Кнопка открытия гардероба -->
+        <button class="wardrobe-trigger-btn" id="btn-open-wardrobe">
+          <span class="wardrobe-btn-ico">🧢</span>
+          <span class="wardrobe-btn-txt">Гардероб</span>
+        </button>
+
         <div class="speech-bubble" id="pet-speech">
           <span>Ррр-мяу! Жду наше общее фото 💖</span>
         </div>
@@ -133,6 +139,76 @@
                 <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
               </g>
 
+              <!-- СЛОЙ ОДЕЖДЫ И АКСЕССУАРОВ (SVG) -->
+              <g id="monster-accessories-layer">
+                <!-- 🎀 Бантик -->
+                <g id="acc-bow" style="display:none;">
+                  <path d="M 64 52 L 78 62 L 64 72 Z M 92 52 L 78 62 L 92 72 Z" fill="#FF5E8A"/>
+                  <circle cx="78" cy="62" r="4.5" fill="#FFA06E"/>
+                </g>
+
+                <!-- 👓 Очки ботаника -->
+                <g id="acc-glasses" style="display:none;">
+                  <circle cx="95" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
+                  <circle cx="145" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
+                  <line x1="112" y1="115" x2="128" y2="115" stroke="#2D3436" stroke-width="3"/>
+                </g>
+
+                <!-- 🧣 Шарфик -->
+                <g id="acc-scarf" style="display:none;">
+                  <path d="M 80 140 Q 120 156 160 140 Q 164 150 152 158 Q 120 166 86 152 Z" fill="#E17055"/>
+                  <path d="M 136 150 L 140 184 L 154 182 L 150 150 Z" fill="#D63031"/>
+                </g>
+
+                <!-- 🧢 Кепка -->
+                <g id="acc-cap" style="display:none;">
+                  <path d="M 86 64 Q 120 34 154 64 Z" fill="#0984E3"/>
+                  <path d="M 144 62 Q 180 64 175 72 Q 146 68 140 62 Z" fill="#74B9FF"/>
+                  <circle cx="120" cy="46" r="3.5" fill="#FFEAA7"/>
+                </g>
+
+                <!-- 🩹 Пластырь -->
+                <g id="acc-bandaid" style="display:none;">
+                  <rect x="68" y="122" width="20" height="9" rx="3.5" transform="rotate(-18 78 126)" fill="#FDCB6E" stroke="#E17055" stroke-width="1.2"/>
+                  <circle cx="78" cy="126" r="1.8" fill="#E17055"/>
+                </g>
+
+                <!-- 💤 Колпак для снов -->
+                <g id="acc-sleepcap" style="display:none;">
+                  <path d="M 88 62 Q 120 40 150 62 Q 174 28 190 56 Q 164 48 142 58 Z" fill="#6C5CE7"/>
+                  <circle cx="190" cy="56" r="7.5" fill="#FFFFFF"/>
+                </g>
+
+                <!-- 🥸 Усы джентльмена -->
+                <g id="acc-mustache" style="display:none;">
+                  <path d="M 120 126 Q 104 119 96 128 Q 112 135 120 128 Q 128 135 144 128 Q 136 119 120 126 Z" fill="#2D3436"/>
+                </g>
+
+                <!-- 🥳 Праздничный колпак -->
+                <g id="acc-partyhat" style="display:none;">
+                  <polygon points="120,12 96,58 144,58" fill="#FD79A8"/>
+                  <circle cx="120" cy="12" r="5.5" fill="#FDCB6E"/>
+                  <line x1="102" y1="48" x2="138" y2="48" stroke="#FFEAA7" stroke-width="2.5"/>
+                  <line x1="108" y1="32" x2="132" y2="32" stroke="#FFEAA7" stroke-width="2.5"/>
+                </g>
+
+                <!-- 🌹 Цветок в зубах -->
+                <g id="acc-flower" style="display:none;">
+                  <path d="M 124 133 Q 146 138 158 128" fill="none" stroke="#00B894" stroke-width="3.5"/>
+                  <circle cx="162" cy="126" r="7" fill="#FF5E8A"/>
+                  <circle cx="162" cy="126" r="2.8" fill="#FDCB6E"/>
+                </g>
+
+                <!-- 😎 Тёмные очки -->
+                <g id="acc-sunglasses" style="display:none;">
+                  <path d="M 82 108 L 110 108 L 106 127 L 86 127 Z" fill="#1E142B"/>
+                  <path d="M 130 108 L 158 108 L 154 127 L 134 127 Z" fill="#1E142B"/>
+                  <line x1="108" y1="112" x2="132" y2="112" stroke="#1E142B" stroke-width="3.5"/>
+                  <line x1="86" y1="111" x2="98" y2="124" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+                  <line x1="134" y1="111" x2="146" y2="124" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+                </g>
+              </g>
+
               <g class="feet">
                 <ellipse cx="92" cy="202" rx="14" ry="9" fill="#4834D4"/>
                 <ellipse cx="148" cy="202" rx="14" ry="9" fill="#4834D4"/>
@@ -182,17 +258,12 @@
     <!-- ЭКРАН 3: ИГРЫ -->
     <div class="tab-screen" id="screen-games" style="display: none !important;">
       <div class="games-container">
-        
-        <!-- Верхний переключатель игр -->
         <div class="game-subtabs">
           <button class="subtab-btn active" id="subtab-arcade">🎯 Ловец сердец</button>
           <button class="subtab-btn" id="subtab-qa">💬 Вопрос дня</button>
         </div>
 
-        <!-- 1. ИГРА: ЛОВЕЦ СЕРДЕЦ -->
         <div class="game-view" id="view-arcade" style="display: flex;">
-          
-          <!-- Карточка со счётом -->
           <div class="glass-card scoreboard-card">
             <div class="score-user-box">
               <span class="score-label" id="arcade-my-name">Ты</span>
@@ -205,16 +276,14 @@
             </div>
           </div>
 
-          <!-- Игровая площадка -->
           <div class="glass-card arcade-arena" id="arcade-arena">
-            
             <div class="arena-overlay" id="arena-overlay">
               <div class="attempts-pill">
                 <span>Попытки на сегодня:</span>
                 <span id="attempts-display" class="hearts-row">❤️❤️❤️</span>
               </div>
               <h3 id="overlay-title">Поймай сердца за 15 секунд!</h3>
-              <p id="overlay-sub">❤️ = +1 &nbsp;|&nbsp; 💛 = +3 &nbsp;|&nbsp; 💔 = -2</p>
+              <p id="overlay-sub">❤️ = +1 &nbsp;|&nbsp; 💛 = +3 &nbsp;|&nbsp; 💔 = -2<br><small style="color: #FDCB6E;">Очки зачисляются в банк для покупки шмоток!</small></p>
               <button class="cta-button play-btn" id="btn-start-arcade">
                 <span>Начать игру ▶️</span>
               </button>
@@ -224,12 +293,9 @@
               <div class="hud-item">⏱️ <span id="game-timer">15</span>с</div>
               <div class="hud-item">✨ Счёт: <span id="game-current-score">0</span></div>
             </div>
-
           </div>
-
         </div>
 
-        <!-- 2. ИГРА: ВОПРОС ДНЯ -->
         <div class="game-view" id="view-qa" style="display: none;">
           <div class="glass-card question-card">
             <div class="q-badge">
@@ -271,6 +337,34 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ШТОРКА ГАРДЕРОБА МОНСТРИКА -->
+  <div class="wardrobe-sheet" id="wardrobe-sheet">
+    <div class="wardrobe-backdrop" id="wardrobe-backdrop"></div>
+    <div class="wardrobe-content glass-card">
+      <div class="wardrobe-handle-bar"></div>
+      
+      <div class="wardrobe-head">
+        <div>
+          <h3>Гардероб питомца 🧢</h3>
+          <p class="wardrobe-sub">Открывай наряды за стрик и покупай за сердечки</p>
+        </div>
+        <div class="heart-coin-badge">
+          <span>❤️</span>
+          <span id="heart-coins-val">60</span>
+        </div>
+      </div>
+
+      <!-- Превью примерки -->
+      <div class="tryon-banner" id="tryon-banner" style="display: none;">
+        <span>👀 Примерка: <b id="tryon-item-name">Название</b></span>
+        <button class="cancel-tryon-btn" id="btn-cancel-tryon">Снять ✕</button>
+      </div>
+
+      <!-- Сетка шмоток -->
+      <div class="wardrobe-grid" id="wardrobe-grid"></div>
+    </div>
   </div>
 
   <!-- Меню -->

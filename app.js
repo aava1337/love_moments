@@ -62,7 +62,7 @@ document.getElementById('tab-vip')?.addEventListener('click', () => {
   alert('Раздел VIP скоро станет доступен! ⭐');
 });
 
-// Переключение подвкладок в «Играх» (Аркада / Вопрос дня)
+// Переключение подвкладок в играх
 const subtabArcade = document.getElementById('subtab-arcade');
 const subtabQa = document.getElementById('subtab-qa');
 const viewArcade = document.getElementById('view-arcade');
@@ -88,7 +88,7 @@ subtabQa?.addEventListener('click', () => {
 const urlParams = new URLSearchParams(window.location.search);
 
 const paramStartDate = urlParams.get('start_date');
-const paramStreak = urlParams.get('streak') || '1';
+const paramStreak = Number(urlParams.get('streak') || '1');
 const paramU1Id = Number(urlParams.get('u1_id') || '0');
 const paramU2Id = Number(urlParams.get('u2_id') || '0');
 const paramU1Name = urlParams.get('u1_name') || 'Партнер 1';
@@ -112,7 +112,208 @@ const myName = isUser1 ? paramU1Name : paramU2Name;
 const partnerName = isUser1 ? paramU2Name : paramU1Name;
 const partnerId = isUser1 ? paramU2Id : paramU1Id;
 
-// 4. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ
+// ==========================================
+// 4. КАТАЛОГ ШМОТОК И КАСТОМИЗАЦИЯ МОНСТРИКА
+// ==========================================
+const WARDROBE_ITEMS = [
+  // Базовые (0 дней)
+  { id: 'bow', name: 'Розовый бантик', ico: '🎀', reqStreak: 0, price: 25, svgId: 'acc-bow' },
+  { id: 'glasses', name: 'Очки ботаника', ico: '👓', reqStreak: 0, price: 40, svgId: 'acc-glasses' },
+  
+  // 7+ дней
+  { id: 'scarf', name: 'Вязаный шарфик', ico: '🧣', reqStreak: 7, price: 65, svgId: 'acc-scarf' },
+  { id: 'cap', name: 'Кепка назад', ico: '🧢', reqStreak: 7, price: 80, svgId: 'acc-cap' },
+  { id: 'bandaid', name: 'Милый пластырь', ico: '🩹', reqStreak: 7, price: 50, svgId: 'acc-bandaid' },
+  
+  // 15+ дней
+  { id: 'sleepcap', name: 'Колпак для снов', ico: '💤', reqStreak: 15, price: 110, svgId: 'acc-sleepcap' },
+  { id: 'mustache', name: 'Усы сыщика', ico: '🥸', reqStreak: 15, price: 95, svgId: 'acc-mustache' },
+  
+  // 30+ дней
+  { id: 'partyhat', name: 'Колпак пати', ico: '🥳', reqStreak: 30, price: 160, svgId: 'acc-partyhat' },
+  { id: 'flower', name: 'Цветок в зубах', ico: '🌹', reqStreak: 30, price: 140, svgId: 'acc-flower' },
+  { id: 'sunglasses', name: 'Тёмные очки', ico: '😎', reqStreak: 30, price: 200, svgId: 'acc-sunglasses' }
+];
+
+// Управление балансом сердечек
+function getHeartCoins() {
+  const saved = localStorage.getItem('user_heart_coins');
+  return saved !== null ? Number(saved) : 60; // 60 приветственных сердец
+}
+
+function setHeartCoins(val) {
+  localStorage.setItem('user_heart_coins', val);
+  const badge = document.getElementById('heart-coins-val');
+  if (badge) badge.innerText = val;
+}
+
+// Купленные и надетые вещи
+function getOwnedItems() {
+  return JSON.parse(localStorage.getItem('owned_accessories') || '[]');
+}
+
+function addOwnedItem(itemId) {
+  const owned = getOwnedItems();
+  if (!owned.includes(itemId)) {
+    owned.push(itemId);
+    localStorage.setItem('owned_accessories', JSON.stringify(owned));
+  }
+}
+
+function getEquippedItem() {
+  return urlParams.get('eq_item') || localStorage.getItem('equipped_accessory') || null;
+}
+
+function setEquippedItem(itemId) {
+  if (itemId) {
+    localStorage.setItem('equipped_accessory', itemId);
+  } else {
+    localStorage.removeItem('equipped_accessory');
+  }
+  applyAccessoryToSvg(itemId);
+}
+
+function applyAccessoryToSvg(activeId) {
+  WARDROBE_ITEMS.forEach(it => {
+    const el = document.getElementById(it.svgId);
+    if (el) el.style.display = (it.id === activeId) ? 'block' : 'none';
+  });
+}
+
+// Логика шторки гардероба
+function setupWardrobeUI() {
+  const sheet = document.getElementById('wardrobe-sheet');
+  const backdrop = document.getElementById('wardrobe-backdrop');
+  const openBtn = document.getElementById('btn-open-wardrobe');
+  const grid = document.getElementById('wardrobe-grid');
+  const tryonBanner = document.getElementById('tryon-banner');
+  const tryonName = document.getElementById('tryon-item-name');
+  const cancelTryonBtn = document.getElementById('btn-cancel-tryon');
+
+  let previewItem = null;
+
+  setHeartCoins(getHeartCoins());
+  applyAccessoryToSvg(getEquippedItem());
+
+  openBtn?.addEventListener('click', () => {
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    renderGrid();
+    sheet?.classList.add('open');
+  });
+
+  function closeSheet() {
+    sheet?.classList.remove('open');
+    if (previewItem) {
+      previewItem = null;
+      tryonBanner.style.display = 'none';
+      applyAccessoryToSvg(getEquippedItem());
+    }
+  }
+
+  backdrop?.addEventListener('click', closeSheet);
+
+  cancelTryonBtn?.addEventListener('click', () => {
+    previewItem = null;
+    tryonBanner.style.display = 'none';
+    applyAccessoryToSvg(getEquippedItem());
+    renderGrid();
+  });
+
+  function renderGrid() {
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const owned = getOwnedItems();
+    const equipped = getEquippedItem();
+    const currentStreak = paramStreak;
+    const coins = getHeartCoins();
+
+    WARDROBE_ITEMS.forEach(item => {
+      const isOwned = owned.includes(item.id);
+      const isEquipped = (equipped === item.id);
+      const isUnlocked = currentStreak >= item.reqStreak;
+
+      const card = document.createElement('div');
+      card.className = `wardrobe-card ${isEquipped ? 'equipped' : ''} ${!isUnlocked ? 'locked' : ''}`;
+
+      let actionHtml = '';
+      if (!isUnlocked) {
+        actionHtml = `<button class="btn-locked" disabled>🔒 Со стрика ${item.reqStreak} дн</button>`;
+      } else if (isOwned) {
+        if (isEquipped) {
+          actionHtml = `<button class="btn-unequip" data-id="${item.id}">Снять</button>`;
+        } else {
+          actionHtml = `<button class="btn-equip" data-id="${item.id}">Надеть</button>`;
+        }
+      } else {
+        actionHtml = `
+          <div class="item-actions">
+            <button class="btn-try" data-id="${item.id}">Примерить</button>
+            <button class="btn-buy" data-id="${item.id}" ${coins < item.price ? 'disabled style="opacity:0.6;"' : ''}>
+              ${item.price} ❤️
+            </button>
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="item-ico">${item.ico}</div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-req">${item.reqStreak === 0 ? 'Базовый наряд' : `Стрик ${item.reqStreak}+ дней`}</div>
+        ${actionHtml}
+      `;
+
+      // Примерка
+      card.querySelector('.btn-try')?.addEventListener('click', () => {
+        previewItem = item.id;
+        applyAccessoryToSvg(item.id);
+        if (tryonBanner && tryonName) {
+          tryonBanner.style.display = 'flex';
+          tryonName.innerText = item.name;
+        }
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      });
+
+      // Покупка
+      card.querySelector('.btn-buy')?.addEventListener('click', () => {
+        const curCoins = getHeartCoins();
+        if (curCoins >= item.price) {
+          setHeartCoins(curCoins - item.price);
+          addOwnedItem(item.id);
+          setEquippedItem(item.id);
+          previewItem = null;
+          if (tryonBanner) tryonBanner.style.display = 'none';
+          if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+          renderGrid();
+        } else {
+          alert('Не хватает сердечек! Сыграйте в «Ловец сердец» 🎯');
+        }
+      });
+
+      // Надеть
+      card.querySelector('.btn-equip')?.addEventListener('click', () => {
+        setEquippedItem(item.id);
+        previewItem = null;
+        if (tryonBanner) tryonBanner.style.display = 'none';
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        renderGrid();
+      });
+
+      // Снять
+      card.querySelector('.btn-unequip')?.addEventListener('click', () => {
+        setEquippedItem(null);
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        renderGrid();
+      });
+
+      grid.appendChild(card);
+    });
+  }
+}
+
+// ==========================================
+// 5. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ (АРКАДА)
+// ==========================================
 function setupArcadeGame() {
   const arena = document.getElementById('arcade-arena');
   const overlay = document.getElementById('arena-overlay');
@@ -268,16 +469,21 @@ function setupArcadeGame() {
     hud.style.display = 'none';
     overlay.style.display = 'flex';
 
+    // Зачисляем заработанные очки в банк сердечек!
+    if (currentScore > 0) {
+      setHeartCoins(getHeartCoins() + currentScore);
+    }
+
     overlayTitle.innerText = `Время вышло! Счёт: ${currentScore} 🎉`;
 
     if (currentScore > myScore) {
       myScore = currentScore;
       myBestEl.innerText = myScore;
       localStorage.setItem('my_arcade_record', myScore);
-      overlaySub.innerText = '🔥 Новый рекорд вашей пары!';
+      overlaySub.innerHTML = `🔥 Новый рекорд! <b>+${Math.max(0, currentScore)} ❤️</b> зачислено в гардероб!`;
       syncRecordWithPartner(myScore);
     } else {
-      overlaySub.innerText = `Твой рекорд: ${myScore} | Рекорд половинки: ${partnerScore}`;
+      overlaySub.innerHTML = `Твой рекорд: ${myScore} | <b>+${Math.max(0, currentScore)} ❤️</b> зачислено в гардероб!`;
     }
 
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -329,7 +535,7 @@ function setupArcadeGame() {
   }
 }
 
-// 5. РАЗДЕЛ: ВОПРОС ДНЯ
+// 6. РАЗДЕЛ: ВОПРОС ДНЯ
 function setupGamesSection() {
   const qTitle = document.getElementById('daily-q-text');
   if (qTitle) qTitle.innerText = paramQText;
@@ -454,7 +660,7 @@ function setupGamesSection() {
   });
 }
 
-// 6. Подгрузка аватарок
+// 7. Подгрузка аватарок
 function loadAvatars() {
   function setAvatar(imgId, fallbackId, username) {
     const imgEl = document.getElementById(imgId);
@@ -490,7 +696,7 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 7. Отрисовка альбома
+// 8. Отрисовка альбома
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -557,7 +763,7 @@ function closeModal() {
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 8. Статусы монстрика и дни отношений
+// 9. Статусы монстрика и дни отношений
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
@@ -654,7 +860,7 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 9. Кнопка камеры
+// 10. Кнопка камеры
 document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');
@@ -687,3 +893,4 @@ setupDaysCounter();
 renderAlbum();
 setupGamesSection();
 setupArcadeGame();
+setupWardrobeUI();
