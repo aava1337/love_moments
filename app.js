@@ -67,8 +67,8 @@ const urlParams = new URLSearchParams(window.location.search);
 
 const paramStartDate = urlParams.get('start_date');
 const paramStreak = urlParams.get('streak') || '1';
-const paramU1Id = parseInt(urlParams.get('u1_id') || '0');
-const paramU2Id = parseInt(urlParams.get('u2_id') || '0');
+const paramU1Id = Number(urlParams.get('u1_id') || '0');
+const paramU2Id = Number(urlParams.get('u2_id') || '0');
 const paramU1Name = urlParams.get('u1_name') || 'Партнер 1';
 const paramU2Name = urlParams.get('u2_name') || 'Партнер 2';
 const paramU1User = urlParams.get('u1_user') || '';
@@ -78,34 +78,33 @@ const paramU2Sent = urlParams.get('u2_sent') === '1';
 const paramPhotos = urlParams.get('photos') || '';
 const paramBotToken = urlParams.get('bot_token') || '';
 const paramQText = urlParams.get('q_text') || 'Какое наше совместное воспоминание самое теплое? ✨';
-const paramU1Ans = urlParams.get('u1_ans') || '';
-const paramU2Ans = urlParams.get('u2_ans') || '';
 
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
-// 4. Логика игры (Ввод прямо в приложении)
+// 4. Логика раздела «Игры» с мгновенной синхронизацией для обоих
 function setupGamesSection() {
   const qTitle = document.getElementById('daily-q-text');
   if (qTitle) qTitle.innerText = paramQText;
 
-  const currentTgId = tg?.initDataUnsafe?.user?.id;
-  const isUser1 = (!currentTgId || currentTgId === paramU1Id);
+  const currentTgUser = tg?.initDataUnsafe?.user;
+  const currentTgId = currentTgUser ? Number(currentTgUser.id) : null;
+
+  // Если открыл второй партнер (Sonya) — isUser1 будет false
+  const isUser1 = (!currentTgId || currentTgId !== paramU2Id);
 
   const myName = isUser1 ? paramU1Name : paramU2Name;
   const partnerName = isUser1 ? paramU2Name : paramU1Name;
   const partnerId = isUser1 ? paramU2Id : paramU1Id;
 
-  // Имена в заголовках карточек
+  // Имена в карточках
   const myNameEl = document.getElementById('my-card-name');
   const partnerNameEl = document.getElementById('partner-card-name');
   if (myNameEl) myNameEl.innerText = `${myName} (Ты)`;
-  if (partnerNameEl) partnerNameEl.innerText = partnerName;
+  if (partnerNameEl) partnerNameEl.innerText = `Ответ: ${partnerName}`;
 
-  // Локальное кэширование ответа
-  const localAnswerKey = `game_ans_${new Date().toISOString().slice(0, 10)}`;
-  const savedMyAns = localStorage.getItem(localAnswerKey) || (isUser1 ? paramU1Ans : paramU2Ans);
-  const partnerAns = isUser1 ? paramU2Ans : paramU1Ans;
+  let currentMyAns = isUser1 ? (urlParams.get('u1_ans') || '') : (urlParams.get('u2_ans') || '');
+  let currentPartnerAns = isUser1 ? (urlParams.get('u2_ans') || '') : (urlParams.get('u1_ans') || '');
 
   const inputMode = document.getElementById('my-input-mode');
   const viewMode = document.getElementById('my-view-mode');
@@ -113,7 +112,19 @@ function setupGamesSection() {
   const myStatusDot = document.getElementById('my-card-status');
   const inputField = document.getElementById('game-answer-input');
 
-  // Показ моего ответа
+  const partnerTextEl = document.getElementById('partner-display-text');
+  const partnerStatus = document.getElementById('partner-card-status');
+
+  function renderPartnerCard(ans) {
+    if (ans) {
+      if (partnerTextEl) partnerTextEl.innerText = `«${ans}»`;
+      if (partnerStatus) partnerStatus.innerText = '✓';
+    } else {
+      if (partnerTextEl) partnerTextEl.innerText = `${partnerName} еще пишет ответ... ⏳`;
+      if (partnerStatus) partnerStatus.innerText = '⏳';
+    }
+  }
+
   function showMyAnswer(text) {
     if (inputMode) inputMode.style.display = 'none';
     if (viewMode) viewMode.style.display = 'flex';
@@ -121,7 +132,6 @@ function setupGamesSection() {
     if (myStatusDot) myStatusDot.innerText = '✓';
   }
 
-  // Режим редактирования
   function showInputMode(defaultText = '') {
     if (viewMode) viewMode.style.display = 'none';
     if (inputMode) inputMode.style.display = 'flex';
@@ -132,59 +142,92 @@ function setupGamesSection() {
     if (myStatusDot) myStatusDot.innerText = '✍️';
   }
 
-  if (savedMyAns) {
-    showMyAnswer(savedMyAns);
+  if (currentMyAns) {
+    showMyAnswer(currentMyAns);
   } else {
     showInputMode();
   }
+  renderPartnerCard(currentPartnerAns);
 
-  // Карточка партнера
-  const partnerTextEl = document.getElementById('partner-display-text');
-  const partnerStatus = document.getElementById('partner-card-status');
-  if (partnerAns) {
-    if (partnerTextEl) partnerTextEl.innerText = `«${partnerAns}»`;
-    if (partnerStatus) partnerStatus.innerText = '✓';
-  } else {
-    if (partnerTextEl) partnerTextEl.innerText = `${partnerName} еще пишет ответ... ⏳`;
-    if (partnerStatus) partnerStatus.innerText = '⏳';
-  }
-
-  // Обработка кнопки «Отправить ответ»
+  // Клик по отправке ответа
   document.getElementById('btn-submit-answer')?.addEventListener('click', async () => {
     const text = inputField?.value.trim();
     if (!text) {
-      alert('Пожалуйста, напиши хотя бы пару слов! 💖');
+      alert('Напиши хотя бы пару слов! 💖');
       return;
     }
 
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-    // 1. Моментально отображаем ответ на экране
-    localStorage.setItem(localAnswerKey, text);
+    // 1. Моментально отображаем у себя
     showMyAnswer(text);
+    currentMyAns = text;
 
-    // 2. Отправляем уведомление партнеру в Telegram через Bot API
-    if (paramBotToken && partnerId) {
-      try {
-        await fetch(`https://api.telegram.org/bot${paramBotToken}/sendMessage`, {
+    // 2. Формируем единый URL с сохраненными ответами обоих партнеров
+    const newU1 = isUser1 ? text : (urlParams.get('u1_ans') || '');
+    const newU2 = isUser1 ? (urlParams.get('u2_ans') || '') : text;
+
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set('u1_ans', newU1);
+    nextUrl.searchParams.set('u2_ans', newU2);
+    const finalUrlString = nextUrl.toString();
+
+    // Обновляем параметры текущей страницы без перезагрузки
+    window.history.replaceState({}, '', finalUrlString);
+    urlParams.set('u1_ans', newU1);
+    urlParams.set('u2_ans', newU2);
+
+    // 3. Синхронизируем системное меню у ОБОИХ партнеров через Bot API
+    if (paramBotToken) {
+      const updateMenu = (uid) => {
+        if (!uid) return;
+        fetch(`https://api.telegram.org/bot${paramBotToken}/setChatMenuButton`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: uid,
+            menu_button: {
+              type: 'web_app',
+              text: 'Наш мир ❤️',
+              web_app: { url: finalUrlString }
+            }
+          })
+        }).catch(e => console.error('Ошибка MenuButton:', e));
+      };
+
+      updateMenu(paramU1Id);
+      updateMenu(paramU2Id);
+
+      // 4. Отправляем половинке уведомление с кнопкой прямого открытия
+      if (partnerId) {
+        const safeText = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeMyName = myName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        fetch(`https://api.telegram.org/bot${paramBotToken}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: partnerId,
-            text: `🎲 **Твоя половинка (${myName}) ответила на вопрос дня:**\n\n«${text}»\n\nЗайди в приложение во вкладку «Игры», чтобы прочитать и ответить! ❤️`,
-            parse_mode: 'Markdown'
+            text: `🎲 <b>Твоя половинка (${safeMyName}) ответила на вопрос дня:</b>\n\n«${safeText}»\n\nНажми кнопку ниже, чтобы открыть ответ в приложении! ❤️`,
+            parse_mode: 'HTML',
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: '🎲 Открыть вопрос дня',
+                    web_app: { url: finalUrlString }
+                  }
+                ]
+              ]
+            }
           })
-        });
-      } catch (e) {
-        console.error('Ошибка отправки партнеру:', e);
+        }).catch(e => console.error('Ошибка отправки уведомления:', e));
       }
     }
   });
 
-  // Кнопка «Изменить»
   document.getElementById('btn-edit-answer')?.addEventListener('click', () => {
-    const cur = displayText?.innerText.replace(/^[«"]|[»"]$/g, '') || '';
-    showInputMode(cur);
+    showInputMode(currentMyAns);
   });
 }
 
@@ -293,7 +336,7 @@ function closeModal() {
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 7. Статусы монстрика
+// 7. Статусы монстрика и дни отношений
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
