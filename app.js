@@ -1,4 +1,6 @@
-// 1. Инициализация Telegram WebApp
+// ==========================================
+// 1. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP
+// ==========================================
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
@@ -7,7 +9,9 @@ if (tg) {
   tg.setBackgroundColor('#0D0914');
 }
 
-// 2. Навигация по вкладкам (Дом, Альбом, Игры, VIP)
+// ==========================================
+// 2. НАВИГАЦИЯ ПО ВКЛАДКАМ (ДОМ, АЛЬБОМ, ИГРЫ, VIP)
+// ==========================================
 const tabHome = document.getElementById('tab-home');
 const tabAlbum = document.getElementById('tab-album');
 const tabGames = document.getElementById('tab-games');
@@ -43,6 +47,7 @@ function showTab(tabName) {
   });
 }
 
+// По умолчанию открываем «Дом»
 showTab('home');
 
 tabHome?.addEventListener('click', () => {
@@ -65,7 +70,7 @@ tabVip?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
-// Переключение подвкладок в играх
+// Переключение подвкладок внутри «Игр» (Аркада / Вопрос дня)
 const subtabArcade = document.getElementById('subtab-arcade');
 const subtabQa = document.getElementById('subtab-qa');
 const viewArcade = document.getElementById('view-arcade');
@@ -87,7 +92,9 @@ subtabQa?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
-// 3. Параметры из URL
+// ==========================================
+// 3. ПАРАМЕТРЫ ИЗ URL И ДАННЫЕ ПАРЫ
+// ==========================================
 const urlParams = new URLSearchParams(window.location.search);
 
 const paramStartDate = urlParams.get('start_date');
@@ -102,6 +109,7 @@ const paramU1Sent = urlParams.get('u1_sent') === '1';
 const paramU2Sent = urlParams.get('u2_sent') === '1';
 const paramPhotos = urlParams.get('photos') || '';
 const paramBotToken = urlParams.get('bot_token') || '';
+const paramBotUsername = urlParams.get('bot_username') || '';
 const paramQText = urlParams.get('q_text') || 'Какое наше совместное воспоминание самое теплое? ✨';
 
 const paramIsVip = urlParams.get('is_vip') === '1' || localStorage.getItem('is_vip_active') === '1';
@@ -112,6 +120,7 @@ const paramOldStreak = Number(urlParams.get('old_streak') || '1');
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
+// Определение активного партнера
 const currentTgUser = tg?.initDataUnsafe?.user;
 const currentTgId = currentTgUser ? Number(currentTgUser.id) : null;
 const isUser1 = (!currentTgId || currentTgId !== paramU2Id);
@@ -121,7 +130,7 @@ const partnerName = isUser1 ? paramU2Name : paramU1Name;
 const partnerId = isUser1 ? paramU2Id : paramU1Id;
 
 // ==========================================
-// 4. ЛОГИКА ВКЛАДКИ «VIP» И TELEGRAM STARS
+// 4. ВКЛАДКА «VIP», TELEGRAM STARS И ОБРАТНАЯ СВЯЗЬ
 // ==========================================
 function setupVipSection() {
   const vipStatusText = document.getElementById('vip-status-text');
@@ -133,7 +142,6 @@ function setupVipSection() {
   const ring1 = document.getElementById('ring-u1');
   const ring2 = document.getElementById('ring-u2');
 
-  // Отображение VIP-статуса
   if (paramIsVip) {
     if (vipStatusText) {
       vipStatusText.innerText = '👑 Королевский VIP активен';
@@ -142,8 +150,7 @@ function setupVipSection() {
     if (crownBadge) crownBadge.style.display = 'inline';
     if (ring1) ring1.classList.add('vip-ring');
     if (ring2) ring2.classList.add('vip-ring');
-    
-    // Если VIP активен, надеваем корону
+
     if (!localStorage.getItem('equipped_accessory')) {
       setEquippedItem('crown');
     }
@@ -153,7 +160,6 @@ function setupVipSection() {
     freezeStockLabel.innerText = `В запасе: ${paramFreezes} шт`;
   }
 
-  // Настройка восстановления стрика
   if (paramCanRestore) {
     if (restoreDescText) restoreDescText.innerText = `Восстановит ваш сгоревший стрик в 🔥 ${paramOldStreak} дней!`;
     if (restoreStatusLabel) restoreStatusLabel.innerText = '⚠️ Стрик можно спасти!';
@@ -162,7 +168,7 @@ function setupVipSection() {
     if (restoreStatusLabel) restoreStatusLabel.innerText = 'Стрик не сгорал 👍';
   }
 
-  // Обработчик покупки через Telegram Stars
+  // Покупка товаров за Telegram Stars
   document.querySelectorAll('.vip-buy-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const itemCode = btn.getAttribute('data-code');
@@ -172,7 +178,6 @@ function setupVipSection() {
 
       if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-      // 1. Создаем ссылку инвойса через Bot API
       try {
         btn.disabled = true;
         btn.innerText = 'Загрузка...';
@@ -187,7 +192,7 @@ function setupVipSection() {
             title: title,
             description: desc,
             payload: payload,
-            currency: 'XTR', // Telegram Stars
+            currency: 'XTR',
             prices: [{ label: title, amount: starsAmount }]
           })
         });
@@ -197,12 +202,10 @@ function setupVipSection() {
         btn.innerText = `${starsAmount} ⭐`;
 
         if (data.ok && data.result) {
-          // 2. Открываем нативное окно оплаты звездами
           tg.openInvoice(data.result, (status) => {
             if (status === 'paid') {
               if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-              
-              // Мгновенная активация бонуса на клиенте
+
               if (itemCode === 'freeze') {
                 paramFreezes++;
                 localStorage.setItem('streak_freezes_count', paramFreezes);
@@ -221,7 +224,7 @@ function setupVipSection() {
                 alert('💖 500 сердечек добавлено в гардероб!');
               }
             } else if (status === 'failed') {
-              alert('Ошибка оплаты. Попробуйте снова.');
+              alert('Оплата отменена или не удалась.');
             }
           });
         } else {
@@ -233,6 +236,20 @@ function setupVipSection() {
         btn.innerText = `${starsAmount} ⭐`;
       }
     });
+  });
+
+  // Кнопка «Обратная связь и баги»
+  document.getElementById('btn-feedback')?.addEventListener('click', () => {
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+    const botUser = paramBotUsername || tg?.initDataUnsafe?.bot_username || 'aava_love_bot';
+    const feedbackLink = `https://t.me/${botUser}?start=bug`;
+
+    if (tg?.openTelegramLink) {
+      tg.openTelegramLink(feedbackLink);
+    } else {
+      window.location.href = feedbackLink;
+    }
   });
 }
 
@@ -345,7 +362,7 @@ function setupWardrobeUI() {
   const backdrop = document.getElementById('wardrobe-backdrop');
   const openBtn = document.getElementById('btn-open-wardrobe');
   const grid = document.getElementById('wardrobe-grid');
-  
+
   const stageChip = document.getElementById('stage-tryon-chip');
   const stageTryonName = document.getElementById('stage-tryon-name');
   const btnStageCancel = document.getElementById('btn-stage-cancel-tryon');
@@ -382,7 +399,6 @@ function setupWardrobeUI() {
     const coins = getHeartCoins();
 
     WARDROBE_ITEMS.forEach(item => {
-      // Корона доступна только в VIP
       if (item.id === 'crown' && !paramIsVip) return;
 
       const isOwned = owned.includes(item.id);
@@ -419,6 +435,7 @@ function setupWardrobeUI() {
         ${actionHtml}
       `;
 
+      // Примерка вещи (не спадает при закрытии шторки)
       card.querySelector('.btn-try')?.addEventListener('click', () => {
         activePreviewItem = item.id;
         applyAccessoryToSvg(item.id);
@@ -429,6 +446,7 @@ function setupWardrobeUI() {
         if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
       });
 
+      // Покупка за сердечки
       card.querySelector('.btn-buy')?.addEventListener('click', () => {
         const curCoins = getHeartCoins();
         if (curCoins >= item.price) {
@@ -444,6 +462,7 @@ function setupWardrobeUI() {
         }
       });
 
+      // Надеть
       card.querySelector('.btn-equip')?.addEventListener('click', () => {
         setEquippedItem(item.id);
         activePreviewItem = null;
@@ -452,6 +471,7 @@ function setupWardrobeUI() {
         renderGrid();
       });
 
+      // Снять
       card.querySelector('.btn-unequip')?.addEventListener('click', () => {
         setEquippedItem(null);
         activePreviewItem = null;
@@ -824,7 +844,9 @@ function setupGamesSection() {
   });
 }
 
-// 8. Подгрузка аватарок
+// ==========================================
+// 8. ПОДГРУЗКА АВАТАРОК
+// ==========================================
 function loadAvatars() {
   function setAvatar(imgId, fallbackId, username) {
     const imgEl = document.getElementById(imgId);
@@ -860,7 +882,9 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 9. Отрисовка альбома
+// ==========================================
+// 9. АЛЬБОМ И МОДАЛЬНОЕ ОКНО
+// ==========================================
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -927,7 +951,9 @@ function closeModal() {
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 10. Статусы монстрика и дни отношений
+// ==========================================
+// 10. СТАТУСЫ МОНСТРИКА И ДНИ ОТНОШЕНИЙ
+// ==========================================
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
@@ -1024,7 +1050,9 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 11. Кнопка камеры
+// ==========================================
+// 11. КНОПКА КАМЕРЫ (СЕРДЕЧКО И ЗАКРЫТИЕ В ЧАТ)
+// ==========================================
 document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');
@@ -1050,7 +1078,9 @@ document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   }, 400);
 });
 
-// Запуск
+// ==========================================
+// 12. ЗАПУСК ВСЕХ МОДУЛЕЙ
+// ==========================================
 loadAvatars();
 updateStatuses();
 setupDaysCounter();

@@ -1787,3 +1787,47 @@ body {
   box-shadow: 0 0 12px #FFD700;
   border: 2px solid #FFF275;
 }
+
+/* КАРТОЧКА ОБРАТНОЙ СВЯЗИ */
+.feedback-card {
+  margin-top: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.feedback-card:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.feedback-ico {
+  font-size: 26px;
+}
+
+.feedback-info {
+  flex: 1;
+}
+
+.feedback-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 2px;
+}
+
+.feedback-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.feedback-arrow {
+  font-size: 14px;
+  color: var(--coral-pink);
+  font-weight: 900;
+}
