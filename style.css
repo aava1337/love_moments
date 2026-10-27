@@ -1012,3 +1012,188 @@ body {
 .edit-ans-link:hover {
   color: var(--coral-pink);
 }
+/* ПЕРЕКЛЮЧАТЕЛЬ ИГР */
+.game-subtabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.subtab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.subtab-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-white);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ТАБЛИЦА РЕКОРДОВ */
+.scoreboard-card {
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.score-user-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.score-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gold-glow);
+}
+
+.vs-badge {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--coral-pink);
+  background: rgba(255, 94, 138, 0.15);
+  border: 1px solid rgba(255, 94, 138, 0.3);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* АРЕНА ИГРЫ */
+.arcade-arena {
+  flex: 1;
+  min-height: 290px;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  background: radial-gradient(circle at center, rgba(108, 92, 231, 0.12) 0%, rgba(16, 12, 22, 0.4) 100%);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Оверлей старта и конца */
+.arena-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  background: rgba(16, 12, 22, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.attempts-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-white);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.arena-overlay h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--text-white);
+}
+
+.arena-overlay p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+
+.play-btn {
+  max-width: 220px;
+  padding: 12px 24px;
+}
+
+.play-btn:disabled {
+  opacity: 0.5;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+/* HUD В ИГРЕ */
+.arena-top-hud {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hud-item {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ПОЯВЛЯЮЩИЕСЯ СЕРДЕЧКИ */
+.spawned-heart {
+  position: absolute;
+  font-size: 38px;
+  cursor: pointer;
+  z-index: 2;
+  transform: scale(0);
+  animation: heartPop 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes heartPop {
+  0% { transform: scale(0.2); opacity: 0; }
+  20% { transform: scale(1.15); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.heart-splash {
+  position: absolute;
+  font-size: 16px;
+  font-weight: 900;
+  pointer-events: none;
+  animation: splashFloat 0.6s ease-out forwards;
+  z-index: 4;
+}
+
+@keyframes splashFloat {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
+}

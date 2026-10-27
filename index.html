@@ -186,53 +186,95 @@
       </div>
     </div>
 
-    <!-- ЭКРАН 3: ИГРЫ (ОТВЕТ ПРЯМО НА ЭКРАНЕ) -->
+    <!-- ЭКРАН 3: ИГРЫ -->
     <div class="tab-screen" id="screen-games" style="display: none !important;">
       <div class="games-container">
         
-        <!-- Карточка вопроса -->
-        <div class="glass-card question-card">
-          <div class="q-badge">
-            <span class="q-sparkle">🎲</span> ВОПРОС ДНЯ ДЛЯ ДВОИХ
-          </div>
-          <h2 class="q-title" id="daily-q-text">Какое наше совместное воспоминание самое теплое? ✨</h2>
+        <!-- ПЕРЕКЛЮЧАТЕЛЬ ИГР: ВОПРОС ДНЯ / ЛОВЕЦ СЕРДЕЦ -->
+        <div class="game-subtabs">
+          <button class="subtab-btn active" id="subtab-arcade">🎯 Ловец сердец</button>
+          <button class="subtab-btn" id="subtab-qa">💬 Вопрос дня</button>
         </div>
 
-        <div class="answers-wrapper">
+        <!-- 1. АРКАДА: ЛОВЕЦ СЕРДЕЦ -->
+        <div class="game-view active" id="view-arcade">
           
-          <!-- Моя карточка с полем ввода -->
-          <div class="glass-card answer-card" id="my-card-container">
-            <div class="card-author-row">
-              <span class="card-author-label" id="my-card-name">Твой ответ</span>
-              <span class="card-status-dot" id="my-card-status">✍️</span>
+          <!-- Табло соревнований -->
+          <div class="glass-card scoreboard-card">
+            <div class="score-user-box">
+              <span class="score-label" id="arcade-my-name">Ты</span>
+              <span class="score-val" id="arcade-my-best">0</span>
             </div>
+            <div class="vs-badge">VS</div>
+            <div class="score-user-box">
+              <span class="score-label" id="arcade-partner-name">Половинка</span>
+              <span class="score-val" id="arcade-partner-best">0</span>
+            </div>
+          </div>
+
+          <!-- Игровая площадка -->
+          <div class="glass-card arcade-arena" id="arcade-arena">
             
-            <!-- Режим ввода -->
-            <div class="input-mode" id="my-input-mode">
-              <textarea id="game-answer-input" class="game-textarea" placeholder="Напиши сюда свой ответ..."></textarea>
-              <button class="cta-button send-ans-btn" id="btn-submit-answer">
-                <span>Отправить ответ 💌</span>
+            <!-- Оверлей старта / окончания -->
+            <div class="arena-overlay" id="arena-overlay">
+              <div class="attempts-pill">
+                <span>Попытки на сегодня:</span>
+                <span id="attempts-display" class="hearts-row">❤️❤️❤️</span>
+              </div>
+              <h3 id="overlay-title">Поймай как можно больше сердец за 15 секунд!</h3>
+              <p id="overlay-sub">❤️ = +1 | 💛 = +3 | 💔 = -2</p>
+              <button class="cta-button play-btn" id="btn-start-arcade">
+                <span>Начать игру ▶️</span>
               </button>
             </div>
 
-            <!-- Режим просмотра готового ответа -->
-            <div class="view-mode" id="my-view-mode" style="display: none;">
-              <p class="ans-text" id="my-display-text"></p>
-              <button class="edit-ans-link" id="btn-edit-answer">✏️ Изменить</button>
+            <!-- Верхняя панель во время игры -->
+            <div class="arena-top-hud" id="arena-hud" style="display: none;">
+              <div class="hud-item">⏱️ <span id="game-timer">15</span>с</div>
+              <div class="hud-item">✨ Счёт: <span id="game-current-score">0</span></div>
             </div>
+
           </div>
 
-          <!-- Карточка ответа партнера -->
-          <div class="glass-card answer-card" id="partner-card-container">
-            <div class="card-author-row">
-              <span class="card-author-label" id="partner-card-name">Ответ половинки</span>
-              <span class="card-status-dot" id="partner-card-status">⏳</span>
+        </div>
+
+        <!-- 2. ВОПРОС ДНЯ -->
+        <div class="game-view" id="view-qa" style="display: none;">
+          <div class="glass-card question-card">
+            <div class="q-badge">
+              <span class="q-sparkle">🎲</span> ВОПРОС ДНЯ ДЛЯ ДВОИХ
             </div>
-            <div class="card-content">
-              <p class="ans-text" id="partner-display-text">Партнер еще пишет ответ... ⏳</p>
-            </div>
+            <h2 class="q-title" id="daily-q-text">Какое наше совместное воспоминание самое теплое? ✨</h2>
           </div>
 
+          <div class="answers-wrapper">
+            <div class="glass-card answer-card" id="my-card-container">
+              <div class="card-author-row">
+                <span class="card-author-label" id="my-card-name">Твой ответ</span>
+                <span class="card-status-dot" id="my-card-status">✍️</span>
+              </div>
+              <div class="input-mode" id="my-input-mode">
+                <textarea id="game-answer-input" class="game-textarea" placeholder="Напиши сюда свой ответ..."></textarea>
+                <button class="cta-button send-ans-btn" id="btn-submit-answer">
+                  <span>Отправить ответ 💌</span>
+                </button>
+              </div>
+              <div class="view-mode" id="my-view-mode" style="display: none;">
+                <p class="ans-text" id="my-display-text"></p>
+                <button class="edit-ans-link" id="btn-edit-answer">✏️ Изменить</button>
+              </div>
+            </div>
+
+            <div class="glass-card answer-card" id="partner-card-container">
+              <div class="card-author-row">
+                <span class="card-author-label" id="partner-card-name">Ответ половинки</span>
+                <span class="card-status-dot" id="partner-card-status">⏳</span>
+              </div>
+              <div class="card-content">
+                <p class="ans-text" id="partner-display-text">Партнер еще пишет ответ... ⏳</p>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>

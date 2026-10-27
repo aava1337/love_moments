@@ -7,7 +7,7 @@ if (tg) {
   tg.setBackgroundColor('#0D0914');
 }
 
-// 2. Элементы навигации
+// 2. Навигация по главным вкладкам
 const tabHome = document.getElementById('tab-home');
 const tabAlbum = document.getElementById('tab-album');
 const tabGames = document.getElementById('tab-games');
@@ -62,6 +62,28 @@ document.getElementById('tab-vip')?.addEventListener('click', () => {
   alert('Раздел VIP скоро станет доступен! ⭐');
 });
 
+// Переключение подвкладок в «Играх» (Аркада / Вопрос дня)
+const subtabArcade = document.getElementById('subtab-arcade');
+const subtabQa = document.getElementById('subtab-qa');
+const viewArcade = document.getElementById('view-arcade');
+const viewQa = document.getElementById('view-qa');
+
+subtabArcade?.addEventListener('click', () => {
+  subtabArcade.classList.add('active');
+  subtabQa.classList.remove('active');
+  viewArcade.style.display = 'block';
+  viewQa.style.display = 'none';
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
+subtabQa?.addEventListener('click', () => {
+  subtabQa.classList.add('active');
+  subtabArcade.classList.remove('active');
+  viewQa.style.display = 'block';
+  viewArcade.style.display = 'none';
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+});
+
 // 3. Параметры из URL
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -82,22 +104,259 @@ const paramQText = urlParams.get('q_text') || 'Какое наше совмес�
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
-// 4. Логика раздела «Игры» с мгновенной синхронизацией для обоих
+// Определяем активного пользователя
+const currentTgUser = tg?.initDataUnsafe?.user;
+const currentTgId = currentTgUser ? Number(currentTgUser.id) : null;
+const isUser1 = (!currentTgId || currentTgId !== paramU2Id);
+
+const myName = isUser1 ? paramU1Name : paramU2Name;
+const partnerName = isUser1 ? paramU2Name : paramU1Name;
+const partnerId = isUser1 ? paramU2Id : paramU1Id;
+
+// ==========================================
+// 4. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ (АРКАДА)
+// ==========================================
+function setupArcadeGame() {
+  const arena = document.getElementById('arcade-arena');
+  const overlay = document.getElementById('arena-overlay');
+  const hud = document.getElementById('arena-hud');
+  const timerEl = document.getElementById('game-timer');
+  const scoreEl = document.getElementById('game-current-score');
+  const attemptsEl = document.getElementById('attempts-display');
+  const playBtn = document.getElementById('btn-start-arcade');
+  const overlayTitle = document.getElementById('overlay-title');
+  const overlaySub = document.getElementById('overlay-sub');
+
+  const myBestEl = document.getElementById('arcade-my-best');
+  const partnerBestEl = document.getElementById('arcade-partner-best');
+  const myNameLabel = document.getElementById('arcade-my-name');
+  const partnerNameLabel = document.getElementById('arcade-partner-name');
+
+  if (myNameLabel) myNameLabel.innerText = `${myName} (Ты)`;
+  if (partnerNameLabel) partnerNameLabel.innerText = partnerName;
+
+  // Инициализация рекордов
+  let myScore = Number(urlParams.get(isUser1 ? 'u1_score' : 'u2_score') || localStorage.getItem('my_arcade_record') || 0);
+  let partnerScore = Number(urlParams.get(isUser1 ? 'u2_score' : 'u1_score') || 0);
+
+  if (myBestEl) myBestEl.innerText = myScore;
+  if (partnerBestEl) partnerBestEl.innerText = partnerScore;
+
+  // Лимит 3 попытки в день
+  const todayKey = `arcade_attempts_${new Date().toISOString().slice(0, 10)}`;
+  let attemptsLeft = Number(localStorage.getItem(todayKey) ?? 3);
+
+  function updateAttemptsUI() {
+    const hearts = ['🖤🖤🖤', '❤️🖤🖤', '❤️❤️🖤', '❤️❤️❤️'];
+    if (attemptsEl) attemptsEl.innerText = hearts[attemptsLeft] || '🖤🖤🖤';
+    if (attemptsLeft <= 0) {
+      if (playBtn) {
+        playBtn.disabled = true;
+        playBtn.querySelector('span').innerText = 'Попытки закончились 🌙';
+      }
+    } else {
+      if (playBtn) {
+        playBtn.disabled = false;
+        playBtn.querySelector('span').innerText = `Играть (${attemptsLeft}/3) ▶️`;
+      }
+    }
+  }
+
+  updateAttemptsUI();
+
+  // Игровой цикл
+  let gameInterval = null;
+  let spawnInterval = null;
+  let timeLeft = 15;
+  let currentScore = 0;
+  let isPlaying = false;
+
+  playBtn?.addEventListener('click', () => {
+    if (attemptsLeft <= 0 || isPlaying) return;
+
+    // Списываем 1 попытку
+    attemptsLeft--;
+    localStorage.setItem(todayKey, attemptsLeft);
+    updateAttemptsUI();
+
+    startGame();
+  });
+
+  function startGame() {
+    isPlaying = true;
+    timeLeft = 15;
+    currentScore = 0;
+
+    overlay.style.display = 'none';
+    hud.style.display = 'flex';
+    timerEl.innerText = timeLeft;
+    scoreEl.innerText = currentScore;
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+    // Таймер игры
+    gameInterval = setInterval(() => {
+      timeLeft--;
+      timerEl.innerText = timeLeft;
+      if (timeLeft <= 0) {
+        endGame();
+      }
+    }, 1000);
+
+    // Спавн сердечек (каждые 480мс)
+    spawnInterval = setInterval(spawnHeart, 480);
+  }
+
+  function spawnHeart() {
+    if (!isPlaying) return;
+
+    const heart = document.createElement('div');
+    heart.className = 'spawned-heart';
+
+    // Типы сердечек: обычное (70%), золотое (15%), разбитое (15%)
+    const roll = Math.random();
+    let type = 'normal';
+    let pts = 1;
+    let emoji = '❤️';
+
+    if (roll > 0.85) {
+      type = 'gold';
+      pts = 3;
+      emoji = '💛';
+    } else if (roll < 0.15) {
+      type = 'broken';
+      pts = -2;
+      emoji = '💔';
+    }
+
+    heart.innerText = emoji;
+
+    // Случайная позиция внутри арены (с отступами)
+    const arenaW = arena.clientWidth - 50;
+    const arenaH = arena.clientHeight - 60;
+    const x = Math.max(10, Math.floor(Math.random() * arenaW));
+    const y = Math.max(40, Math.floor(Math.random() * arenaH));
+
+    heart.style.left = `${x}px`;
+    heart.style.top = `${y}px`;
+
+    // Клик по сердечку
+    heart.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      currentScore += pts;
+      scoreEl.innerText = currentScore;
+
+      // Всплывающий текст очков
+      showSplash(e.clientX, e.clientY, pts > 0 ? `+${pts}` : `${pts}`, pts > 0 ? '#55EFC4' : '#FF7675');
+
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred(pts > 0 ? 'light' : 'heavy');
+      }
+
+      heart.remove();
+    });
+
+    arena.appendChild(heart);
+
+    // Удаление через 1.4 секунды, если не нажали
+    setTimeout(() => {
+      if (heart.parentNode) heart.remove();
+    }, 1400);
+  }
+
+  function showSplash(x, y, text, color) {
+    const splash = document.createElement('div');
+    splash.className = 'heart-splash';
+    splash.innerText = text;
+    splash.style.color = color;
+    splash.style.left = `${x - 10}px`;
+    splash.style.top = `${y - 20}px`;
+    document.body.appendChild(splash);
+    setTimeout(() => splash.remove(), 600);
+  }
+
+  function endGame() {
+    isPlaying = false;
+    clearInterval(gameInterval);
+    clearInterval(spawnInterval);
+
+    // Очищаем арену
+    document.querySelectorAll('.spawned-heart').forEach(h => h.remove());
+
+    hud.style.display = 'none';
+    overlay.style.display = 'flex';
+
+    overlayTitle.innerText = `Время вышло! Результат: ${currentScore} очков 🎉`;
+
+    if (currentScore > myScore) {
+      myScore = currentScore;
+      myBestEl.innerText = myScore;
+      localStorage.setItem('my_arcade_record', myScore);
+      overlaySub.innerText = '🔥 Новый рекорд вашей пары!';
+      syncRecordWithPartner(myScore);
+    } else {
+      overlaySub.innerText = `Твой рекорд: ${myScore} очков | Рекорд половинки: ${partnerScore}`;
+    }
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  }
+
+  // Синхронизация рекорда с половинкой через Bot API
+  function syncRecordWithPartner(record) {
+    const newU1Score = isUser1 ? record : partnerScore;
+    const newU2Score = isUser1 ? partnerScore : record;
+
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set('u1_score', newU1Score);
+    nextUrl.searchParams.set('u2_score', newU2Score);
+    const finalUrl = nextUrl.toString();
+
+    window.history.replaceState({}, '', finalUrl);
+
+    if (paramBotToken) {
+      // Обновляем кнопку меню у обоих
+      [paramU1Id, paramU2Id].forEach(uid => {
+        if (!uid) return;
+        fetch(`https://api.telegram.org/bot${paramBotToken}/setChatMenuButton`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: uid,
+            menu_button: {
+              type: 'web_app',
+              text: 'Наш мир ❤️',
+              web_app: { url: finalUrl }
+            }
+          })
+        }).catch(e => console.error(e));
+      });
+
+      // Отправляем уведомление с вызовом побить рекорд
+      if (partnerId) {
+        fetch(`https://api.telegram.org/bot${paramBotToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: partnerId,
+            text: `🏆 <b>${myName} установил(а) новый рекорд в «Ловце сердец»: ${record} очков!</b>\n\nСможешь обогнать? У тебя есть 3 попытки на сегодня! 😼`,
+            parse_mode: 'HTML',
+            reply_markup: {
+              inline_keyboard: [[{ text: '🎮 Принять вызов!', web_app: { url: finalUrl } }]]
+            }
+          })
+        }).catch(e => console.error(e));
+      }
+    }
+  }
+}
+
+// ==========================================
+// 5. РАЗДЕЛ: ВОПРОС ДНЯ
+// ==========================================
 function setupGamesSection() {
   const qTitle = document.getElementById('daily-q-text');
   if (qTitle) qTitle.innerText = paramQText;
 
-  const currentTgUser = tg?.initDataUnsafe?.user;
-  const currentTgId = currentTgUser ? Number(currentTgUser.id) : null;
-
-  // Если открыл второй партнер (Sonya) — isUser1 будет false
-  const isUser1 = (!currentTgId || currentTgId !== paramU2Id);
-
-  const myName = isUser1 ? paramU1Name : paramU2Name;
-  const partnerName = isUser1 ? paramU2Name : paramU1Name;
-  const partnerId = isUser1 ? paramU2Id : paramU1Id;
-
-  // Имена в карточках
   const myNameEl = document.getElementById('my-card-name');
   const partnerNameEl = document.getElementById('partner-card-name');
   if (myNameEl) myNameEl.innerText = `${myName} (Ты)`;
@@ -149,7 +408,6 @@ function setupGamesSection() {
   }
   renderPartnerCard(currentPartnerAns);
 
-  // Клик по отправке ответа
   document.getElementById('btn-submit-answer')?.addEventListener('click', async () => {
     const text = inputField?.value.trim();
     if (!text) {
@@ -159,11 +417,9 @@ function setupGamesSection() {
 
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-    // 1. Моментально отображаем у себя
     showMyAnswer(text);
     currentMyAns = text;
 
-    // 2. Формируем единый URL с сохраненными ответами обоих партнеров
     const newU1 = isUser1 ? text : (urlParams.get('u1_ans') || '');
     const newU2 = isUser1 ? (urlParams.get('u2_ans') || '') : text;
 
@@ -172,12 +428,10 @@ function setupGamesSection() {
     nextUrl.searchParams.set('u2_ans', newU2);
     const finalUrlString = nextUrl.toString();
 
-    // Обновляем параметры текущей страницы без перезагрузки
     window.history.replaceState({}, '', finalUrlString);
     urlParams.set('u1_ans', newU1);
     urlParams.set('u2_ans', newU2);
 
-    // 3. Синхронизируем системное меню у ОБОИХ партнеров через Bot API
     if (paramBotToken) {
       const updateMenu = (uid) => {
         if (!uid) return;
@@ -192,13 +446,12 @@ function setupGamesSection() {
               web_app: { url: finalUrlString }
             }
           })
-        }).catch(e => console.error('Ошибка MenuButton:', e));
+        }).catch(e => console.error(e));
       };
 
       updateMenu(paramU1Id);
       updateMenu(paramU2Id);
 
-      // 4. Отправляем половинке уведомление с кнопкой прямого открытия
       if (partnerId) {
         const safeText = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const safeMyName = myName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -211,17 +464,10 @@ function setupGamesSection() {
             text: `🎲 <b>Твоя половинка (${safeMyName}) ответила на вопрос дня:</b>\n\n«${safeText}»\n\nНажми кнопку ниже, чтобы открыть ответ в приложении! ❤️`,
             parse_mode: 'HTML',
             reply_markup: {
-              inline_keyboard: [
-                [
-                  {
-                    text: '🎲 Открыть вопрос дня',
-                    web_app: { url: finalUrlString }
-                  }
-                ]
-              ]
+              inline_keyboard: [[{ text: '🎲 Открыть вопрос дня', web_app: { url: finalUrlString } }]]
             }
           })
-        }).catch(e => console.error('Ошибка отправки уведомления:', e));
+        }).catch(e => console.error(e));
       }
     }
   });
@@ -231,10 +477,8 @@ function setupGamesSection() {
   });
 }
 
-// 5. Подгрузка аватарок
+// 6. Подгрузка аватарок
 function loadAvatars() {
-  const currentTgUser = tg?.initDataUnsafe?.user;
-
   function setAvatar(imgId, fallbackId, username) {
     const imgEl = document.getElementById(imgId);
     const fallbackEl = document.getElementById(fallbackId);
@@ -269,7 +513,7 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 6. Отрисовка альбома
+// 7. Отрисовка альбома
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -336,7 +580,7 @@ function closeModal() {
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 7. Статусы монстрика и дни отношений
+// 8. Статусы монстрика и дни отношений
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
@@ -433,7 +677,7 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 8. Кнопка камеры
+// 9. Кнопка камеры
 document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');
@@ -465,3 +709,4 @@ updateStatuses();
 setupDaysCounter();
 renderAlbum();
 setupGamesSection();
+setupArcadeGame();
