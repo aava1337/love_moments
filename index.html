@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.4">
+  <link rel="stylesheet" href="style.css?v=2.5">
 </head>
 <body>
   <div class="ambient-glow glow-1"></div>
@@ -157,9 +157,8 @@
                 <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
               </g>
 
-              <!-- СЛОЙ ОДЕЖДЫ И АКСЕССУАРОВ (SVG) -->
+              <!-- СЛОЙ ОДЕЖДЫ И АКСЕССУАРОВ -->
               <g id="monster-accessories-layer">
-                <!-- 👑 КОРОЛЕВСКАЯ VIP КОРОНА -->
                 <g id="acc-crown" style="display:none;">
                   <path d="M 96 52 L 102 32 L 112 44 L 120 26 L 128 44 L 138 32 L 144 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.5"/>
                   <circle cx="102" cy="32" r="2.5" fill="#E53E3E"/>
@@ -167,7 +166,6 @@
                   <circle cx="138" cy="32" r="2.5" fill="#38A169"/>
                 </g>
 
-                <!-- Обычные аксессуары -->
                 <g id="acc-bow" style="display:none;">
                   <path d="M 64 52 L 78 62 L 64 72 Z M 92 52 L 78 62 L 92 72 Z" fill="#FF5E8A"/>
                   <circle cx="78" cy="62" r="4.5" fill="#FFA06E"/>
@@ -378,7 +376,6 @@
     <div class="tab-screen" id="screen-vip" style="display: none !important;">
       <div class="vip-container">
         
-        <!-- Верхний статус-баннер -->
         <div class="glass-card vip-hero-card">
           <div class="vip-badge-row">
             <span class="vip-status-pill" id="vip-status-text">Обычный аккаунт</span>
@@ -388,10 +385,8 @@
           <p class="vip-hero-desc">Поддержите бота звёздами и защитите вашу историю любви</p>
         </div>
 
-        <!-- Витрина VIP товаров -->
         <div class="vip-cards-grid">
           
-          <!-- 1. Заморозка стрика -->
           <div class="glass-card vip-item-card">
             <div class="vip-item-header">
               <span class="vip-item-ico">🧊</span>
@@ -407,7 +402,6 @@
             </div>
           </div>
 
-          <!-- 2. Воскрешение стрика -->
           <div class="glass-card vip-item-card" id="card-restore-streak">
             <div class="vip-item-header">
               <span class="vip-item-ico">🩹</span>
@@ -423,7 +417,6 @@
             </div>
           </div>
 
-          <!-- 3. Королевский VIP навсегда -->
           <div class="glass-card vip-item-card gold-border">
             <div class="vip-item-header">
               <span class="vip-item-ico">👑</span>
@@ -439,7 +432,6 @@
             </div>
           </div>
 
-          <!-- 4. Мешок сердец -->
           <div class="glass-card vip-item-card">
             <div class="vip-item-header">
               <span class="vip-item-ico">💖</span>
@@ -455,6 +447,16 @@
             </div>
           </div>
 
+        </div>
+
+        <!-- КАРТОЧКА ОБРАТНОЙ СВЯЗИ ВНУТРИ VIP-ЭКРАНА -->
+        <div class="glass-card feedback-card" id="btn-feedback">
+          <div class="feedback-ico">💌</div>
+          <div class="feedback-info">
+            <h4 class="feedback-title">Обратная связь и баги</h4>
+            <p class="feedback-desc">Нашли ошибку или есть идея? Напишите нам!</p>
+          </div>
+          <span class="feedback-arrow">➔</span>
         </div>
 
       </div>
@@ -525,16 +527,6 @@
       <div class="modal-caption" id="modal-caption"></div>
     </div>
   </div>
-
-  <!-- Карточка обратной связи / Баг-репорт -->
-        <div class="glass-card feedback-card" id="btn-feedback">
-          <div class="feedback-ico">💌</div>
-          <div class="feedback-info">
-            <h4 class="feedback-title">Обратная связь и баги</h4>
-            <p class="feedback-desc">Нашли ошибку или есть идея? Напишите нам!</p>
-          </div>
-          <span class="feedback-arrow">➔</span>
-        </div>
 
   <script src="app.js"></script>
 </body>

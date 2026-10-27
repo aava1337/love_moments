@@ -10,7 +10,7 @@ if (tg) {
 }
 
 // ==========================================
-// 2. НАВИГАЦИЯ ПО ВКЛАДКАМ (ДОМ, АЛЬБОМ, ИГРЫ, VIP)
+// 2. НАВИГАЦИЯ ПО ГЛАВНЫМ ВКЛАДКАМ
 // ==========================================
 const tabHome = document.getElementById('tab-home');
 const tabAlbum = document.getElementById('tab-album');
@@ -238,17 +238,34 @@ function setupVipSection() {
     });
   });
 
-  // Кнопка «Обратная связь и баги»
-  document.getElementById('btn-feedback')?.addEventListener('click', () => {
+  // Кнопка «Обратная связь и баги» — отправка инструкции в чат бота и закрытие Mini App
+  document.getElementById('btn-feedback')?.addEventListener('click', async () => {
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-    const botUser = paramBotUsername || tg?.initDataUnsafe?.bot_username || 'aava_love_bot';
-    const feedbackLink = `https://t.me/${botUser}?start=bug`;
+    const currentUserId = currentTgId || (isUser1 ? paramU1Id : paramU2Id);
 
-    if (tg?.openTelegramLink) {
-      tg.openTelegramLink(feedbackLink);
-    } else {
-      window.location.href = feedbackLink;
+    if (paramBotToken && currentUserId) {
+      try {
+        await fetch(`https://api.telegram.org/bot${paramBotToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: currentUserId,
+            text: "💌 <b>Обратная связь и сообщения об ошибках</b>\n\n" +
+                  "Если вы нашли баг или хотите предложить идею, отправьте прямо в этот чат:\n" +
+                  "<code>/bug текст вашего сообщения</code>\n\n" +
+                  "<i>Пример:</i>\n<code>/bug Не открывается фото в альбоме</code>\n\n" +
+                  "Разработчик сразу получит ваше обращение в канале модерации и сможет ответить вам!",
+            parse_mode: 'HTML'
+          })
+        });
+      } catch (e) {
+        console.error('Ошибка отправки сообщения:', e);
+      }
+    }
+
+    if (tg) {
+      tg.close();
     }
   });
 }
