@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.2">
+  <link rel="stylesheet" href="style.css?v=2.3">
 </head>
 <body>
   <div class="ambient-glow glow-1"></div>
@@ -53,10 +53,16 @@
     <div class="tab-screen active" id="screen-home">
       <main class="monster-stage">
         
-        <!-- Кнопка открытия гардероба -->
-        <button class="wardrobe-trigger-btn" id="btn-open-wardrobe">
-          <span class="wardrobe-btn-ico">🧢</span>
-          <span class="wardrobe-btn-txt">Гардероб</span>
+        <!-- Чип активной примерки на сцене -->
+        <div class="stage-tryon-chip" id="stage-tryon-chip" style="display: none;">
+          <span>👀 Примерка: <b id="stage-tryon-name">Вещь</b></span>
+          <button class="stage-tryon-close" id="btn-stage-cancel-tryon">✕</button>
+        </div>
+
+        <!-- Кнопка гардероба на сцене справа от монстрика -->
+        <button class="stage-wardrobe-btn" id="btn-open-wardrobe" title="Открыть гардероб">
+          <span class="btn-icon">🧢</span>
+          <span class="btn-label">Шкаф</span>
         </button>
 
         <div class="speech-bubble" id="pet-speech">
@@ -85,6 +91,16 @@
                 <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
                 <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
               </radialGradient>
+              
+              <!-- Градиенты для крутых вещей -->
+              <linearGradient id="cyberGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#00F2FE"/>
+                <stop offset="100%" stop-color="#4FACFE"/>
+              </linearGradient>
+              <linearGradient id="fireGrad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#FF0844"/>
+                <stop offset="100%" stop-color="#FFB199"/>
+              </linearGradient>
             </defs>
 
             <ellipse class="ground-shadow" cx="120" cy="222" rx="70" ry="14" fill="url(#monsterShadow)" />
@@ -141,71 +157,118 @@
 
               <!-- СЛОЙ ОДЕЖДЫ И АКСЕССУАРОВ (SVG) -->
               <g id="monster-accessories-layer">
-                <!-- 🎀 Бантик -->
+                <!-- 0 дней -->
                 <g id="acc-bow" style="display:none;">
                   <path d="M 64 52 L 78 62 L 64 72 Z M 92 52 L 78 62 L 92 72 Z" fill="#FF5E8A"/>
                   <circle cx="78" cy="62" r="4.5" fill="#FFA06E"/>
                 </g>
 
-                <!-- 👓 Очки ботаника -->
                 <g id="acc-glasses" style="display:none;">
                   <circle cx="95" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
                   <circle cx="145" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
                   <line x1="112" y1="115" x2="128" y2="115" stroke="#2D3436" stroke-width="3"/>
                 </g>
 
-                <!-- 🧣 Шарфик -->
+                <!-- 7 дней -->
                 <g id="acc-scarf" style="display:none;">
                   <path d="M 80 140 Q 120 156 160 140 Q 164 150 152 158 Q 120 166 86 152 Z" fill="#E17055"/>
                   <path d="M 136 150 L 140 184 L 154 182 L 150 150 Z" fill="#D63031"/>
                 </g>
 
-                <!-- 🧢 Кепка -->
                 <g id="acc-cap" style="display:none;">
                   <path d="M 86 64 Q 120 34 154 64 Z" fill="#0984E3"/>
                   <path d="M 144 62 Q 180 64 175 72 Q 146 68 140 62 Z" fill="#74B9FF"/>
                   <circle cx="120" cy="46" r="3.5" fill="#FFEAA7"/>
                 </g>
 
-                <!-- 🩹 Пластырь -->
                 <g id="acc-bandaid" style="display:none;">
                   <rect x="68" y="122" width="20" height="9" rx="3.5" transform="rotate(-18 78 126)" fill="#FDCB6E" stroke="#E17055" stroke-width="1.2"/>
                   <circle cx="78" cy="126" r="1.8" fill="#E17055"/>
                 </g>
 
-                <!-- 💤 Колпак для снов -->
+                <!-- 15 дней -->
                 <g id="acc-sleepcap" style="display:none;">
                   <path d="M 88 62 Q 120 40 150 62 Q 174 28 190 56 Q 164 48 142 58 Z" fill="#6C5CE7"/>
                   <circle cx="190" cy="56" r="7.5" fill="#FFFFFF"/>
                 </g>
 
-                <!-- 🥸 Усы джентльмена -->
                 <g id="acc-mustache" style="display:none;">
                   <path d="M 120 126 Q 104 119 96 128 Q 112 135 120 128 Q 128 135 144 128 Q 136 119 120 126 Z" fill="#2D3436"/>
                 </g>
 
-                <!-- 🥳 Праздничный колпак -->
+                <!-- 30 дней -->
                 <g id="acc-partyhat" style="display:none;">
                   <polygon points="120,12 96,58 144,58" fill="#FD79A8"/>
                   <circle cx="120" cy="12" r="5.5" fill="#FDCB6E"/>
                   <line x1="102" y1="48" x2="138" y2="48" stroke="#FFEAA7" stroke-width="2.5"/>
-                  <line x1="108" y1="32" x2="132" y2="32" stroke="#FFEAA7" stroke-width="2.5"/>
                 </g>
 
-                <!-- 🌹 Цветок в зубах -->
                 <g id="acc-flower" style="display:none;">
                   <path d="M 124 133 Q 146 138 158 128" fill="none" stroke="#00B894" stroke-width="3.5"/>
                   <circle cx="162" cy="126" r="7" fill="#FF5E8A"/>
-                  <circle cx="162" cy="126" r="2.8" fill="#FDCB6E"/>
                 </g>
 
-                <!-- 😎 Тёмные очки -->
                 <g id="acc-sunglasses" style="display:none;">
                   <path d="M 82 108 L 110 108 L 106 127 L 86 127 Z" fill="#1E142B"/>
                   <path d="M 130 108 L 158 108 L 154 127 L 134 127 Z" fill="#1E142B"/>
                   <line x1="108" y1="112" x2="132" y2="112" stroke="#1E142B" stroke-width="3.5"/>
-                  <line x1="86" y1="111" x2="98" y2="124" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
-                  <line x1="134" y1="111" x2="146" y2="124" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+                </g>
+
+                <!-- 50 дней -->
+                <g id="acc-headphones" style="display:none;">
+                  <path d="M 70 100 A 52 52 0 0 1 170 100" fill="none" stroke="#00F2FE" stroke-width="5" stroke-linecap="round"/>
+                  <rect x="58" y="94" width="16" height="30" rx="8" fill="#1E142B" stroke="#00F2FE" stroke-width="3"/>
+                  <rect x="166" y="94" width="16" height="30" rx="8" fill="#1E142B" stroke="#00F2FE" stroke-width="3"/>
+                </g>
+
+                <g id="acc-witchhat" style="display:none;">
+                  <ellipse cx="120" cy="62" rx="48" ry="12" fill="#2C3A47"/>
+                  <path d="M 88 60 Q 120 10 148 40 Q 135 55 152 60 Z" fill="#1E142B"/>
+                  <circle cx="148" cy="40" r="4.5" fill="#FDCB6E"/>
+                </g>
+
+                <!-- 100 дней -->
+                <g id="acc-cybervisor" style="display:none;">
+                  <path d="M 76 108 L 164 108 L 158 125 L 82 125 Z" fill="url(#cyberGrad)" opacity="0.88"/>
+                  <line x1="76" y1="116" x2="164" y2="116" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
+                </g>
+
+                <g id="acc-ninja" style="display:none;">
+                  <rect x="74" y="92" width="92" height="15" rx="4" fill="#2D3436"/>
+                  <circle cx="120" cy="99.5" r="4" fill="#FF7675"/>
+                  <path d="M 166 96 Q 186 106 195 125" fill="none" stroke="#2D3436" stroke-width="4" stroke-linecap="round"/>
+                </g>
+
+                <!-- 150 дней -->
+                <g id="acc-spacehelmet" style="display:none;">
+                  <circle cx="120" cy="120" r="54" fill="none" stroke="#74B9FF" stroke-width="3.5" opacity="0.8"/>
+                  <path d="M 90 85 A 40 40 0 0 1 150 85" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+                </g>
+
+                <g id="acc-saturn_ring" style="display:none;">
+                  <ellipse cx="120" cy="64" rx="60" ry="16" fill="none" stroke="#FDCB6E" stroke-width="4" transform="rotate(-15 120 64)"/>
+                </g>
+
+                <!-- 200 дней -->
+                <g id="acc-monocle" style="display:none;">
+                  <circle cx="95" cy="115" r="16" fill="none" stroke="#F1C40F" stroke-width="3"/>
+                  <path d="M 111 115 Q 120 145 130 160" fill="none" stroke="#F1C40F" stroke-width="2" stroke-dasharray="3,3"/>
+                </g>
+
+                <g id="acc-horns_fire" style="display:none;">
+                  <circle cx="62" cy="42" r="14" fill="url(#fireGrad)" opacity="0.6" filter="blur(3px)"/>
+                  <circle cx="178" cy="42" r="14" fill="url(#fireGrad)" opacity="0.6" filter="blur(3px)"/>
+                </g>
+
+                <!-- 250 дней -->
+                <g id="acc-dragon_wings" style="display:none;">
+                  <path d="M 64 125 Q 10 90 20 60 Q 40 85 58 100" fill="#4834D4" stroke="#6C5CE7" stroke-width="3"/>
+                  <path d="M 176 125 Q 230 90 220 60 Q 200 85 182 100" fill="#4834D4" stroke="#6C5CE7" stroke-width="3"/>
+                </g>
+
+                <g id="acc-phoenix_halo" style="display:none;">
+                  <ellipse cx="120" cy="28" rx="42" ry="12" fill="none" stroke="#FF7675" stroke-width="5" opacity="0.9"/>
+                  <ellipse cx="120" cy="28" rx="42" ry="12" fill="none" stroke="#FDCB6E" stroke-width="2.5"/>
                 </g>
               </g>
 
@@ -339,7 +402,7 @@
 
   </div>
 
-  <!-- ШТОРКА ГАРДЕРОБА МОНСТРИКА -->
+  <!-- ШТОРКА ГАРДЕРОБА -->
   <div class="wardrobe-sheet" id="wardrobe-sheet">
     <div class="wardrobe-backdrop" id="wardrobe-backdrop"></div>
     <div class="wardrobe-content glass-card">
@@ -356,13 +419,6 @@
         </div>
       </div>
 
-      <!-- Превью примерки -->
-      <div class="tryon-banner" id="tryon-banner" style="display: none;">
-        <span>👀 Примерка: <b id="tryon-item-name">Название</b></span>
-        <button class="cancel-tryon-btn" id="btn-cancel-tryon">Снять ✕</button>
-      </div>
-
-      <!-- Сетка шмоток -->
       <div class="wardrobe-grid" id="wardrobe-grid"></div>
     </div>
   </div>

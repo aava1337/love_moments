@@ -116,7 +116,7 @@ const partnerId = isUser1 ? paramU2Id : paramU1Id;
 // 4. КАТАЛОГ ШМОТОК И КАСТОМИЗАЦИЯ МОНСТРИКА
 // ==========================================
 const WARDROBE_ITEMS = [
-  // Базовые (0 дней)
+  // 0 дней
   { id: 'bow', name: 'Розовый бантик', ico: '🎀', reqStreak: 0, price: 25, svgId: 'acc-bow' },
   { id: 'glasses', name: 'Очки ботаника', ico: '👓', reqStreak: 0, price: 40, svgId: 'acc-glasses' },
   
@@ -132,13 +132,32 @@ const WARDROBE_ITEMS = [
   // 30+ дней
   { id: 'partyhat', name: 'Колпак пати', ico: '🥳', reqStreak: 30, price: 160, svgId: 'acc-partyhat' },
   { id: 'flower', name: 'Цветок в зубах', ico: '🌹', reqStreak: 30, price: 140, svgId: 'acc-flower' },
-  { id: 'sunglasses', name: 'Тёмные очки', ico: '😎', reqStreak: 30, price: 200, svgId: 'acc-sunglasses' }
+  { id: 'sunglasses', name: 'Тёмные очки', ico: '😎', reqStreak: 30, price: 200, svgId: 'acc-sunglasses' },
+
+  // 50+ дней
+  { id: 'headphones', name: 'Кибер-наушники', ico: '🎧', reqStreak: 50, price: 260, svgId: 'acc-headphones' },
+  { id: 'witchhat', name: 'Шляпа мага', ico: '🧙‍♂️', reqStreak: 50, price: 290, svgId: 'acc-witchhat' },
+
+  // 100+ дней
+  { id: 'cybervisor', name: 'Неоновый визор', ico: '🥽', reqStreak: 100, price: 380, svgId: 'acc-cybervisor' },
+  { id: 'ninja', name: 'Повязка ниндзя', ico: '🥷', reqStreak: 100, price: 420, svgId: 'acc-ninja' },
+
+  // 150+ дней
+  { id: 'spacehelmet', name: 'Шлем космоса', ico: '👨‍🚀', reqStreak: 150, price: 550, svgId: 'acc-spacehelmet' },
+  { id: 'saturn_ring', name: 'Кольца Сатурна', ico: '🪐', reqStreak: 150, price: 580, svgId: 'acc-saturn_ring' },
+
+  // 200+ дней
+  { id: 'monocle', name: 'Золотой монокль', ico: '🧐', reqStreak: 200, price: 680, svgId: 'acc-monocle' },
+  { id: 'horns_fire', name: 'Пылающие рожки', ico: '⚡', reqStreak: 200, price: 750, svgId: 'acc-horns_fire' },
+
+  // 250+ дней
+  { id: 'dragon_wings', name: 'Крылья дракона', ico: '🐉', reqStreak: 250, price: 900, svgId: 'acc-dragon_wings' },
+  { id: 'phoenix_halo', name: 'Ореол феникса', ico: '🔥', reqStreak: 250, price: 990, svgId: 'acc-phoenix_halo' }
 ];
 
-// Управление балансом сердечек
 function getHeartCoins() {
   const saved = localStorage.getItem('user_heart_coins');
-  return saved !== null ? Number(saved) : 60; // 60 приветственных сердец
+  return saved !== null ? Number(saved) : 60;
 }
 
 function setHeartCoins(val) {
@@ -147,7 +166,6 @@ function setHeartCoins(val) {
   if (badge) badge.innerText = val;
 }
 
-// Купленные и надетые вещи
 function getOwnedItems() {
   return JSON.parse(localStorage.getItem('owned_accessories') || '[]');
 }
@@ -164,15 +182,6 @@ function getEquippedItem() {
   return urlParams.get('eq_item') || localStorage.getItem('equipped_accessory') || null;
 }
 
-function setEquippedItem(itemId) {
-  if (itemId) {
-    localStorage.setItem('equipped_accessory', itemId);
-  } else {
-    localStorage.removeItem('equipped_accessory');
-  }
-  applyAccessoryToSvg(itemId);
-}
-
 function applyAccessoryToSvg(activeId) {
   WARDROBE_ITEMS.forEach(it => {
     const el = document.getElementById(it.svgId);
@@ -180,17 +189,49 @@ function applyAccessoryToSvg(activeId) {
   });
 }
 
-// Логика шторки гардероба
+// Синхронизация надетой вещи с половинкой
+function syncEquippedWithPartner(itemId) {
+  const nextUrl = new URL(window.location.href);
+  if (itemId) {
+    nextUrl.searchParams.set('eq_item', itemId);
+    localStorage.setItem('equipped_accessory', itemId);
+  } else {
+    nextUrl.searchParams.delete('eq_item');
+    localStorage.removeItem('equipped_accessory');
+  }
+  const finalUrl = nextUrl.toString();
+  window.history.replaceState({}, '', finalUrl);
+
+  if (paramBotToken) {
+    [paramU1Id, paramU2Id].forEach(uid => {
+      if (!uid) return;
+      fetch(`https://api.telegram.org/bot${paramBotToken}/setChatMenuButton`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: uid,
+          menu_button: {
+            type: 'web_app',
+            text: 'Наш мир ❤️',
+            web_app: { url: finalUrl }
+          }
+        })
+      }).catch(e => console.error(e));
+    });
+  }
+}
+
+let activePreviewItem = null;
+
 function setupWardrobeUI() {
   const sheet = document.getElementById('wardrobe-sheet');
   const backdrop = document.getElementById('wardrobe-backdrop');
   const openBtn = document.getElementById('btn-open-wardrobe');
   const grid = document.getElementById('wardrobe-grid');
-  const tryonBanner = document.getElementById('tryon-banner');
-  const tryonName = document.getElementById('tryon-item-name');
-  const cancelTryonBtn = document.getElementById('btn-cancel-tryon');
-
-  let previewItem = null;
+  
+  const stageChip = document.getElementById('stage-tryon-chip');
+  const stageTryonName = document.getElementById('stage-tryon-name');
+  const btnStageCancel = document.getElementById('btn-stage-cancel-tryon');
 
   setHeartCoins(getHeartCoins());
   applyAccessoryToSvg(getEquippedItem());
@@ -203,18 +244,14 @@ function setupWardrobeUI() {
 
   function closeSheet() {
     sheet?.classList.remove('open');
-    if (previewItem) {
-      previewItem = null;
-      tryonBanner.style.display = 'none';
-      applyAccessoryToSvg(getEquippedItem());
-    }
   }
 
   backdrop?.addEventListener('click', closeSheet);
 
-  cancelTryonBtn?.addEventListener('click', () => {
-    previewItem = null;
-    tryonBanner.style.display = 'none';
+  // Сброс примерки на сцене
+  btnStageCancel?.addEventListener('click', () => {
+    activePreviewItem = null;
+    if (stageChip) stageChip.style.display = 'none';
     applyAccessoryToSvg(getEquippedItem());
     renderGrid();
   });
@@ -263,13 +300,13 @@ function setupWardrobeUI() {
         ${actionHtml}
       `;
 
-      // Примерка
+      // Примерка (остаётся на монстрике при закрытии шторки!)
       card.querySelector('.btn-try')?.addEventListener('click', () => {
-        previewItem = item.id;
+        activePreviewItem = item.id;
         applyAccessoryToSvg(item.id);
-        if (tryonBanner && tryonName) {
-          tryonBanner.style.display = 'flex';
-          tryonName.innerText = item.name;
+        if (stageChip && stageTryonName) {
+          stageChip.style.display = 'flex';
+          stageTryonName.innerText = item.name;
         }
         if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
       });
@@ -280,9 +317,10 @@ function setupWardrobeUI() {
         if (curCoins >= item.price) {
           setHeartCoins(curCoins - item.price);
           addOwnedItem(item.id);
-          setEquippedItem(item.id);
-          previewItem = null;
-          if (tryonBanner) tryonBanner.style.display = 'none';
+          syncEquippedWithPartner(item.id);
+          applyAccessoryToSvg(item.id);
+          activePreviewItem = null;
+          if (stageChip) stageChip.style.display = 'none';
           if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
           renderGrid();
         } else {
@@ -292,16 +330,20 @@ function setupWardrobeUI() {
 
       // Надеть
       card.querySelector('.btn-equip')?.addEventListener('click', () => {
-        setEquippedItem(item.id);
-        previewItem = null;
-        if (tryonBanner) tryonBanner.style.display = 'none';
+        syncEquippedWithPartner(item.id);
+        applyAccessoryToSvg(item.id);
+        activePreviewItem = null;
+        if (stageChip) stageChip.style.display = 'none';
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         renderGrid();
       });
 
       // Снять
       card.querySelector('.btn-unequip')?.addEventListener('click', () => {
-        setEquippedItem(null);
+        syncEquippedWithPartner(null);
+        applyAccessoryToSvg(null);
+        activePreviewItem = null;
+        if (stageChip) stageChip.style.display = 'none';
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         renderGrid();
       });
@@ -469,7 +511,6 @@ function setupArcadeGame() {
     hud.style.display = 'none';
     overlay.style.display = 'flex';
 
-    // Зачисляем заработанные очки в банк сердечек!
     if (currentScore > 0) {
       setHeartCoins(getHeartCoins() + currentScore);
     }
@@ -480,10 +521,10 @@ function setupArcadeGame() {
       myScore = currentScore;
       myBestEl.innerText = myScore;
       localStorage.setItem('my_arcade_record', myScore);
-      overlaySub.innerHTML = `🔥 Новый рекорд! <b>+${Math.max(0, currentScore)} ❤️</b> зачислено в гардероб!`;
+      overlaySub.innerHTML = `🔥 Новый рекорд! <b>+${Math.max(0, currentScore)} ❤️</b> зачислено в банк!`;
       syncRecordWithPartner(myScore);
     } else {
-      overlaySub.innerHTML = `Твой рекорд: ${myScore} | <b>+${Math.max(0, currentScore)} ❤️</b> зачислено в гардероб!`;
+      overlaySub.innerHTML = `Твой рекорд: ${myScore} | <b>+${Math.max(0, currentScore)} ❤️</b> зачислено в банк!`;
     }
 
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
