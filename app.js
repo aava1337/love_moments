@@ -71,16 +71,16 @@ const viewQa = document.getElementById('view-qa');
 subtabArcade?.addEventListener('click', () => {
   subtabArcade.classList.add('active');
   subtabQa.classList.remove('active');
-  viewArcade.style.display = 'block';
-  viewQa.style.display = 'none';
+  if (viewArcade) viewArcade.style.setProperty('display', 'flex', 'important');
+  if (viewQa) viewQa.style.setProperty('display', 'none', 'important');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
 subtabQa?.addEventListener('click', () => {
   subtabQa.classList.add('active');
   subtabArcade.classList.remove('active');
-  viewQa.style.display = 'block';
-  viewArcade.style.display = 'none';
+  if (viewQa) viewQa.style.setProperty('display', 'flex', 'important');
+  if (viewArcade) viewArcade.style.setProperty('display', 'none', 'important');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
@@ -104,7 +104,6 @@ const paramQText = urlParams.get('q_text') || 'Какое наше совмес�
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
-// Определяем активного пользователя
 const currentTgUser = tg?.initDataUnsafe?.user;
 const currentTgId = currentTgUser ? Number(currentTgUser.id) : null;
 const isUser1 = (!currentTgId || currentTgId !== paramU2Id);
@@ -113,9 +112,7 @@ const myName = isUser1 ? paramU1Name : paramU2Name;
 const partnerName = isUser1 ? paramU2Name : paramU1Name;
 const partnerId = isUser1 ? paramU2Id : paramU1Id;
 
-// ==========================================
-// 4. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ (АРКАДА)
-// ==========================================
+// 4. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ
 function setupArcadeGame() {
   const arena = document.getElementById('arcade-arena');
   const overlay = document.getElementById('arena-overlay');
@@ -135,14 +132,12 @@ function setupArcadeGame() {
   if (myNameLabel) myNameLabel.innerText = `${myName} (Ты)`;
   if (partnerNameLabel) partnerNameLabel.innerText = partnerName;
 
-  // Инициализация рекордов
   let myScore = Number(urlParams.get(isUser1 ? 'u1_score' : 'u2_score') || localStorage.getItem('my_arcade_record') || 0);
   let partnerScore = Number(urlParams.get(isUser1 ? 'u2_score' : 'u1_score') || 0);
 
   if (myBestEl) myBestEl.innerText = myScore;
   if (partnerBestEl) partnerBestEl.innerText = partnerScore;
 
-  // Лимит 3 попытки в день
   const todayKey = `arcade_attempts_${new Date().toISOString().slice(0, 10)}`;
   let attemptsLeft = Number(localStorage.getItem(todayKey) ?? 3);
 
@@ -164,7 +159,6 @@ function setupArcadeGame() {
 
   updateAttemptsUI();
 
-  // Игровой цикл
   let gameInterval = null;
   let spawnInterval = null;
   let timeLeft = 15;
@@ -174,7 +168,6 @@ function setupArcadeGame() {
   playBtn?.addEventListener('click', () => {
     if (attemptsLeft <= 0 || isPlaying) return;
 
-    // Списываем 1 попытку
     attemptsLeft--;
     localStorage.setItem(todayKey, attemptsLeft);
     updateAttemptsUI();
@@ -194,7 +187,6 @@ function setupArcadeGame() {
 
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-    // Таймер игры
     gameInterval = setInterval(() => {
       timeLeft--;
       timerEl.innerText = timeLeft;
@@ -203,7 +195,6 @@ function setupArcadeGame() {
       }
     }, 1000);
 
-    // Спавн сердечек (каждые 480мс)
     spawnInterval = setInterval(spawnHeart, 480);
   }
 
@@ -213,25 +204,20 @@ function setupArcadeGame() {
     const heart = document.createElement('div');
     heart.className = 'spawned-heart';
 
-    // Типы сердечек: обычное (70%), золотое (15%), разбитое (15%)
     const roll = Math.random();
-    let type = 'normal';
     let pts = 1;
     let emoji = '❤️';
 
     if (roll > 0.85) {
-      type = 'gold';
       pts = 3;
       emoji = '💛';
     } else if (roll < 0.15) {
-      type = 'broken';
       pts = -2;
       emoji = '💔';
     }
 
     heart.innerText = emoji;
 
-    // Случайная позиция внутри арены (с отступами)
     const arenaW = arena.clientWidth - 50;
     const arenaH = arena.clientHeight - 60;
     const x = Math.max(10, Math.floor(Math.random() * arenaW));
@@ -240,13 +226,11 @@ function setupArcadeGame() {
     heart.style.left = `${x}px`;
     heart.style.top = `${y}px`;
 
-    // Клик по сердечку
     heart.addEventListener('pointerdown', (e) => {
       e.stopPropagation();
       currentScore += pts;
       scoreEl.innerText = currentScore;
 
-      // Всплывающий текст очков
       showSplash(e.clientX, e.clientY, pts > 0 ? `+${pts}` : `${pts}`, pts > 0 ? '#55EFC4' : '#FF7675');
 
       if (tg?.HapticFeedback) {
@@ -258,7 +242,6 @@ function setupArcadeGame() {
 
     arena.appendChild(heart);
 
-    // Удаление через 1.4 секунды, если не нажали
     setTimeout(() => {
       if (heart.parentNode) heart.remove();
     }, 1400);
@@ -280,13 +263,12 @@ function setupArcadeGame() {
     clearInterval(gameInterval);
     clearInterval(spawnInterval);
 
-    // Очищаем арену
     document.querySelectorAll('.spawned-heart').forEach(h => h.remove());
 
     hud.style.display = 'none';
     overlay.style.display = 'flex';
 
-    overlayTitle.innerText = `Время вышло! Результат: ${currentScore} очков 🎉`;
+    overlayTitle.innerText = `Время вышло! Счёт: ${currentScore} 🎉`;
 
     if (currentScore > myScore) {
       myScore = currentScore;
@@ -295,13 +277,12 @@ function setupArcadeGame() {
       overlaySub.innerText = '🔥 Новый рекорд вашей пары!';
       syncRecordWithPartner(myScore);
     } else {
-      overlaySub.innerText = `Твой рекорд: ${myScore} очков | Рекорд половинки: ${partnerScore}`;
+      overlaySub.innerText = `Твой рекорд: ${myScore} | Рекорд половинки: ${partnerScore}`;
     }
 
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   }
 
-  // Синхронизация рекорда с половинкой через Bot API
   function syncRecordWithPartner(record) {
     const newU1Score = isUser1 ? record : partnerScore;
     const newU2Score = isUser1 ? partnerScore : record;
@@ -314,7 +295,6 @@ function setupArcadeGame() {
     window.history.replaceState({}, '', finalUrl);
 
     if (paramBotToken) {
-      // Обновляем кнопку меню у обоих
       [paramU1Id, paramU2Id].forEach(uid => {
         if (!uid) return;
         fetch(`https://api.telegram.org/bot${paramBotToken}/setChatMenuButton`, {
@@ -331,7 +311,6 @@ function setupArcadeGame() {
         }).catch(e => console.error(e));
       });
 
-      // Отправляем уведомление с вызовом побить рекорд
       if (partnerId) {
         fetch(`https://api.telegram.org/bot${paramBotToken}/sendMessage`, {
           method: 'POST',
@@ -350,9 +329,7 @@ function setupArcadeGame() {
   }
 }
 
-// ==========================================
 // 5. РАЗДЕЛ: ВОПРОС ДНЯ
-// ==========================================
 function setupGamesSection() {
   const qTitle = document.getElementById('daily-q-text');
   if (qTitle) qTitle.innerText = paramQText;
