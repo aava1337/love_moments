@@ -186,55 +186,54 @@
       </div>
     </div>
 
-    <!-- ЭКРАН 3: ИГРЫ (ВОПРОС ДНЯ) -->
+    <!-- ЭКРАН 3: ИГРЫ (ОТВЕТ ПРЯМО НА ЭКРАНЕ) -->
     <div class="tab-screen" id="screen-games" style="display: none !important;">
       <div class="games-container">
         
-        <!-- Верхняя карточка вопроса -->
+        <!-- Карточка вопроса -->
         <div class="glass-card question-card">
           <div class="q-badge">
-            <span class="q-sparkle">🎲</span> ВОПРОС ДНЯ
+            <span class="q-sparkle">🎲</span> ВОПРОС ДНЯ ДЛЯ ДВОИХ
           </div>
-          <h2 class="q-title" id="daily-q-text">Загружаем вопрос дня...</h2>
-          <span class="q-hint">Ответ партнера откроется, когда оба напишут ответ 🔒</span>
+          <h2 class="q-title" id="daily-q-text">Какое наше совместное воспоминание самое теплое? ✨</h2>
         </div>
 
-        <!-- Две карточки с ответами -->
         <div class="answers-wrapper">
           
-          <!-- Мой ответ -->
-          <div class="glass-card answer-card my-card">
+          <!-- Моя карточка с полем ввода -->
+          <div class="glass-card answer-card" id="my-card-container">
             <div class="card-author-row">
-              <span class="card-author-label" id="my-card-name">Мой ответ</span>
-              <span class="card-status-dot" id="my-card-status">⏳</span>
+              <span class="card-author-label" id="my-card-name">Твой ответ</span>
+              <span class="card-status-dot" id="my-card-status">✍️</span>
             </div>
-            <div class="card-content" id="my-answer-content">
-              <p class="ans-text empty">Вы еще не ответили на этот вопрос</p>
+            
+            <!-- Режим ввода -->
+            <div class="input-mode" id="my-input-mode">
+              <textarea id="game-answer-input" class="game-textarea" placeholder="Напиши сюда свой ответ..."></textarea>
+              <button class="cta-button send-ans-btn" id="btn-submit-answer">
+                <span>Отправить ответ 💌</span>
+              </button>
+            </div>
+
+            <!-- Режим просмотра готового ответа -->
+            <div class="view-mode" id="my-view-mode" style="display: none;">
+              <p class="ans-text" id="my-display-text"></p>
+              <button class="edit-ans-link" id="btn-edit-answer">✏️ Изменить</button>
             </div>
           </div>
 
-          <!-- Ответ половинки -->
-          <div class="glass-card answer-card partner-card">
+          <!-- Карточка ответа партнера -->
+          <div class="glass-card answer-card" id="partner-card-container">
             <div class="card-author-row">
               <span class="card-author-label" id="partner-card-name">Ответ половинки</span>
               <span class="card-status-dot" id="partner-card-status">⏳</span>
             </div>
-            <div class="card-content" id="partner-answer-content">
-              <!-- Блюр-заглушка или текст -->
-              <div class="secret-blur-box" id="partner-blur-box">
-                <span class="lock-icon">🔒</span>
-                <span class="lock-txt">Ответ скрыт до взаимности</span>
-              </div>
-              <p class="ans-text" id="partner-real-text" style="display: none;"></p>
+            <div class="card-content">
+              <p class="ans-text" id="partner-display-text">Партнер еще пишет ответ... ⏳</p>
             </div>
           </div>
 
         </div>
-
-        <!-- Кнопка действия: написать ответ -->
-        <button class="cta-button game-btn" id="btn-answer-game">
-          <span class="btn-main-txt">✍️ Ответить на вопрос</span>
-        </button>
 
       </div>
     </div>

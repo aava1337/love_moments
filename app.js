@@ -40,7 +40,6 @@ function showTab(tabName) {
   });
 }
 
-// По умолчанию всегда открываем «Дом»
 showTab('home');
 
 tabHome?.addEventListener('click', () => {
@@ -63,7 +62,7 @@ document.getElementById('tab-vip')?.addEventListener('click', () => {
   alert('Раздел VIP скоро станет доступен! ⭐');
 });
 
-// 3. Получение параметров из URL
+// 3. Параметры из URL
 const urlParams = new URLSearchParams(window.location.search);
 
 const paramStartDate = urlParams.get('start_date');
@@ -78,16 +77,118 @@ const paramU1Sent = urlParams.get('u1_sent') === '1';
 const paramU2Sent = urlParams.get('u2_sent') === '1';
 const paramPhotos = urlParams.get('photos') || '';
 const paramBotToken = urlParams.get('bot_token') || '';
-
-// Параметры вопроса дня
-const paramQText = urlParams.get('q_text') || 'Какой момент из нашего прошлого самый ценный?';
+const paramQText = urlParams.get('q_text') || 'Какое наше совместное воспоминание самое теплое? ✨';
 const paramU1Ans = urlParams.get('u1_ans') || '';
 const paramU2Ans = urlParams.get('u2_ans') || '';
 
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
-// 4. Подгрузка аватарок
+// 4. Логика игры (Ввод прямо в приложении)
+function setupGamesSection() {
+  const qTitle = document.getElementById('daily-q-text');
+  if (qTitle) qTitle.innerText = paramQText;
+
+  const currentTgId = tg?.initDataUnsafe?.user?.id;
+  const isUser1 = (!currentTgId || currentTgId === paramU1Id);
+
+  const myName = isUser1 ? paramU1Name : paramU2Name;
+  const partnerName = isUser1 ? paramU2Name : paramU1Name;
+  const partnerId = isUser1 ? paramU2Id : paramU1Id;
+
+  // Имена в заголовках карточек
+  const myNameEl = document.getElementById('my-card-name');
+  const partnerNameEl = document.getElementById('partner-card-name');
+  if (myNameEl) myNameEl.innerText = `${myName} (Ты)`;
+  if (partnerNameEl) partnerNameEl.innerText = partnerName;
+
+  // Локальное кэширование ответа
+  const localAnswerKey = `game_ans_${new Date().toISOString().slice(0, 10)}`;
+  const savedMyAns = localStorage.getItem(localAnswerKey) || (isUser1 ? paramU1Ans : paramU2Ans);
+  const partnerAns = isUser1 ? paramU2Ans : paramU1Ans;
+
+  const inputMode = document.getElementById('my-input-mode');
+  const viewMode = document.getElementById('my-view-mode');
+  const displayText = document.getElementById('my-display-text');
+  const myStatusDot = document.getElementById('my-card-status');
+  const inputField = document.getElementById('game-answer-input');
+
+  // Показ моего ответа
+  function showMyAnswer(text) {
+    if (inputMode) inputMode.style.display = 'none';
+    if (viewMode) viewMode.style.display = 'flex';
+    if (displayText) displayText.innerText = `«${text}»`;
+    if (myStatusDot) myStatusDot.innerText = '✓';
+  }
+
+  // Режим редактирования
+  function showInputMode(defaultText = '') {
+    if (viewMode) viewMode.style.display = 'none';
+    if (inputMode) inputMode.style.display = 'flex';
+    if (inputField) {
+      inputField.value = defaultText;
+      inputField.focus();
+    }
+    if (myStatusDot) myStatusDot.innerText = '✍️';
+  }
+
+  if (savedMyAns) {
+    showMyAnswer(savedMyAns);
+  } else {
+    showInputMode();
+  }
+
+  // Карточка партнера
+  const partnerTextEl = document.getElementById('partner-display-text');
+  const partnerStatus = document.getElementById('partner-card-status');
+  if (partnerAns) {
+    if (partnerTextEl) partnerTextEl.innerText = `«${partnerAns}»`;
+    if (partnerStatus) partnerStatus.innerText = '✓';
+  } else {
+    if (partnerTextEl) partnerTextEl.innerText = `${partnerName} еще пишет ответ... ⏳`;
+    if (partnerStatus) partnerStatus.innerText = '⏳';
+  }
+
+  // Обработка кнопки «Отправить ответ»
+  document.getElementById('btn-submit-answer')?.addEventListener('click', async () => {
+    const text = inputField?.value.trim();
+    if (!text) {
+      alert('Пожалуйста, напиши хотя бы пару слов! 💖');
+      return;
+    }
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+    // 1. Моментально отображаем ответ на экране
+    localStorage.setItem(localAnswerKey, text);
+    showMyAnswer(text);
+
+    // 2. Отправляем уведомление партнеру в Telegram через Bot API
+    if (paramBotToken && partnerId) {
+      try {
+        await fetch(`https://api.telegram.org/bot${paramBotToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: partnerId,
+            text: `🎲 **Твоя половинка (${myName}) ответила на вопрос дня:**\n\n«${text}»\n\nЗайди в приложение во вкладку «Игры», чтобы прочитать и ответить! ❤️`,
+            parse_mode: 'Markdown'
+          })
+        });
+      } catch (e) {
+        console.error('Ошибка отправки партнеру:', e);
+      }
+    }
+  });
+
+  // Кнопка «Изменить»
+  document.getElementById('btn-edit-answer')?.addEventListener('click', () => {
+    const cur = displayText?.innerText.replace(/^[«"]|[»"]$/g, '') || '';
+    showInputMode(cur);
+  });
+}
+
+// 5. Подгрузка аватарок
 function loadAvatars() {
   const currentTgUser = tg?.initDataUnsafe?.user;
 
@@ -124,84 +225,6 @@ function loadAvatars() {
   setAvatar('avatar-img-u1', 'avatar-fallback-u1', paramU1User);
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
-
-// 5. Отрисовка раздела «Игры»
-function setupGamesSection() {
-  const qTitleEl = document.getElementById('daily-q-text');
-  if (qTitleEl) qTitleEl.innerText = paramQText;
-
-  const currentTgId = tg?.initDataUnsafe?.user?.id;
-  // Определяем, кто сейчас открыл приложение: Партнер 1 или Партнер 2
-  const isUser1 = (currentTgId && currentTgId === paramU1Id) || true; // По умолчанию U1, если тесты в браузере
-
-  const myName = isUser1 ? paramU1Name : paramU2Name;
-  const partnerName = isUser1 ? paramU2Name : paramU1Name;
-  const myAns = isUser1 ? paramU1Ans : paramU2Ans;
-  const partnerAns = isUser1 ? paramU2Ans : paramU1Ans;
-
-  // Имена в карточках
-  const myNameEl = document.getElementById('my-card-name');
-  const partnerNameEl = document.getElementById('partner-card-name');
-  if (myNameEl) myNameEl.innerText = `${myName} (Ты)`;
-  if (partnerNameEl) partnerNameEl.innerText = partnerName;
-
-  // 1. Мой ответ
-  const myContentEl = document.getElementById('my-answer-content');
-  const myStatusDot = document.getElementById('my-card-status');
-  if (myAns) {
-    if (myContentEl) myContentEl.innerHTML = `<p class="ans-text">«${myAns}»</p>`;
-    if (myStatusDot) myStatusDot.innerText = '✓';
-    const btnAns = document.getElementById('btn-answer-game');
-    if (btnAns) btnAns.querySelector('.btn-main-txt').innerText = '✍️ Изменить свой ответ';
-  } else {
-    if (myContentEl) myContentEl.innerHTML = `<p class="ans-text empty">Нажмите кнопку внизу, чтобы ответить...</p>`;
-    if (myStatusDot) myStatusDot.innerText = '⏳';
-  }
-
-  // 2. Ответ партнера (Секретный блюр)
-  const blurBox = document.getElementById('partner-blur-box');
-  const realTextEl = document.getElementById('partner-real-text');
-  const partnerStatusDot = document.getElementById('partner-card-status');
-
-  if (myAns && partnerAns) {
-    // ОБА ОТВЕТИЛИ: Снимаем замок и блюр!
-    if (blurBox) blurBox.style.display = 'none';
-    if (realTextEl) {
-      realTextEl.style.display = 'block';
-      realTextEl.innerText = `«${partnerAns}»`;
-    }
-    if (partnerStatusDot) partnerStatusDot.innerText = '✓';
-  } else if (!myAns && partnerAns) {
-    // Партнер ответил, а ты еще нет: замок с призывом ответить
-    if (blurBox) {
-      blurBox.style.display = 'flex';
-      blurBox.querySelector('.lock-txt').innerText = 'Ответьте, чтобы увидеть ответ!';
-    }
-    if (partnerStatusDot) partnerStatusDot.innerText = '✓';
-  } else {
-    // Партнер еще не ответил
-    if (blurBox) {
-      blurBox.style.display = 'flex';
-      blurBox.querySelector('.lock-txt').innerText = 'Партнер еще пишет ответ... ⏳';
-    }
-    if (partnerStatusDot) partnerStatusDot.innerText = '⏳';
-  }
-}
-
-// Кнопка «Ответить на вопрос»: открывает диалог бота с готовой командой
-document.getElementById('btn-answer-game')?.addEventListener('click', () => {
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-  // Дип-линк для мгновенного ответа через чат бота
-  const botUser = tg?.initDataUnsafe?.bot_username || 'our_couple_bot';
-  const answerLink = `https://t.me/${botUser}?start=ans`;
-
-  if (tg?.openTelegramLink) {
-    tg.openTelegramLink(answerLink);
-  } else {
-    window.location.href = answerLink;
-  }
-});
 
 // 6. Отрисовка альбома
 function renderAlbum() {
@@ -270,7 +293,7 @@ function closeModal() {
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 7. Статусы монстрика и счетчик дней
+// 7. Статусы монстрика
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
