@@ -7,20 +7,23 @@ if (tg) {
   tg.setBackgroundColor('#0D0914');
 }
 
-// 2. Навигация по главным вкладкам
+// 2. Навигация по вкладкам (Дом, Альбом, Игры, VIP)
 const tabHome = document.getElementById('tab-home');
 const tabAlbum = document.getElementById('tab-album');
 const tabGames = document.getElementById('tab-games');
+const tabVip = document.getElementById('tab-vip');
 
 const screenHome = document.getElementById('screen-home');
 const screenAlbum = document.getElementById('screen-album');
 const screenGames = document.getElementById('screen-games');
+const screenVip = document.getElementById('screen-vip');
 
 function showTab(tabName) {
   const tabs = [
     { btn: tabHome, scr: screenHome, name: 'home' },
     { btn: tabAlbum, scr: screenAlbum, name: 'album' },
-    { btn: tabGames, scr: screenGames, name: 'games' }
+    { btn: tabGames, scr: screenGames, name: 'games' },
+    { btn: tabVip, scr: screenVip, name: 'vip' }
   ];
 
   tabs.forEach(t => {
@@ -57,9 +60,9 @@ tabGames?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
-document.getElementById('tab-vip')?.addEventListener('click', () => {
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  alert('Раздел VIP скоро станет доступен! ⭐');
+tabVip?.addEventListener('click', () => {
+  showTab('vip');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 });
 
 // Переключение подвкладок в играх
@@ -101,6 +104,11 @@ const paramPhotos = urlParams.get('photos') || '';
 const paramBotToken = urlParams.get('bot_token') || '';
 const paramQText = urlParams.get('q_text') || 'Какое наше совместное воспоминание самое теплое? ✨';
 
+const paramIsVip = urlParams.get('is_vip') === '1' || localStorage.getItem('is_vip_active') === '1';
+let paramFreezes = Number(urlParams.get('freezes') || localStorage.getItem('streak_freezes_count') || 0);
+const paramCanRestore = urlParams.get('can_restore') === '1';
+const paramOldStreak = Number(urlParams.get('old_streak') || '1');
+
 const streakEl = document.getElementById('streak-count');
 if (streakEl) streakEl.innerText = paramStreak;
 
@@ -113,44 +121,144 @@ const partnerName = isUser1 ? paramU2Name : paramU1Name;
 const partnerId = isUser1 ? paramU2Id : paramU1Id;
 
 // ==========================================
-// 4. КАТАЛОГ ШМОТОК И КАСТОМИЗАЦИЯ МОНСТРИКА
+// 4. ЛОГИКА ВКЛАДКИ «VIP» И TELEGRAM STARS
+// ==========================================
+function setupVipSection() {
+  const vipStatusText = document.getElementById('vip-status-text');
+  const freezeStockLabel = document.getElementById('freeze-stock-label');
+  const restoreStatusLabel = document.getElementById('restore-status-label');
+  const restoreDescText = document.getElementById('restore-desc-text');
+  const btnBuyRestore = document.getElementById('btn-buy-restore');
+  const crownBadge = document.getElementById('vip-crown-badge');
+  const ring1 = document.getElementById('ring-u1');
+  const ring2 = document.getElementById('ring-u2');
+
+  // Отображение VIP-статуса
+  if (paramIsVip) {
+    if (vipStatusText) {
+      vipStatusText.innerText = '👑 Королевский VIP активен';
+      vipStatusText.classList.add('active');
+    }
+    if (crownBadge) crownBadge.style.display = 'inline';
+    if (ring1) ring1.classList.add('vip-ring');
+    if (ring2) ring2.classList.add('vip-ring');
+    
+    // Если VIP активен, надеваем корону
+    if (!localStorage.getItem('equipped_accessory')) {
+      setEquippedItem('crown');
+    }
+  }
+
+  if (freezeStockLabel) {
+    freezeStockLabel.innerText = `В запасе: ${paramFreezes} шт`;
+  }
+
+  // Настройка восстановления стрика
+  if (paramCanRestore) {
+    if (restoreDescText) restoreDescText.innerText = `Восстановит ваш сгоревший стрик в 🔥 ${paramOldStreak} дней!`;
+    if (restoreStatusLabel) restoreStatusLabel.innerText = '⚠️ Стрик можно спасти!';
+  } else {
+    if (btnBuyRestore) btnBuyRestore.disabled = true;
+    if (restoreStatusLabel) restoreStatusLabel.innerText = 'Стрик не сгорал 👍';
+  }
+
+  // Обработчик покупки через Telegram Stars
+  document.querySelectorAll('.vip-buy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const itemCode = btn.getAttribute('data-code');
+      const starsAmount = Number(btn.getAttribute('data-stars'));
+      const title = btn.getAttribute('data-title');
+      const desc = btn.getAttribute('data-desc');
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+      // 1. Создаем ссылку инвойса через Bot API
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Загрузка...';
+
+        const pairId = urlParams.get('u1_id') || '0';
+        const payload = `${pairId}_${itemCode}_${Date.now()}`;
+
+        const resp = await fetch(`https://api.telegram.org/bot${paramBotToken}/createInvoiceLink`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            description: desc,
+            payload: payload,
+            currency: 'XTR', // Telegram Stars
+            prices: [{ label: title, amount: starsAmount }]
+          })
+        });
+
+        const data = await resp.json();
+        btn.disabled = false;
+        btn.innerText = `${starsAmount} ⭐`;
+
+        if (data.ok && data.result) {
+          // 2. Открываем нативное окно оплаты звездами
+          tg.openInvoice(data.result, (status) => {
+            if (status === 'paid') {
+              if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+              
+              // Мгновенная активация бонуса на клиенте
+              if (itemCode === 'freeze') {
+                paramFreezes++;
+                localStorage.setItem('streak_freezes_count', paramFreezes);
+                freezeStockLabel.innerText = `В запасе: ${paramFreezes} шт`;
+                alert('🧊 Заморозка стрика успешно добавлена!');
+              } else if (itemCode === 'restore') {
+                streakEl.innerText = paramOldStreak;
+                alert(`🩹 Стрик успешно восстановлен до 🔥 ${paramOldStreak} дней!`);
+              } else if (itemCode === 'vip') {
+                localStorage.setItem('is_vip_active', '1');
+                setEquippedItem('crown');
+                alert('👑 Королевский VIP активирован навсегда!');
+                location.reload();
+              } else if (itemCode === 'coins') {
+                setHeartCoins(getHeartCoins() + 500);
+                alert('💖 500 сердечек добавлено в гардероб!');
+              }
+            } else if (status === 'failed') {
+              alert('Ошибка оплаты. Попробуйте снова.');
+            }
+          });
+        } else {
+          alert('Не удалось создать инвойс Telegram Stars.');
+        }
+      } catch (e) {
+        console.error(e);
+        btn.disabled = false;
+        btn.innerText = `${starsAmount} ⭐`;
+      }
+    });
+  });
+}
+
+// ==========================================
+// 5. КАТАЛОГ ШМОТОК И КАСТОМИЗАЦИЯ МОНСТРИКА
 // ==========================================
 const WARDROBE_ITEMS = [
-  // 0 дней
+  { id: 'crown', name: 'Золотая корона', ico: '👑', reqStreak: 0, price: 9999, svgId: 'acc-crown' },
   { id: 'bow', name: 'Розовый бантик', ico: '🎀', reqStreak: 0, price: 25, svgId: 'acc-bow' },
   { id: 'glasses', name: 'Очки ботаника', ico: '👓', reqStreak: 0, price: 40, svgId: 'acc-glasses' },
-  
-  // 7+ дней
   { id: 'scarf', name: 'Вязаный шарфик', ico: '🧣', reqStreak: 7, price: 65, svgId: 'acc-scarf' },
   { id: 'cap', name: 'Кепка назад', ico: '🧢', reqStreak: 7, price: 80, svgId: 'acc-cap' },
   { id: 'bandaid', name: 'Милый пластырь', ico: '🩹', reqStreak: 7, price: 50, svgId: 'acc-bandaid' },
-  
-  // 15+ дней
   { id: 'sleepcap', name: 'Колпак для снов', ico: '💤', reqStreak: 15, price: 110, svgId: 'acc-sleepcap' },
   { id: 'mustache', name: 'Усы сыщика', ico: '🥸', reqStreak: 15, price: 95, svgId: 'acc-mustache' },
-  
-  // 30+ дней
   { id: 'partyhat', name: 'Колпак пати', ico: '🥳', reqStreak: 30, price: 160, svgId: 'acc-partyhat' },
   { id: 'flower', name: 'Цветок в зубах', ico: '🌹', reqStreak: 30, price: 140, svgId: 'acc-flower' },
   { id: 'sunglasses', name: 'Тёмные очки', ico: '😎', reqStreak: 30, price: 200, svgId: 'acc-sunglasses' },
-
-  // 50+ дней
   { id: 'headphones', name: 'Кибер-наушники', ico: '🎧', reqStreak: 50, price: 260, svgId: 'acc-headphones' },
   { id: 'witchhat', name: 'Шляпа мага', ico: '🧙‍♂️', reqStreak: 50, price: 290, svgId: 'acc-witchhat' },
-
-  // 100+ дней
   { id: 'cybervisor', name: 'Неоновый визор', ico: '🥽', reqStreak: 100, price: 380, svgId: 'acc-cybervisor' },
   { id: 'ninja', name: 'Повязка ниндзя', ico: '🥷', reqStreak: 100, price: 420, svgId: 'acc-ninja' },
-
-  // 150+ дней
   { id: 'spacehelmet', name: 'Шлем космоса', ico: '👨‍🚀', reqStreak: 150, price: 550, svgId: 'acc-spacehelmet' },
   { id: 'saturn_ring', name: 'Кольца Сатурна', ico: '🪐', reqStreak: 150, price: 580, svgId: 'acc-saturn_ring' },
-
-  // 200+ дней
   { id: 'monocle', name: 'Золотой монокль', ico: '🧐', reqStreak: 200, price: 680, svgId: 'acc-monocle' },
   { id: 'horns_fire', name: 'Пылающие рожки', ico: '⚡', reqStreak: 200, price: 750, svgId: 'acc-horns_fire' },
-
-  // 250+ дней
   { id: 'dragon_wings', name: 'Крылья дракона', ico: '🐉', reqStreak: 250, price: 900, svgId: 'acc-dragon_wings' },
   { id: 'phoenix_halo', name: 'Ореол феникса', ico: '🔥', reqStreak: 250, price: 990, svgId: 'acc-phoenix_halo' }
 ];
@@ -167,7 +275,9 @@ function setHeartCoins(val) {
 }
 
 function getOwnedItems() {
-  return JSON.parse(localStorage.getItem('owned_accessories') || '[]');
+  const arr = JSON.parse(localStorage.getItem('owned_accessories') || '[]');
+  if (paramIsVip && !arr.includes('crown')) arr.push('crown');
+  return arr;
 }
 
 function addOwnedItem(itemId) {
@@ -189,15 +299,22 @@ function applyAccessoryToSvg(activeId) {
   });
 }
 
-// Синхронизация надетой вещи с половинкой
+function setEquippedItem(itemId) {
+  if (itemId) {
+    localStorage.setItem('equipped_accessory', itemId);
+  } else {
+    localStorage.removeItem('equipped_accessory');
+  }
+  applyAccessoryToSvg(itemId);
+  syncEquippedWithPartner(itemId);
+}
+
 function syncEquippedWithPartner(itemId) {
   const nextUrl = new URL(window.location.href);
   if (itemId) {
     nextUrl.searchParams.set('eq_item', itemId);
-    localStorage.setItem('equipped_accessory', itemId);
   } else {
     nextUrl.searchParams.delete('eq_item');
-    localStorage.removeItem('equipped_accessory');
   }
   const finalUrl = nextUrl.toString();
   window.history.replaceState({}, '', finalUrl);
@@ -248,7 +365,6 @@ function setupWardrobeUI() {
 
   backdrop?.addEventListener('click', closeSheet);
 
-  // Сброс примерки на сцене
   btnStageCancel?.addEventListener('click', () => {
     activePreviewItem = null;
     if (stageChip) stageChip.style.display = 'none';
@@ -266,6 +382,9 @@ function setupWardrobeUI() {
     const coins = getHeartCoins();
 
     WARDROBE_ITEMS.forEach(item => {
+      // Корона доступна только в VIP
+      if (item.id === 'crown' && !paramIsVip) return;
+
       const isOwned = owned.includes(item.id);
       const isEquipped = (equipped === item.id);
       const isUnlocked = currentStreak >= item.reqStreak;
@@ -300,7 +419,6 @@ function setupWardrobeUI() {
         ${actionHtml}
       `;
 
-      // Примерка (остаётся на монстрике при закрытии шторки!)
       card.querySelector('.btn-try')?.addEventListener('click', () => {
         activePreviewItem = item.id;
         applyAccessoryToSvg(item.id);
@@ -311,14 +429,12 @@ function setupWardrobeUI() {
         if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
       });
 
-      // Покупка
       card.querySelector('.btn-buy')?.addEventListener('click', () => {
         const curCoins = getHeartCoins();
         if (curCoins >= item.price) {
           setHeartCoins(curCoins - item.price);
           addOwnedItem(item.id);
-          syncEquippedWithPartner(item.id);
-          applyAccessoryToSvg(item.id);
+          setEquippedItem(item.id);
           activePreviewItem = null;
           if (stageChip) stageChip.style.display = 'none';
           if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -328,20 +444,16 @@ function setupWardrobeUI() {
         }
       });
 
-      // Надеть
       card.querySelector('.btn-equip')?.addEventListener('click', () => {
-        syncEquippedWithPartner(item.id);
-        applyAccessoryToSvg(item.id);
+        setEquippedItem(item.id);
         activePreviewItem = null;
         if (stageChip) stageChip.style.display = 'none';
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         renderGrid();
       });
 
-      // Снять
       card.querySelector('.btn-unequip')?.addEventListener('click', () => {
-        syncEquippedWithPartner(null);
-        applyAccessoryToSvg(null);
+        setEquippedItem(null);
         activePreviewItem = null;
         if (stageChip) stageChip.style.display = 'none';
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -354,7 +466,7 @@ function setupWardrobeUI() {
 }
 
 // ==========================================
-// 5. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ (АРКАДА)
+// 6. МИНИ-ИГРА: ЛОВЕЦ СЕРДЕЦ (АРКАДА)
 // ==========================================
 function setupArcadeGame() {
   const arena = document.getElementById('arcade-arena');
@@ -382,9 +494,18 @@ function setupArcadeGame() {
   if (partnerBestEl) partnerBestEl.innerText = partnerScore;
 
   const todayKey = `arcade_attempts_${new Date().toISOString().slice(0, 10)}`;
-  let attemptsLeft = Number(localStorage.getItem(todayKey) ?? 3);
+  let attemptsLeft = paramIsVip ? 999 : Number(localStorage.getItem(todayKey) ?? 3);
 
   function updateAttemptsUI() {
+    if (paramIsVip) {
+      if (attemptsEl) attemptsEl.innerText = '👑 Безлимит (VIP)';
+      if (playBtn) {
+        playBtn.disabled = false;
+        playBtn.querySelector('span').innerText = 'Играть безлимитно ▶️';
+      }
+      return;
+    }
+
     const hearts = ['🖤🖤🖤', '❤️🖤🖤', '❤️❤️🖤', '❤️❤️❤️'];
     if (attemptsEl) attemptsEl.innerText = hearts[attemptsLeft] || '🖤🖤🖤';
     if (attemptsLeft <= 0) {
@@ -409,12 +530,12 @@ function setupArcadeGame() {
   let isPlaying = false;
 
   playBtn?.addEventListener('click', () => {
-    if (attemptsLeft <= 0 || isPlaying) return;
-
-    attemptsLeft--;
-    localStorage.setItem(todayKey, attemptsLeft);
-    updateAttemptsUI();
-
+    if (!paramIsVip) {
+      if (attemptsLeft <= 0 || isPlaying) return;
+      attemptsLeft--;
+      localStorage.setItem(todayKey, attemptsLeft);
+      updateAttemptsUI();
+    }
     startGame();
   });
 
@@ -576,7 +697,9 @@ function setupArcadeGame() {
   }
 }
 
-// 6. РАЗДЕЛ: ВОПРОС ДНЯ
+// ==========================================
+// 7. РАЗДЕЛ: ВОПРОС ДНЯ
+// ==========================================
 function setupGamesSection() {
   const qTitle = document.getElementById('daily-q-text');
   if (qTitle) qTitle.innerText = paramQText;
@@ -701,7 +824,7 @@ function setupGamesSection() {
   });
 }
 
-// 7. Подгрузка аватарок
+// 8. Подгрузка аватарок
 function loadAvatars() {
   function setAvatar(imgId, fallbackId, username) {
     const imgEl = document.getElementById(imgId);
@@ -737,7 +860,7 @@ function loadAvatars() {
   setAvatar('avatar-img-u2', 'avatar-fallback-u2', paramU2User);
 }
 
-// 8. Отрисовка альбома
+// 9. Отрисовка альбома
 function renderAlbum() {
   const grid = document.getElementById('photo-grid');
   const emptyBlock = document.getElementById('empty-album');
@@ -804,7 +927,7 @@ function closeModal() {
 document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
 document.getElementById('modal-close-bg')?.addEventListener('click', closeModal);
 
-// 9. Статусы монстрика и дни отношений
+// 10. Статусы монстрика и дни отношений
 function updateStatuses() {
   const badge1 = document.getElementById('status-badge-u1');
   const badge2 = document.getElementById('status-badge-u2');
@@ -901,7 +1024,7 @@ function getRussianPlural(number, titles) {
   ];
 }
 
-// 10. Кнопка камеры
+// 11. Кнопка камеры
 document.getElementById('dock-snap-btn')?.addEventListener('click', () => {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   const heart = document.createElement('div');
@@ -935,3 +1058,4 @@ renderAlbum();
 setupGamesSection();
 setupArcadeGame();
 setupWardrobeUI();
+setupVipSection();

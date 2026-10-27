@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.3">
+  <link rel="stylesheet" href="style.css?v=2.4">
 </head>
 <body>
   <div class="ambient-glow glow-1"></div>
@@ -20,7 +20,7 @@
     <header class="glass-card header-bar">
       <div class="couple-profile">
         <div class="avatar-group">
-          <div class="avatar-ring male">
+          <div class="avatar-ring male" id="ring-u1">
             <img id="avatar-img-u1" class="avatar-pic" alt="" />
             <span id="avatar-fallback-u1" class="avatar-fallback">М</span>
             <div class="moment-status waiting" id="status-badge-u1">⏳</div>
@@ -28,7 +28,7 @@
           <div class="heart-badge">
             <svg viewBox="0 0 24 24" class="heart-icon"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
           </div>
-          <div class="avatar-ring female">
+          <div class="avatar-ring female" id="ring-u2">
             <img id="avatar-img-u2" class="avatar-pic" alt="" />
             <span id="avatar-fallback-u2" class="avatar-fallback">С</span>
             <div class="moment-status waiting" id="status-badge-u2">⏳</div>
@@ -38,6 +38,7 @@
           <div class="days-pill">
             <span class="counter-num" id="days-counter">0</span>
             <span class="counter-txt" id="days-label">дней вместе</span>
+            <span class="vip-crown-badge" id="vip-crown-badge" style="display: none;">👑</span>
           </div>
           <span class="anniversary-date" id="anniversary-date">с 29 ноября 2023</span>
         </div>
@@ -53,13 +54,11 @@
     <div class="tab-screen active" id="screen-home">
       <main class="monster-stage">
         
-        <!-- Чип активной примерки на сцене -->
         <div class="stage-tryon-chip" id="stage-tryon-chip" style="display: none;">
           <span>👀 Примерка: <b id="stage-tryon-name">Вещь</b></span>
           <button class="stage-tryon-close" id="btn-stage-cancel-tryon">✕</button>
         </div>
 
-        <!-- Кнопка гардероба на сцене справа от монстрика -->
         <button class="stage-wardrobe-btn" id="btn-open-wardrobe" title="Открыть гардероб">
           <span class="btn-icon">🧢</span>
           <span class="btn-label">Шкаф</span>
@@ -91,8 +90,6 @@
                 <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
                 <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
               </radialGradient>
-              
-              <!-- Градиенты для крутых вещей -->
               <linearGradient id="cyberGrad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#00F2FE"/>
                 <stop offset="100%" stop-color="#4FACFE"/>
@@ -100,6 +97,11 @@
               <linearGradient id="fireGrad" x1="0" y1="1" x2="0" y2="0">
                 <stop offset="0%" stop-color="#FF0844"/>
                 <stop offset="100%" stop-color="#FFB199"/>
+              </linearGradient>
+              <linearGradient id="goldCrownGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FFF275"/>
+                <stop offset="50%" stop-color="#FFD700"/>
+                <stop offset="100%" stop-color="#FFA500"/>
               </linearGradient>
             </defs>
 
@@ -157,118 +159,90 @@
 
               <!-- СЛОЙ ОДЕЖДЫ И АКСЕССУАРОВ (SVG) -->
               <g id="monster-accessories-layer">
-                <!-- 0 дней -->
+                <!-- 👑 КОРОЛЕВСКАЯ VIP КОРОНА -->
+                <g id="acc-crown" style="display:none;">
+                  <path d="M 96 52 L 102 32 L 112 44 L 120 26 L 128 44 L 138 32 L 144 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.5"/>
+                  <circle cx="102" cy="32" r="2.5" fill="#E53E3E"/>
+                  <circle cx="120" cy="26" r="3" fill="#3182CE"/>
+                  <circle cx="138" cy="32" r="2.5" fill="#38A169"/>
+                </g>
+
+                <!-- Обычные аксессуары -->
                 <g id="acc-bow" style="display:none;">
                   <path d="M 64 52 L 78 62 L 64 72 Z M 92 52 L 78 62 L 92 72 Z" fill="#FF5E8A"/>
                   <circle cx="78" cy="62" r="4.5" fill="#FFA06E"/>
                 </g>
-
                 <g id="acc-glasses" style="display:none;">
                   <circle cx="95" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
                   <circle cx="145" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
                   <line x1="112" y1="115" x2="128" y2="115" stroke="#2D3436" stroke-width="3"/>
                 </g>
-
-                <!-- 7 дней -->
                 <g id="acc-scarf" style="display:none;">
                   <path d="M 80 140 Q 120 156 160 140 Q 164 150 152 158 Q 120 166 86 152 Z" fill="#E17055"/>
                   <path d="M 136 150 L 140 184 L 154 182 L 150 150 Z" fill="#D63031"/>
                 </g>
-
                 <g id="acc-cap" style="display:none;">
                   <path d="M 86 64 Q 120 34 154 64 Z" fill="#0984E3"/>
                   <path d="M 144 62 Q 180 64 175 72 Q 146 68 140 62 Z" fill="#74B9FF"/>
-                  <circle cx="120" cy="46" r="3.5" fill="#FFEAA7"/>
                 </g>
-
                 <g id="acc-bandaid" style="display:none;">
                   <rect x="68" y="122" width="20" height="9" rx="3.5" transform="rotate(-18 78 126)" fill="#FDCB6E" stroke="#E17055" stroke-width="1.2"/>
-                  <circle cx="78" cy="126" r="1.8" fill="#E17055"/>
                 </g>
-
-                <!-- 15 дней -->
                 <g id="acc-sleepcap" style="display:none;">
                   <path d="M 88 62 Q 120 40 150 62 Q 174 28 190 56 Q 164 48 142 58 Z" fill="#6C5CE7"/>
                   <circle cx="190" cy="56" r="7.5" fill="#FFFFFF"/>
                 </g>
-
                 <g id="acc-mustache" style="display:none;">
                   <path d="M 120 126 Q 104 119 96 128 Q 112 135 120 128 Q 128 135 144 128 Q 136 119 120 126 Z" fill="#2D3436"/>
                 </g>
-
-                <!-- 30 дней -->
                 <g id="acc-partyhat" style="display:none;">
                   <polygon points="120,12 96,58 144,58" fill="#FD79A8"/>
                   <circle cx="120" cy="12" r="5.5" fill="#FDCB6E"/>
-                  <line x1="102" y1="48" x2="138" y2="48" stroke="#FFEAA7" stroke-width="2.5"/>
                 </g>
-
                 <g id="acc-flower" style="display:none;">
                   <path d="M 124 133 Q 146 138 158 128" fill="none" stroke="#00B894" stroke-width="3.5"/>
                   <circle cx="162" cy="126" r="7" fill="#FF5E8A"/>
                 </g>
-
                 <g id="acc-sunglasses" style="display:none;">
                   <path d="M 82 108 L 110 108 L 106 127 L 86 127 Z" fill="#1E142B"/>
                   <path d="M 130 108 L 158 108 L 154 127 L 134 127 Z" fill="#1E142B"/>
                   <line x1="108" y1="112" x2="132" y2="112" stroke="#1E142B" stroke-width="3.5"/>
                 </g>
-
-                <!-- 50 дней -->
                 <g id="acc-headphones" style="display:none;">
                   <path d="M 70 100 A 52 52 0 0 1 170 100" fill="none" stroke="#00F2FE" stroke-width="5" stroke-linecap="round"/>
                   <rect x="58" y="94" width="16" height="30" rx="8" fill="#1E142B" stroke="#00F2FE" stroke-width="3"/>
                   <rect x="166" y="94" width="16" height="30" rx="8" fill="#1E142B" stroke="#00F2FE" stroke-width="3"/>
                 </g>
-
                 <g id="acc-witchhat" style="display:none;">
                   <ellipse cx="120" cy="62" rx="48" ry="12" fill="#2C3A47"/>
                   <path d="M 88 60 Q 120 10 148 40 Q 135 55 152 60 Z" fill="#1E142B"/>
-                  <circle cx="148" cy="40" r="4.5" fill="#FDCB6E"/>
                 </g>
-
-                <!-- 100 дней -->
                 <g id="acc-cybervisor" style="display:none;">
                   <path d="M 76 108 L 164 108 L 158 125 L 82 125 Z" fill="url(#cyberGrad)" opacity="0.88"/>
-                  <line x1="76" y1="116" x2="164" y2="116" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
                 </g>
-
                 <g id="acc-ninja" style="display:none;">
                   <rect x="74" y="92" width="92" height="15" rx="4" fill="#2D3436"/>
                   <circle cx="120" cy="99.5" r="4" fill="#FF7675"/>
-                  <path d="M 166 96 Q 186 106 195 125" fill="none" stroke="#2D3436" stroke-width="4" stroke-linecap="round"/>
                 </g>
-
-                <!-- 150 дней -->
                 <g id="acc-spacehelmet" style="display:none;">
                   <circle cx="120" cy="120" r="54" fill="none" stroke="#74B9FF" stroke-width="3.5" opacity="0.8"/>
-                  <path d="M 90 85 A 40 40 0 0 1 150 85" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
                 </g>
-
                 <g id="acc-saturn_ring" style="display:none;">
                   <ellipse cx="120" cy="64" rx="60" ry="16" fill="none" stroke="#FDCB6E" stroke-width="4" transform="rotate(-15 120 64)"/>
                 </g>
-
-                <!-- 200 дней -->
                 <g id="acc-monocle" style="display:none;">
                   <circle cx="95" cy="115" r="16" fill="none" stroke="#F1C40F" stroke-width="3"/>
-                  <path d="M 111 115 Q 120 145 130 160" fill="none" stroke="#F1C40F" stroke-width="2" stroke-dasharray="3,3"/>
                 </g>
-
                 <g id="acc-horns_fire" style="display:none;">
                   <circle cx="62" cy="42" r="14" fill="url(#fireGrad)" opacity="0.6" filter="blur(3px)"/>
                   <circle cx="178" cy="42" r="14" fill="url(#fireGrad)" opacity="0.6" filter="blur(3px)"/>
                 </g>
-
-                <!-- 250 дней -->
                 <g id="acc-dragon_wings" style="display:none;">
                   <path d="M 64 125 Q 10 90 20 60 Q 40 85 58 100" fill="#4834D4" stroke="#6C5CE7" stroke-width="3"/>
                   <path d="M 176 125 Q 230 90 220 60 Q 200 85 182 100" fill="#4834D4" stroke="#6C5CE7" stroke-width="3"/>
                 </g>
-
                 <g id="acc-phoenix_halo" style="display:none;">
                   <ellipse cx="120" cy="28" rx="42" ry="12" fill="none" stroke="#FF7675" stroke-width="5" opacity="0.9"/>
-                  <ellipse cx="120" cy="28" rx="42" ry="12" fill="none" stroke="#FDCB6E" stroke-width="2.5"/>
                 </g>
               </g>
 
@@ -400,6 +374,92 @@
       </div>
     </div>
 
+    <!-- ЭКРАН 4: VIP (TELEGRAM STARS) -->
+    <div class="tab-screen" id="screen-vip" style="display: none !important;">
+      <div class="vip-container">
+        
+        <!-- Верхний статус-баннер -->
+        <div class="glass-card vip-hero-card">
+          <div class="vip-badge-row">
+            <span class="vip-status-pill" id="vip-status-text">Обычный аккаунт</span>
+            <span class="vip-stars-balance">⭐ Telegram Stars</span>
+          </div>
+          <h2 class="vip-hero-title">Магия для двоих ✨</h2>
+          <p class="vip-hero-desc">Поддержите бота звёздами и защитите вашу историю любви</p>
+        </div>
+
+        <!-- Витрина VIP товаров -->
+        <div class="vip-cards-grid">
+          
+          <!-- 1. Заморозка стрика -->
+          <div class="glass-card vip-item-card">
+            <div class="vip-item-header">
+              <span class="vip-item-ico">🧊</span>
+              <div class="vip-item-badge">Защита</div>
+            </div>
+            <h4 class="vip-item-title">Заморозка стрика</h4>
+            <p class="vip-item-desc">Стрик не сгорит, если вы пропустите день или будете без связи.</p>
+            <div class="vip-item-footer">
+              <span class="vip-stock" id="freeze-stock-label">Осталось: 0 шт</span>
+              <button class="vip-buy-btn" data-code="freeze" data-stars="25" data-title="Заморозка стрика" data-desc="Защита стрика пары от сгорания на 1 пропуск">
+                <span>25 ⭐</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Воскрешение стрика -->
+          <div class="glass-card vip-item-card" id="card-restore-streak">
+            <div class="vip-item-header">
+              <span class="vip-item-ico">🩹</span>
+              <div class="vip-item-badge">Спасение</div>
+            </div>
+            <h4 class="vip-item-title">Воскрешение стрика</h4>
+            <p class="vip-item-desc" id="restore-desc-text">Вернёт вчерашний сгоревший стрик обратно к жизни.</p>
+            <div class="vip-item-footer">
+              <span class="vip-stock" id="restore-status-label">Доступно при сгорании</span>
+              <button class="vip-buy-btn" id="btn-buy-restore" data-code="restore" data-stars="50" data-title="Воскрешение стрика" data-desc="Восстановление сгоревшего стрика пары">
+                <span>50 ⭐</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Королевский VIP навсегда -->
+          <div class="glass-card vip-item-card gold-border">
+            <div class="vip-item-header">
+              <span class="vip-item-ico">👑</span>
+              <div class="vip-item-badge gold">Эксклюзив</div>
+            </div>
+            <h4 class="vip-item-title">Королевский VIP</h4>
+            <p class="vip-item-desc">Золотая корона монстрику, сияющая аура и бесконечные попытки в играх.</p>
+            <div class="vip-item-footer">
+              <span class="vip-stock gold" id="vip-perk-label">Навсегда</span>
+              <button class="vip-buy-btn gold-btn" id="btn-buy-vip" data-code="vip" data-stars="75" data-title="Королевский VIP" data-desc="Золотая корона, бесконечные попытки и VIP-статус">
+                <span>75 ⭐</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. Мешок сердец -->
+          <div class="glass-card vip-item-card">
+            <div class="vip-item-header">
+              <span class="vip-item-ico">💖</span>
+              <div class="vip-item-badge">Гардероб</div>
+            </div>
+            <h4 class="vip-item-title">Мешок 500 ❤️</h4>
+            <p class="vip-item-desc">Мгновенный запас сердечек для покупки любых шмоток в шкафу.</p>
+            <div class="vip-item-footer">
+              <span class="vip-stock">+500 очков</span>
+              <button class="vip-buy-btn" data-code="coins" data-stars="15" data-title="Мешок 500 сердец" data-desc="500 сердечек для гардероба питомца">
+                <span>15 ⭐</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <!-- ШТОРКА ГАРДЕРОБА -->
@@ -451,7 +511,7 @@
       <button class="dock-item" id="tab-vip">
         <span class="dock-ico">⭐</span>
         <span class="dock-txt">VIP</span>
-        <span class="badge-dot"></span>
+        <span class="badge-dot" id="vip-tab-dot"></span>
       </button>
     </div>
   </nav>
