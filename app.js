@@ -45,9 +45,12 @@ function showTab(tabName) {
       }
     }
   });
+
+  if (tabName === 'album') {
+    renderAlbum();
+  }
 }
 
-// По умолчанию открываем «Дом»
 showTab('home');
 
 tabHome?.addEventListener('click', () => {
@@ -93,7 +96,7 @@ subtabQa?.addEventListener('click', () => {
 });
 
 // ==========================================
-// 3. ПАРАМЕТРЫ ИЗ URL И ДАННЫЕ ПАРЫ
+// 3. ПАРАМЕТРЫ ИЗ URL И КЭШИРОВАНИЕ ФОТО
 // ==========================================
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -107,8 +110,16 @@ const paramU1User = urlParams.get('u1_user') || '';
 const paramU2User = urlParams.get('u2_user') || '';
 const paramU1Sent = urlParams.get('u1_sent') === '1';
 const paramU2Sent = urlParams.get('u2_sent') === '1';
-const paramPhotos = urlParams.get('photos') || '';
-const paramBotToken = urlParams.get('bot_token') || '';
+
+// Кэширование фото: если в ссылке есть новые фото — сохраняем их в память, если нет — достаем из памяти
+let paramPhotos = urlParams.get('photos') || '';
+if (paramPhotos) {
+  localStorage.setItem('cached_photos_list', paramPhotos);
+} else {
+  paramPhotos = localStorage.getItem('cached_photos_list') || '';
+}
+
+const paramBotToken = urlParams.get('bot_token') || '8927842634:AAE-YCSfJzdYTMnB1znZDMptVIkhgUIfYtU';
 const paramBotUsername = urlParams.get('bot_username') || '';
 const paramQText = urlParams.get('q_text') || 'Какое наше совместное воспоминание самое теплое? ✨';
 
@@ -168,7 +179,6 @@ function setupVipSection() {
     if (restoreStatusLabel) restoreStatusLabel.innerText = 'Стрик не сгорал 👍';
   }
 
-  // Покупка товаров за Telegram Stars
   document.querySelectorAll('.vip-buy-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const itemCode = btn.getAttribute('data-code');
@@ -238,7 +248,6 @@ function setupVipSection() {
     });
   });
 
-  // Кнопка «Обратная связь и баги» — отправка инструкции в чат бота и закрытие Mini App
   document.getElementById('btn-feedback')?.addEventListener('click', async () => {
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
@@ -254,8 +263,8 @@ function setupVipSection() {
             text: "💌 <b>Обратная связь и сообщения об ошибках</b>\n\n" +
                   "Если вы нашли баг или хотите предложить идею, отправьте прямо в этот чат:\n" +
                   "<code>/bug текст вашего сообщения</code>\n\n" +
-                  "<i>Пример:</i>\n<code>/bug Не открывается фото в альбоме</code>\n\n" +
-                  "Разработчик сразу получит ваше обращение в канале модерации и сможет ответить вам!",
+                  "<i>Пример:</i>\n<code>/bug Заметил баг в альбоме</code>\n\n" +
+                  "Разработчик сразу получит ваше обращение и сможет ответить вам!",
             parse_mode: 'HTML'
           })
         });
@@ -349,6 +358,10 @@ function syncEquippedWithPartner(itemId) {
     nextUrl.searchParams.set('eq_item', itemId);
   } else {
     nextUrl.searchParams.delete('eq_item');
+  }
+  // Защита: не даем стереть фотографии из ссылки
+  if (!nextUrl.searchParams.get('photos') && paramPhotos) {
+    nextUrl.searchParams.set('photos', paramPhotos);
   }
   const finalUrl = nextUrl.toString();
   window.history.replaceState({}, '', finalUrl);
@@ -452,7 +465,6 @@ function setupWardrobeUI() {
         ${actionHtml}
       `;
 
-      // Примерка вещи (не спадает при закрытии шторки)
       card.querySelector('.btn-try')?.addEventListener('click', () => {
         activePreviewItem = item.id;
         applyAccessoryToSvg(item.id);
@@ -463,7 +475,6 @@ function setupWardrobeUI() {
         if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
       });
 
-      // Покупка за сердечки
       card.querySelector('.btn-buy')?.addEventListener('click', () => {
         const curCoins = getHeartCoins();
         if (curCoins >= item.price) {
@@ -479,7 +490,6 @@ function setupWardrobeUI() {
         }
       });
 
-      // Надеть
       card.querySelector('.btn-equip')?.addEventListener('click', () => {
         setEquippedItem(item.id);
         activePreviewItem = null;
@@ -488,7 +498,6 @@ function setupWardrobeUI() {
         renderGrid();
       });
 
-      // Снять
       card.querySelector('.btn-unequip')?.addEventListener('click', () => {
         setEquippedItem(null);
         activePreviewItem = null;
@@ -695,6 +704,9 @@ function setupArcadeGame() {
     const nextUrl = new URL(window.location.href);
     nextUrl.searchParams.set('u1_score', newU1Score);
     nextUrl.searchParams.set('u2_score', newU2Score);
+    if (!nextUrl.searchParams.get('photos') && paramPhotos) {
+      nextUrl.searchParams.set('photos', paramPhotos);
+    }
     const finalUrl = nextUrl.toString();
 
     window.history.replaceState({}, '', finalUrl);
@@ -810,6 +822,9 @@ function setupGamesSection() {
     const nextUrl = new URL(window.location.href);
     nextUrl.searchParams.set('u1_ans', newU1);
     nextUrl.searchParams.set('u2_ans', newU2);
+    if (!nextUrl.searchParams.get('photos') && paramPhotos) {
+      nextUrl.searchParams.set('photos', paramPhotos);
+    }
     const finalUrlString = nextUrl.toString();
 
     window.history.replaceState({}, '', finalUrlString);
@@ -907,15 +922,27 @@ function renderAlbum() {
   const emptyBlock = document.getElementById('empty-album');
   const counterEl = document.getElementById('album-total-count');
 
-  if (!paramPhotos) {
+  // Берём фото из URL или из локального кэша
+  let photosData = paramPhotos || localStorage.getItem('cached_photos_list') || '';
+
+  if (!photosData || photosData.trim() === '') {
     if (grid) grid.style.display = 'none';
     if (emptyBlock) emptyBlock.style.display = 'block';
     if (counterEl) counterEl.innerText = '0 кадров';
     return;
   }
 
-  const items = paramPhotos.split('~');
-  if (counterEl) counterEl.innerText = `${items.length} ${getRussianPlural(items.length, ['кадр', 'кадра', 'кадров'])}`;
+  const items = photosData.split('~').filter(Boolean);
+  if (items.length === 0) {
+    if (grid) grid.style.display = 'none';
+    if (emptyBlock) emptyBlock.style.display = 'block';
+    if (counterEl) counterEl.innerText = '0 кадров';
+    return;
+  }
+
+  if (counterEl) {
+    counterEl.innerText = `${items.length} ${getRussianPlural(items.length, ['кадр', 'кадра', 'кадров'])}`;
+  }
 
   if (emptyBlock) emptyBlock.style.display = 'none';
   if (grid) {
@@ -923,7 +950,11 @@ function renderAlbum() {
     grid.innerHTML = '';
 
     items.forEach(rawItem => {
-      const [filePath, dateStr, authorName] = rawItem.split('*');
+      const parts = rawItem.split('*');
+      const filePath = parts[0];
+      const dateStr = parts[1] || '';
+      const authorName = parts[2] || 'Момент';
+
       if (!filePath) return;
 
       const fullPhotoUrl = `https://api.telegram.org/file/bot${paramBotToken}/${filePath}`;
