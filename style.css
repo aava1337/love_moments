@@ -34,10 +34,36 @@ body {
 }
 
 /* ======================================================== */
-/* ТЕМАТИЧЕСКИЕ ФОНЫ ГЛАВНОГО МЕНЮ */
+/* СЛОЙ ЖИВЫХ ПАТТЕРНОВ (СЕРДЕЧКИ, 67 И ПРИКОЛЮХИ) */
 /* ======================================================== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  opacity: 0.35;
+  animation: bgPatternDrift 35s linear infinite;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes bgPatternDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 160px 320px;
+  }
+}
+
+/* 1. ПОЛНОЧЬ: Сердечки, Луна, Звёзды и 67 */
 body.theme-midnight {
   background: linear-gradient(180deg, #181124 0%, #0D0914 100%);
+}
+body.theme-midnight::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath d='M30 25 C24 16 12 21 18 31 L30 43 L42 31 C48 21 36 16 30 25 Z' fill='%23FF5E8A' opacity='0.9'/%3E%3Ctext x='105' y='46' font-family='Impact, sans-serif' font-size='20' font-weight='900' fill='%23A29BFE' opacity='0.85'%3E67%3C/text%3E%3Cpath d='M125 100 A12 12 0 1 0 137 120 A10 10 0 0 1 125 100' fill='%23FDCB6E' opacity='0.8'/%3E%3Cpath d='M40 108 L43 118 L53 120 L43 122 L40 132 L37 122 L27 120 L37 118 Z' fill='%23FFFFFF' opacity='0.85'/%3E%3Cpath d='M90 90 C86 84 78 86 82 93 L90 100 L98 93 C102 86 94 84 90 90 Z' fill='%23FF7675' opacity='0.7'/%3E%3Ccircle cx='80' cy='22' r='2.5' fill='%23FFFFFF' opacity='0.8'/%3E%3Ccircle cx='145' cy='30' r='2' fill='%23FF5E8A' opacity='0.7'/%3E%3Ccircle cx='18' cy='85' r='2' fill='%23A29BFE' opacity='0.7'/%3E%3C/svg%3E");
 }
 body.theme-midnight .glow-1 {
   background: radial-gradient(circle, rgba(108, 92, 231, 0.55) 0%, transparent 70%);
@@ -46,8 +72,12 @@ body.theme-midnight .glow-2 {
   background: radial-gradient(circle, rgba(255, 94, 138, 0.45) 0%, transparent 70%);
 }
 
+/* 2. КОСМОС: Сатурн, НЛО, Ракеты, 67 и Космо-сердца */
 body.theme-space {
   background: radial-gradient(circle at 50% 20%, #151632 0%, #060714 80%);
+}
+body.theme-space::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Ccircle cx='38' cy='38' r='9' fill='%234FACFE'/%3E%3Cellipse cx='38' cy='38' rx='18' ry='5' fill='none' stroke='%2300F2FE' stroke-width='2' transform='rotate(-22 38 38)'/%3E%3Ctext x='110' y='42' font-family='Arial Black, sans-serif' font-size='22' font-weight='900' fill='%2338BDF8' opacity='0.9'%3E67%3C/text%3E%3Cpath d='M108 118 Q124 108 140 118 Q124 128 108 118 Z' fill='%23A55EEA'/%3E%3Ccircle cx='124' cy='116' r='4' fill='%2300F2FE'/%3E%3Cpath d='M35 116 C30 110 20 113 24 121 L35 130 L46 121 C50 113 40 110 35 116 Z' fill='%23FF5E8A' opacity='0.85'/%3E%3Cpath d='M82 68 L84 76 L92 78 L84 80 L82 88 L80 80 L72 78 L80 76 Z' fill='%23FFFFFF' opacity='0.9'/%3E%3Ccircle cx='80' cy='22' r='2' fill='%2370A1FF'/%3E%3Ccircle cx='140' cy='75' r='1.8' fill='%23FFFFFF'/%3E%3C/svg%3E");
 }
 body.theme-space .glow-1 {
   background: radial-gradient(circle, rgba(69, 123, 255, 0.5) 0%, transparent 70%);
@@ -56,8 +86,12 @@ body.theme-space .glow-2 {
   background: radial-gradient(circle, rgba(165, 94, 234, 0.45) 0%, transparent 70%);
 }
 
+/* 3. ЗАКАТ: Стрелы Амура, Сердца, Облачка и 67 */
 body.theme-sunset {
   background: linear-gradient(180deg, #2D1438 0%, #541936 50%, #200E1D 100%);
+}
+body.theme-sunset::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath d='M42 32 C35 23 21 27 28 39 L42 53 L56 39 C63 27 49 23 42 32 Z' fill='%23FF7675'/%3E%3Cline x1='14' y1='60' x2='68' y2='26' stroke='%23FFA06E' stroke-width='2.8' stroke-linecap='round'/%3E%3Ctext x='110' y='46' font-family='Arial Black, sans-serif' font-size='22' font-weight='900' fill='%23FFA06E' opacity='0.9'%3E67%3C/text%3E%3Cpath d='M105 118 A8 8 0 0 1 120 112 A11 11 0 0 1 140 118 A8 8 0 0 1 136 128 L105 128 Z' fill='%23FFA06E' opacity='0.7'/%3E%3Cpath d='M35 112 C30 105 18 109 23 118 L35 128 L47 118 C52 109 40 105 35 112 Z' fill='%23FF5E8A' opacity='0.85'/%3E%3Cpath d='M85 82 L87 88 L93 90 L87 92 L85 98 L83 92 L77 90 L83 88 Z' fill='%23FFEAA7' opacity='0.9'/%3E%3C/svg%3E");
 }
 body.theme-sunset .glow-1 {
   background: radial-gradient(circle, rgba(255, 121, 121, 0.55) 0%, transparent 70%);
@@ -66,8 +100,13 @@ body.theme-sunset .glow-2 {
   background: radial-gradient(circle, rgba(255, 160, 110, 0.5) 0%, transparent 70%);
 }
 
+/* 4. КИБЕРПАНК: Глитч 67, 8-битные сердца, Молнии ⚡ и Прицелы */
 body.theme-cyberpunk {
   background: linear-gradient(180deg, #090A0F 0%, #140826 100%);
+}
+body.theme-cyberpunk::before {
+  opacity: 0.45;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath d='M24 26 h8 v8 h-8 z M40 26 h8 v8 h-8 z M16 34 h40 v8 h-40 z M24 42 h24 v8 h-24 z M32 50 h8 v8 h-8 z' fill='%23FF0844'/%3E%3Ctext x='103' y='44' font-family='monospace' font-size='24' font-weight='900' fill='%2300F2FE'%3E67%3C/text%3E%3Ctext x='105' y='43' font-family='monospace' font-size='24' font-weight='900' fill='%23FF0844' opacity='0.6'%3E67%3C/text%3E%3Cpolygon points='128,96 116,116 126,116 120,136 138,112 128,112' fill='%2300F2FE'/%3E%3Ccircle cx='38' cy='118' r='11' fill='none' stroke='%23FF0844' stroke-width='1.8'/%3E%3Cline x1='38' y1='102' x2='38' y2='134' stroke='%23FF0844' stroke-width='1.8'/%3E%3Cline x1='22' y1='118' x2='54' y2='118' stroke='%23FF0844' stroke-width='1.8'/%3E%3Ccircle cx='80' cy='20' r='2' fill='%2300F2FE'/%3E%3Ccircle cx='80' cy='140' r='2' fill='%2300F2FE'/%3E%3C/svg%3E");
 }
 body.theme-cyberpunk .glow-1 {
   background: radial-gradient(circle, rgba(0, 242, 254, 0.45) 0%, transparent 70%);
@@ -76,8 +115,12 @@ body.theme-cyberpunk .glow-2 {
   background: radial-gradient(circle, rgba(255, 8, 68, 0.4) 0%, transparent 70%);
 }
 
+/* 5. САД САКУРЫ: Цветки, Лепестки, Сердечки и 67 */
 body.theme-sakura {
   background: linear-gradient(180deg, #281726 0%, #170F1A 100%);
+}
+body.theme-sakura::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Ccircle cx='32' cy='36' r='7' fill='%23FFB8D2'/%3E%3Ccircle cx='46' cy='36' r='7' fill='%23FFB8D2'/%3E%3Ccircle cx='39' cy='29' r='7' fill='%23FFB8D2'/%3E%3Ccircle cx='39' cy='43' r='7' fill='%23FFB8D2'/%3E%3Ccircle cx='39' cy='36' r='4' fill='%23FF75A0'/%3E%3Ctext x='110' y='46' font-family='Arial Black, sans-serif' font-size='22' font-weight='900' fill='%23FD79A8' opacity='0.9'%3E67%3C/text%3E%3Cpath d='M118 108 C128 103 134 114 124 124 C114 119 114 110 118 108 Z' fill='%23FF75A0' opacity='0.85'/%3E%3Cpath d='M134 128 C142 124 146 132 138 139 C130 136 130 129 134 128 Z' fill='%23FFB8D2' opacity='0.8'/%3E%3Cpath d='M36 112 C30 104 18 108 22 118 L36 128 L50 118 C54 108 42 104 36 112 Z' fill='%23FD79A8' opacity='0.85'/%3E%3Cpath d='M85 80 L87 86 L93 88 L87 90 L85 96 L83 90 L77 88 L83 86 Z' fill='%23FFFFFF' opacity='0.9'/%3E%3C/svg%3E");
 }
 body.theme-sakura .glow-1 {
   background: radial-gradient(circle, rgba(253, 121, 168, 0.55) 0%, transparent 70%);
@@ -86,8 +129,13 @@ body.theme-sakura .glow-2 {
   background: radial-gradient(circle, rgba(225, 112, 85, 0.35) 0%, transparent 70%);
 }
 
+/* 6. КОРОЛЕВСКИЙ БАРХАТ: Короны 👑, Алмазы 💎, Золотые 67 */
 body.theme-royal {
   background: radial-gradient(circle at 50% 30%, #290B19 0%, #0D0308 90%);
+}
+body.theme-royal::before {
+  opacity: 0.42;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath d='M20 46 L27 30 L36 38 L45 22 L54 38 L63 30 L70 46 Z' fill='%23FFD700' stroke='%23B7791F' stroke-width='1.5'/%3E%3Ccircle cx='27' cy='30' r='2' fill='%23FF0844'/%3E%3Ccircle cx='45' cy='22' r='2.5' fill='%2300F2FE'/%3E%3Ccircle cx='63' cy='30' r='2' fill='%23FF0844'/%3E%3Cpolygon points='115,116 125,104 137,104 147,116 131,134' fill='%2300F2FE' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3Ctext x='110' y='46' font-family='Georgia, serif' font-size='24' font-weight='900' fill='%23FFD700'%3E67%3C/text%3E%3Cpath d='M40 114 C35 106 22 110 26 120 L40 131 L54 120 C58 110 45 106 40 114 Z' fill='%23D63031'/%3E%3Cpath d='M85 75 L87 83 L95 85 L87 87 L85 95 L83 87 L75 85 L83 83 Z' fill='%23FFD700' opacity='0.95'/%3E%3C/svg%3E");
 }
 body.theme-royal .glow-1 {
   background: radial-gradient(circle, rgba(255, 215, 0, 0.38) 0%, transparent 70%);
@@ -140,9 +188,7 @@ body.theme-royal .glow-2 {
   box-shadow: var(--glass-shadow);
 }
 
-/* ======================================================== */
 /* ШАПКА */
-/* ======================================================== */
 .header-bar {
   padding: 10px 14px;
   display: flex;
@@ -301,9 +347,7 @@ body.theme-royal .glow-2 {
   color: #FFA06E;
 }
 
-/* ======================================================== */
-/* ВКЛАДКИ ЭКРАНОВ */
-/* ======================================================== */
+/* ВКЛАДКИ */
 .tab-screen {
   display: none !important;
   flex: 1;
@@ -316,9 +360,7 @@ body.theme-royal .glow-2 {
   display: flex !important;
 }
 
-/* ======================================================== */
 /* ЭКРАН 1: ДОМ */
-/* ======================================================== */
 .monster-stage {
   flex: 1;
   display: flex;
@@ -421,7 +463,7 @@ body.theme-royal .glow-2 {
   font-size: 13px;
 }
 
-/* Кнопка стиля на сцене */
+/* Кнопка стиля */
 .stage-wardrobe-btn {
   position: absolute;
   right: 10px;
@@ -458,7 +500,7 @@ body.theme-royal .glow-2 {
   letter-spacing: 0.3px;
 }
 
-/* Плашка активной примерки */
+/* Плашка примерки */
 .stage-tryon-chip {
   position: absolute;
   top: 6px;
@@ -559,9 +601,7 @@ body.theme-royal .glow-2 {
 .user-check.done { color: #00B894; }
 .user-check.pending { color: var(--text-dim); }
 
-/* ======================================================== */
 /* ЭКРАН 2: АЛЬБОМ */
-/* ======================================================== */
 .album-container {
   flex: 1;
   display: flex;
@@ -659,9 +699,7 @@ body.theme-royal .glow-2 {
   line-height: 1.4;
 }
 
-/* ======================================================== */
 /* ЭКРАН 3: ИГРЫ */
-/* ======================================================== */
 .games-container {
   flex: 1;
   display: flex;
@@ -709,7 +747,7 @@ body.theme-royal .glow-2 {
   min-height: 0;
 }
 
-/* Аркада */
+/* Ловец сердец */
 .scoreboard-card {
   padding: 12px 20px;
   display: flex;
@@ -852,13 +890,6 @@ body.theme-royal .glow-2 {
   animation: heartPop 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes heartPop {
-  0% { transform: scale(0.2); opacity: 0; }
-  20% { transform: scale(1.15); opacity: 1; }
-  80% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0); opacity: 0; }
-}
-
 .heart-splash {
   position: absolute;
   font-size: 17px;
@@ -866,11 +897,6 @@ body.theme-royal .glow-2 {
   pointer-events: none;
   animation: splashFloat 0.6s ease-out forwards;
   z-index: 999;
-}
-
-@keyframes splashFloat {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
 }
 
 /* Вопрос дня */
@@ -996,9 +1022,7 @@ body.theme-royal .glow-2 {
   padding: 2px 0;
 }
 
-/* ======================================================== */
 /* ЭКРАН 4: VIP */
-/* ======================================================== */
 .vip-container {
   flex: 1;
   display: flex;
@@ -1214,9 +1238,7 @@ body.theme-royal .glow-2 {
   font-weight: 900;
 }
 
-/* ======================================================== */
-/* ШТОРКА КАСТОМИЗАЦИИ (ЦВЕТА И ФОНЫ) */
-/* ======================================================== */
+/* ШТОРКА СТИЛЕЙ */
 .wardrobe-sheet {
   position: fixed;
   inset: 0;
@@ -1292,7 +1314,6 @@ body.theme-royal .glow-2 {
   color: #FFA06E;
 }
 
-/* Вкладки стилей внутри шторки */
 .style-subtabs {
   display: flex;
   gap: 6px;
@@ -1453,9 +1474,7 @@ body.theme-royal .glow-2 {
   cursor: not-allowed;
 }
 
-/* ======================================================== */
 /* НИЖНЕЕ МЕНЮ */
-/* ======================================================== */
 .bottom-dock {
   position: fixed;
   bottom: 0;
