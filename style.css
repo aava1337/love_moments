@@ -79,7 +79,9 @@ body {
   box-shadow: var(--glass-shadow);
 }
 
-/* ШАПКА */
+/* ======================================================== */
+/* ШАПКА ПАРЫ */
+/* ======================================================== */
 .header-bar {
   padding: 10px 14px;
   display: flex;
@@ -199,6 +201,18 @@ body {
   color: var(--coral-pink);
 }
 
+.vip-crown-badge {
+  font-size: 16px;
+  margin-left: 4px;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  animation: pulseBeat 1.8s infinite;
+}
+
+.avatar-ring.vip-ring {
+  box-shadow: 0 0 12px #FFD700;
+  border: 2px solid #FFF275;
+}
+
 .anniversary-date {
   font-size: 10px;
   color: var(--text-dim);
@@ -226,7 +240,9 @@ body {
   color: #FFA06E;
 }
 
-/* ВКЛАДКИ ЭКРАНОВ */
+/* ======================================================== */
+/* ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ */
+/* ======================================================== */
 .tab-screen {
   display: none !important;
   flex: 1;
@@ -239,7 +255,9 @@ body {
   display: flex !important;
 }
 
-/* ЭКРАН МОНСТРИКА */
+/* ======================================================== */
+/* ЭКРАН 1: ДОМ И МОНСТРИК */
+/* ======================================================== */
 .monster-stage {
   flex: 1;
   display: flex;
@@ -248,6 +266,7 @@ body {
   justify-content: center;
   min-height: 0;
   gap: 12px;
+  position: relative;
 }
 
 .speech-bubble {
@@ -340,7 +359,79 @@ body {
   font-size: 13px;
 }
 
-/* КАРТОЧКА СТАТУСА */
+/* Кнопка гардероба на сцене (справа от монстрика) */
+.stage-wardrobe-btn {
+  position: absolute;
+  right: 10px;
+  top: 48%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(24, 17, 36, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease;
+}
+
+.stage-wardrobe-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+.stage-wardrobe-btn .btn-icon {
+  font-size: 22px;
+}
+
+.stage-wardrobe-btn .btn-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.3px;
+}
+
+/* Плашка примерки на сцене */
+.stage-tryon-chip {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  background: rgba(253, 203, 110, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px dashed rgba(253, 203, 110, 0.5);
+  border-radius: 14px;
+  padding: 6px 14px;
+  font-size: 11.5px;
+  color: #FFEAA7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.stage-tryon-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Карточка статуса монстрика */
 .status-card {
   padding: 12px 16px;
   flex-shrink: 0;
@@ -406,7 +497,9 @@ body {
 .user-check.done { color: #00B894; }
 .user-check.pending { color: var(--text-dim); }
 
-/* АЛЬБОМ */
+/* ======================================================== */
+/* ЭКРАН 2: АЛЬБОМ */
+/* ======================================================== */
 .album-container {
   flex: 1;
   display: flex;
@@ -505,7 +598,7 @@ body {
 }
 
 /* ======================================================== */
-/* РАЗДЕЛ «ИГРЫ»: ПОЛНЫЕ СТИЛИ (АРКАДА + ВОПРОС ДНЯ) */
+/* ЭКРАН 3: ИГРЫ (АРКАДА + ВОПРОС ДНЯ) */
 /* ======================================================== */
 .games-container {
   flex: 1;
@@ -516,7 +609,6 @@ body {
   overflow: hidden;
 }
 
-/* Переключатель вкладок игр */
 .game-subtabs {
   display: flex;
   gap: 6px;
@@ -547,7 +639,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Контейнеры переключения видов игр */
 .game-view {
   display: none;
   flex: 1;
@@ -556,7 +647,7 @@ body {
   min-height: 0;
 }
 
-/* 1. СТИЛИ АРКАДЫ (ЛОВЕЦ СЕРДЕЦ) */
+/* Ловец сердец */
 .scoreboard-card {
   padding: 12px 20px;
   display: flex;
@@ -599,7 +690,6 @@ body {
   justify-content: center;
 }
 
-/* Арена для ловли сердечек */
 .arcade-arena {
   flex: 1;
   min-height: 250px;
@@ -700,13 +790,6 @@ body {
   animation: heartPop 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes heartPop {
-  0% { transform: scale(0.2); opacity: 0; }
-  20% { transform: scale(1.15); opacity: 1; }
-  80% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0); opacity: 0; }
-}
-
 .heart-splash {
   position: absolute;
   font-size: 17px;
@@ -716,12 +799,7 @@ body {
   z-index: 999;
 }
 
-@keyframes splashFloat {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
-}
-
-/* 2. СТИЛИ ДЛЯ ВОПРОСА ДНЯ */
+/* Вопрос дня */
 .question-card {
   padding: 16px;
   text-align: center;
@@ -844,28 +922,421 @@ body {
   padding: 2px 0;
 }
 
-/* ГЛАВНАЯ КНОПКА CTA */
-.cta-button {
-  background: linear-gradient(135deg, #FF5E8A 0%, #FF3366 50%, #FF8A5E 100%);
-  border: none;
-  border-radius: 18px;
-  padding: 14px 16px;
-  color: white;
+/* ======================================================== */
+/* ЭКРАН 4: ВИТРИНА VIP */
+/* ======================================================== */
+.vip-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 4px 2px 14px;
+}
+
+.vip-hero-card {
+  padding: 16px 18px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(253, 203, 110, 0.22) 0%, rgba(108, 92, 231, 0.25) 100%);
+  border: 1.5px solid rgba(253, 203, 110, 0.4);
+  box-shadow: 0 10px 30px rgba(253, 203, 110, 0.15);
+  flex-shrink: 0;
+}
+
+.vip-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.vip-status-pill {
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFA06E;
+  background: rgba(255, 160, 110, 0.18);
+  border: 1px solid rgba(255, 160, 110, 0.35);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.vip-status-pill.active {
+  color: #FFF275;
+  background: rgba(255, 215, 0, 0.25);
+  border-color: #FFD700;
+}
+
+.vip-stars-balance {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #FFEAA7;
+}
+
+.vip-hero-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.vip-hero-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.35;
+}
+
+.vip-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.vip-item-card {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 165px;
   position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(255, 51, 102, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
   transition: transform 0.15s ease;
+}
+
+.vip-item-card.gold-border {
+  border-color: rgba(255, 215, 0, 0.5);
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.15);
+}
+
+.vip-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.vip-item-ico {
+  font-size: 28px;
+}
+
+.vip-item-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--coral-pink);
+  background: rgba(255, 94, 138, 0.15);
+  border: 1px solid rgba(255, 94, 138, 0.3);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.vip-item-badge.gold {
+  color: #FFD700;
+  background: rgba(255, 215, 0, 0.2);
+  border-color: #FFD700;
+}
+
+.vip-item-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.vip-item-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.vip-item-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.vip-stock {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.vip-stock.gold {
+  color: #FDCB6E;
+}
+
+.vip-buy-btn {
+  background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.4);
+  transition: transform 0.15s ease;
 }
 
-.cta-button:active {
+.vip-buy-btn:active {
+  transform: scale(0.94);
+}
+
+.vip-buy-btn.gold-btn {
+  background: linear-gradient(135deg, #FFA06E, #FDCB6E);
+  color: #1A1325;
+  box-shadow: 0 4px 16px rgba(253, 203, 110, 0.5);
+}
+
+/* Карточка обратной связи */
+.feedback-card {
+  margin-top: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  transition: transform 0.15s ease, background 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.feedback-card:active {
   transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.12);
 }
 
+.feedback-ico {
+  font-size: 24px;
+}
+
+.feedback-info {
+  flex: 1;
+}
+
+.feedback-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 2px;
+}
+
+.feedback-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.3;
+}
+
+.feedback-arrow {
+  font-size: 14px;
+  color: var(--coral-pink);
+  font-weight: 900;
+}
+
+/* ======================================================== */
+/* ШТОРКА ГАРДЕРОБА */
+/* ======================================================== */
+.wardrobe-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: flex-end;
+}
+
+.wardrobe-sheet.open {
+  display: flex;
+}
+
+.wardrobe-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 6, 15, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.wardrobe-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-height: 80vh;
+  background: #171124;
+  border-radius: 26px 26px 0 0;
+  padding: 12px 16px calc(24px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  animation: slideUpSheet 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+
+.wardrobe-handle-bar {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  margin: 0 auto 12px;
+}
+
+.wardrobe-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.wardrobe-head h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.wardrobe-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.heart-coin-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 94, 138, 0.16);
+  border: 1px solid rgba(255, 94, 138, 0.35);
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #FFA06E;
+}
+
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 52vh;
+  padding-bottom: 8px;
+}
+
+.wardrobe-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.wardrobe-card.equipped {
+  border-color: #00B894;
+  background: rgba(0, 184, 148, 0.08);
+}
+
+.wardrobe-card.locked {
+  opacity: 0.6;
+}
+
+.item-ico {
+  font-size: 34px;
+  margin-bottom: 4px;
+}
+
+.item-name {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 2px;
+}
+
+.item-req {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--sunset-orange);
+  margin-bottom: 8px;
+}
+
+.item-actions {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.btn-try {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-white);
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+
+.btn-buy {
+  flex: 1.3;
+  background: linear-gradient(135deg, #FF5E8A, #FFA06E);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+
+.btn-equip {
+  width: 100%;
+  background: #00B894;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.btn-unequip {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #FFA06E;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.btn-locked {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: var(--text-dim);
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px;
+  cursor: not-allowed;
+}
+
+/* ======================================================== */
 /* НИЖНЕЕ МЕНЮ */
+/* ======================================================== */
 .bottom-dock {
   position: fixed;
   bottom: 0;
@@ -980,7 +1451,9 @@ body {
   font-size: 28px;
 }
 
-/* МОДАЛЬНОЕ ОКНО */
+/* ======================================================== */
+/* МОДАЛЬНОЕ ОКНО ПРОСМОТРА ФОТО */
+/* ======================================================== */
 .modal-viewer {
   position: fixed;
   inset: 0;
@@ -1042,7 +1515,9 @@ body {
   text-align: center;
 }
 
+/* ======================================================== */
 /* АНИМАЦИИ */
+/* ======================================================== */
 @keyframes monsterBreathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.03, 0.97) translateY(2px); }
@@ -1078,761 +1553,19 @@ body {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* ПЛАВАЮЩАЯ КНОПКА ГАРДЕРОБА НА ЭКРАНЕ «ДОМ» */
-.wardrobe-trigger-btn {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 6px 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-white);
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  transition: transform 0.15s ease;
-}
-
-.wardrobe-trigger-btn:active {
-  transform: scale(0.92);
-}
-
-.wardrobe-btn-ico {
-  font-size: 16px;
-}
-
-.wardrobe-btn-txt {
-  font-size: 12px;
-  font-weight: 800;
-}
-
-/* ШТОРКА ГАРДЕРОБА */
-.wardrobe-sheet {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: none;
-  align-items: flex-end;
-}
-
-.wardrobe-sheet.open {
-  display: flex;
-}
-
-.wardrobe-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 6, 15, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.wardrobe-content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-height: 80vh;
-  background: #171124;
-  border-radius: 26px 26px 0 0;
-  padding: 12px 16px calc(24px + env(safe-area-inset-bottom));
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  animation: slideUpSheet 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
-}
-
 @keyframes slideUpSheet {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
 
-.wardrobe-handle-bar {
-  width: 40px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
-  margin: 0 auto 12px;
-}
-
-.wardrobe-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.wardrobe-head h3 {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--text-white);
-}
-
-.wardrobe-sub {
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-
-.heart-coin-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 94, 138, 0.16);
-  border: 1px solid rgba(255, 94, 138, 0.35);
-  padding: 6px 12px;
-  border-radius: 14px;
-  font-size: 13px;
-  font-weight: 800;
-  color: #FFA06E;
-}
-
-/* Баннер примерки */
-.tryon-banner {
-  background: rgba(253, 203, 110, 0.15);
-  border: 1px dashed rgba(253, 203, 110, 0.4);
-  border-radius: 12px;
-  padding: 6px 12px;
-  font-size: 11.5px;
-  color: #FFEAA7;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.cancel-tryon-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: white;
-  padding: 3px 8px;
-  border-radius: 8px;
-  font-size: 10.5px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* Сетка карточек шмоток */
-.wardrobe-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  overflow-y: auto;
-  max-height: 52vh;
-  padding-bottom: 8px;
-}
-
-.wardrobe-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-}
-
-.wardrobe-card.equipped {
-  border-color: #00B894;
-  background: rgba(0, 184, 148, 0.08);
-}
-
-.wardrobe-card.locked {
-  opacity: 0.6;
-}
-
-.item-ico {
-  font-size: 34px;
-  margin-bottom: 4px;
-}
-
-.item-name {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-white);
-  margin-bottom: 2px;
-}
-
-.item-req {
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--sunset-orange);
-  margin-bottom: 8px;
-}
-
-.item-actions {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  margin-top: auto;
-}
-
-.btn-try {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-white);
-  border-radius: 10px;
-  font-size: 10.5px;
-  font-weight: 700;
-  padding: 6px 4px;
-  cursor: pointer;
-}
-
-.btn-buy {
-  flex: 1.3;
-  background: linear-gradient(135deg, #FF5E8A, #FFA06E);
-  border: none;
-  color: white;
-  border-radius: 10px;
-  font-size: 10.5px;
-  font-weight: 800;
-  padding: 6px 4px;
-  cursor: pointer;
-}
-
-.btn-equip {
-  width: 100%;
-  background: #00B894;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px;
-  cursor: pointer;
-}
-
-.btn-unequip {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #FFA06E;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px;
-  cursor: pointer;
-}
-
-.btn-locked {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  color: var(--text-dim);
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 6px;
-  cursor: not-allowed;
-}
-
-/* КНОПКА ГАРДЕРОБА НА СЦЕНЕ (Справа от монстрика, не закрывает стрик) */
-.stage-wardrobe-btn {
-  position: absolute;
-  right: 14px;
-  top: 48%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(24, 17, 36, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  border-radius: 20px;
-  padding: 10px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-  transition: transform 0.15s ease;
-}
-
-.stage-wardrobe-btn:active {
-  transform: translateY(-50%) scale(0.92);
-}
-
-.stage-wardrobe-btn .btn-icon {
-  font-size: 22px;
-}
-
-.stage-wardrobe-btn .btn-label {
-  font-size: 10px;
-  font-weight: 800;
-  color: #FFFFFF;
-  letter-spacing: 0.3px;
-}
-
-/* ЧИП АКТИВНОЙ ПРИМЕРКИ НАД МОНСТРИКОМ */
-.stage-tryon-chip {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 12;
-  background: rgba(253, 203, 110, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px dashed rgba(253, 203, 110, 0.5);
-  border-radius: 14px;
-  padding: 6px 14px;
-  font-size: 11.5px;
-  color: #FFEAA7;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-}
-
-.stage-tryon-close {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  font-size: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ШТОРКА ГАРДЕРОБА */
-.wardrobe-sheet {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: none;
-  align-items: flex-end;
-}
-
-.wardrobe-sheet.open {
-  display: flex;
-}
-
-.wardrobe-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 6, 15, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.wardrobe-content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-height: 80vh;
-  background: #171124;
-  border-radius: 26px 26px 0 0;
-  padding: 12px 16px calc(24px + env(safe-area-inset-bottom));
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  animation: slideUpSheet 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
-}
-
-@keyframes slideUpSheet {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.wardrobe-handle-bar {
-  width: 40px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
-  margin: 0 auto 12px;
-}
-
-.wardrobe-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.wardrobe-head h3 {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--text-white);
-}
-
-.wardrobe-sub {
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-
-.heart-coin-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 94, 138, 0.16);
-  border: 1px solid rgba(255, 94, 138, 0.35);
-  padding: 6px 12px;
-  border-radius: 14px;
-  font-size: 13px;
-  font-weight: 800;
-  color: #FFA06E;
-}
-
-.wardrobe-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  overflow-y: auto;
-  max-height: 52vh;
-  padding-bottom: 8px;
-}
-
-.wardrobe-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-}
-
-.wardrobe-card.equipped {
-  border-color: #00B894;
-  background: rgba(0, 184, 148, 0.08);
-}
-
-.wardrobe-card.locked {
-  opacity: 0.6;
-}
-
-.item-ico {
-  font-size: 34px;
-  margin-bottom: 4px;
-}
-
-.item-name {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-white);
-  margin-bottom: 2px;
-}
-
-.item-req {
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--sunset-orange);
-  margin-bottom: 8px;
-}
-
-.item-actions {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  margin-top: auto;
-}
-
-.btn-try {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-white);
-  border-radius: 10px;
-  font-size: 10.5px;
-  font-weight: 700;
-  padding: 6px 4px;
-  cursor: pointer;
-}
-
-.btn-buy {
-  flex: 1.3;
-  background: linear-gradient(135deg, #FF5E8A, #FFA06E);
-  border: none;
-  color: white;
-  border-radius: 10px;
-  font-size: 10.5px;
-  font-weight: 800;
-  padding: 6px 4px;
-  cursor: pointer;
-}
-
-.btn-equip {
-  width: 100%;
-  background: #00B894;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px;
-  cursor: pointer;
-}
-
-.btn-unequip {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #FFA06E;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px;
-  cursor: pointer;
-}
-
-.btn-locked {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  color: var(--text-dim);
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 6px;
-  cursor: not-allowed;
-}
-
-/* ======================================================== */
-/* СТИЛИ ВКЛАДКИ VIP (TELEGRAM STARS) */
-/* ======================================================== */
-.vip-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  padding: 4px 2px 14px;
-}
-
-.vip-hero-card {
-  padding: 16px 18px;
-  text-align: center;
-  background: linear-gradient(135deg, rgba(253, 203, 110, 0.22) 0%, rgba(108, 92, 231, 0.25) 100%);
-  border: 1.5px solid rgba(253, 203, 110, 0.4);
-  box-shadow: 0 10px 30px rgba(253, 203, 110, 0.15);
-  flex-shrink: 0;
-}
-
-.vip-badge-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.vip-status-pill {
-  font-size: 11px;
-  font-weight: 800;
-  color: #FFA06E;
-  background: rgba(255, 160, 110, 0.18);
-  border: 1px solid rgba(255, 160, 110, 0.35);
-  padding: 4px 10px;
-  border-radius: 12px;
-}
-
-.vip-status-pill.active {
-  color: #FFF275;
-  background: rgba(255, 215, 0, 0.25);
-  border-color: #FFD700;
-}
-
-.vip-stars-balance {
-  font-size: 11.5px;
-  font-weight: 800;
-  color: #FFEAA7;
-}
-
-.vip-hero-title {
-  font-size: 17px;
-  font-weight: 800;
-  color: #FFFFFF;
-  margin-bottom: 4px;
-}
-
-.vip-hero-desc {
-  font-size: 12px;
-  color: var(--text-dim);
-  line-height: 1.35;
-}
-
-/* Сетка карточек */
-.vip-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.vip-item-card {
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 165px;
-  position: relative;
-  transition: transform 0.15s ease;
-}
-
-.vip-item-card.gold-border {
-  border-color: rgba(255, 215, 0, 0.5);
-  background: linear-gradient(180deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
-  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.15);
-}
-
-.vip-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.vip-item-ico {
-  font-size: 28px;
-}
-
-.vip-item-badge {
-  font-size: 9.5px;
-  font-weight: 800;
-  color: var(--coral-pink);
-  background: rgba(255, 94, 138, 0.15);
-  border: 1px solid rgba(255, 94, 138, 0.3);
-  padding: 2px 6px;
-  border-radius: 8px;
-}
-
-.vip-item-badge.gold {
-  color: #FFD700;
-  background: rgba(255, 215, 0, 0.2);
-  border-color: #FFD700;
-}
-
-.vip-item-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: #FFFFFF;
-  margin-bottom: 4px;
-}
-
-.vip-item-desc {
-  font-size: 11px;
-  color: var(--text-dim);
-  line-height: 1.3;
-  margin-bottom: 10px;
-}
-
-.vip-item-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: auto;
-}
-
-.vip-stock {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-dim);
-  text-align: center;
-}
-
-.vip-stock.gold {
-  color: #FDCB6E;
-}
-
-.vip-buy-btn {
-  background: linear-gradient(135deg, #6C5CE7, #A29BFE);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 8px 10px;
-  color: #FFFFFF;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.4);
-  transition: transform 0.15s ease;
-}
-
-.vip-buy-btn:active {
-  transform: scale(0.94);
-}
-
-.vip-buy-btn.gold-btn {
-  background: linear-gradient(135deg, #FFA06E, #FDCB6E);
-  color: #1A1325;
-  box-shadow: 0 4px 16px rgba(253, 203, 110, 0.5);
-}
-
-/* Королевская корона в шапке */
-.vip-crown-badge {
-  font-size: 16px;
-  margin-left: 4px;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
-  animation: pulseBeat 1.8s infinite;
-}
-
-.avatar-ring.vip-ring {
-  box-shadow: 0 0 12px #FFD700;
-  border: 2px solid #FFF275;
-}
-
-/* КАРТОЧКА ОБРАТНОЙ СВЯЗИ */
-/* КАРТОЧКА ОБРАТНОЙ СВЯЗИ */
-.feedback-card {
-  margin-top: 10px;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 18px;
-  transition: transform 0.15s ease, background 0.2s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.feedback-card:active {
-  transform: scale(0.97);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.feedback-ico {
-  font-size: 24px;
-}
-
-.feedback-info {
-  flex: 1;
-}
-
-.feedback-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--text-white);
-  margin-bottom: 2px;
-}
-
-.feedback-desc {
-  font-size: 11px;
-  color: var(--text-dim);
-  line-height: 1.3;
-}
-
-.feedback-arrow {
-  font-size: 14px;
-  color: var(--coral-pink);
-  font-weight: 900;
+@keyframes heartPop {
+  0% { transform: scale(0.2); opacity: 0; }
+  20% { transform: scale(1.15); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes splashFloat {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
 }

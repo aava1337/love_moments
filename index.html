@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.5">
+  <link rel="stylesheet" href="style.css?v=2.6">
 </head>
 <body>
   <div class="ambient-glow glow-1"></div>
@@ -54,11 +54,13 @@
     <div class="tab-screen active" id="screen-home">
       <main class="monster-stage">
         
+        <!-- Чип активной примерки на сцене -->
         <div class="stage-tryon-chip" id="stage-tryon-chip" style="display: none;">
           <span>👀 Примерка: <b id="stage-tryon-name">Вещь</b></span>
           <button class="stage-tryon-close" id="btn-stage-cancel-tryon">✕</button>
         </div>
 
+        <!-- Кнопка гардероба на сцене справа от монстрика -->
         <button class="stage-wardrobe-btn" id="btn-open-wardrobe" title="Открыть гардероб">
           <span class="btn-icon">🧢</span>
           <span class="btn-label">Шкаф</span>
@@ -90,13 +92,27 @@
                 <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
                 <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
               </radialGradient>
-              <linearGradient id="cyberGrad" x1="0" y1="0" x2="1" y2="0">
+
+              <!-- Градиенты для новой оверсайз-одежды -->
+              <linearGradient id="hoodieCreamGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FFFFFF"/>
+                <stop offset="100%" stop-color="#DFE4EA"/>
+              </linearGradient>
+              <linearGradient id="retroSweaterGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2C3A47"/>
+                <stop offset="100%" stop-color="#130F40"/>
+              </linearGradient>
+              <linearGradient id="varsityBodyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#303952"/>
+                <stop offset="100%" stop-color="#1E272E"/>
+              </linearGradient>
+              <linearGradient id="leatherGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2F3542"/>
+                <stop offset="100%" stop-color="#111317"/>
+              </linearGradient>
+              <linearGradient id="cyberNeonGrad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#00F2FE"/>
                 <stop offset="100%" stop-color="#4FACFE"/>
-              </linearGradient>
-              <linearGradient id="fireGrad" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stop-color="#FF0844"/>
-                <stop offset="100%" stop-color="#FFB199"/>
               </linearGradient>
               <linearGradient id="goldCrownGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#FFF275"/>
@@ -106,6 +122,12 @@
             </defs>
 
             <ellipse class="ground-shadow" cx="120" cy="222" rx="70" ry="14" fill="url(#monsterShadow)" />
+
+            <!-- Крылья Архангела (за спиной) -->
+            <g id="acc-celestial_wings" style="display:none;">
+              <path d="M 68 135 C 10 90, 0 40, 25 15 C 45 45, 55 85, 75 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 8px rgba(255,255,255,0.8))"/>
+              <path d="M 172 135 C 230 90, 240 40, 215 15 C 195 45, 185 85, 165 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 8px rgba(255,255,255,0.8))"/>
+            </g>
 
             <g class="monster-tail">
               <path d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
@@ -157,91 +179,140 @@
                 <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
               </g>
 
-              <!-- СЛОЙ ОДЕЖДЫ И АКСЕССУАРОВ -->
+              <!-- СЛОЙ ОДЕЖДЫ И СТРИТВИРА -->
               <g id="monster-accessories-layer">
+
+                <!-- 1. Оверсайз-худи «Крем» (0 дней) -->
+                <g id="acc-hoodie_cream" style="display:none;">
+                  <path d="M 72 142 C 56 166, 58 196, 74 200 C 95 204, 145 204, 166 200 C 182 196, 184 166, 168 142 C 150 151, 90 151, 72 142 Z" fill="url(#hoodieCreamGrad)" stroke="#CAD3C8" stroke-width="2"/>
+                  <path d="M 88 135 Q 120 152 152 135 Q 138 150 120 152 Q 102 150 88 135 Z" fill="#F1F2F6"/>
+                  <path d="M 95 174 L 145 174 L 149 194 L 91 194 Z" fill="#CED6E0" opacity="0.7" rx="3"/>
+                  <line x1="114" y1="148" x2="113" y2="164" stroke="#747D8C" stroke-width="2" stroke-linecap="round"/>
+                  <line x1="126" y1="148" x2="127" y2="164" stroke="#747D8C" stroke-width="2" stroke-linecap="round"/>
+                </g>
+
+                <!-- 2. Шапка-бини с подворотом (0 дней) -->
+                <g id="acc-beanie" style="display:none;">
+                  <path d="M 82 70 C 85 36, 155 36, 158 70 Z" fill="#2F3542"/>
+                  <rect x="78" y="66" width="84" height="15" rx="5" fill="#1E272E" stroke="#57606F" stroke-width="1.2"/>
+                  <rect x="114" y="68" width="12" height="10" rx="2" fill="#FF5E8A"/>
+                </g>
+
+                <!-- 3. Винтажный свитер (7 дней) -->
+                <g id="acc-vintage_sweater" style="display:none;">
+                  <path d="M 72 142 C 56 166, 58 196, 74 200 C 95 204, 145 204, 166 200 C 182 196, 184 166, 168 142 C 150 151, 90 151, 72 142 Z" fill="url(#retroSweaterGrad)"/>
+                  <path d="M 90 136 Q 120 148 150 136 Q 136 148 120 150 Q 104 148 90 136 Z" fill="#ECCC68"/>
+                  <path d="M 70 162 L 170 162" stroke="#ECCC68" stroke-width="4" stroke-dasharray="8 4"/>
+                  <path d="M 72 174 L 168 174" stroke="#FF7F50" stroke-width="3"/>
+                </g>
+
+                <!-- 4. Серебряная цепь с замком (7 дней) -->
+                <g id="acc-silver_chain" style="display:none;">
+                  <path d="M 92 136 Q 120 160 148 136" fill="none" stroke="#CED6E0" stroke-width="3.5" stroke-dasharray="5 3"/>
+                  <rect x="116" y="152" width="8" height="10" rx="2" fill="#A4B0BE" stroke="#747D8C" stroke-width="1"/>
+                  <circle cx="120" cy="151" r="2.5" fill="none" stroke="#747D8C" stroke-width="1.2"/>
+                </g>
+
+                <!-- 5. Бейсболка Streetwear (7 дней) -->
+                <g id="acc-street_cap" style="display:none;">
+                  <path d="M 84 66 Q 120 38, 156 66 Z" fill="#1E272E"/>
+                  <path d="M 136 63 Q 182 63, 178 74 Q 146 69, 134 63 Z" fill="#2F3542" stroke="#111" stroke-width="1"/>
+                  <text x="114" y="58" font-size="11" font-weight="900" fill="#FFFFFF">M</text>
+                </g>
+
+                <!-- 6. Университетский бомбер (15 дней) -->
+                <g id="acc-varsity_jacket" style="display:none;">
+                  <path d="M 72 142 C 56 166, 58 196, 74 200 C 95 204, 145 204, 166 200 C 182 196, 184 166, 168 142 C 150 151, 90 151, 72 142 Z" fill="url(#varsityBodyGrad)"/>
+                  <path d="M 68 144 Q 54 172 70 196 Z" fill="#F1F2F6"/>
+                  <path d="M 172 144 Q 186 172 170 196 Z" fill="#F1F2F6"/>
+                  <line x1="120" y1="146" x2="120" y2="202" stroke="#FFFFFF" stroke-width="3"/>
+                  <text x="96" y="165" font-size="12" font-weight="900" fill="#ECCC68">L</text>
+                </g>
+
+                <!-- 7. Пиксельные очки (15 дней) -->
+                <g id="acc-pixel_glasses" style="display:none;">
+                  <rect x="80" y="108" width="30" height="15" fill="#111"/>
+                  <rect x="130" y="108" width="30" height="15" fill="#111"/>
+                  <rect x="110" y="112" width="20" height="6" fill="#111"/>
+                  <rect x="84" y="110" width="5" height="4" fill="#FFF"/>
+                  <rect x="89" y="114" width="5" height="4" fill="#FFF"/>
+                  <rect x="134" y="110" width="5" height="4" fill="#FFF"/>
+                  <rect x="139" y="114" width="5" height="4" fill="#FFF"/>
+                </g>
+
+                <!-- 8. Геймерские Cat-наушники (30 дней) -->
+                <g id="acc-cat_headphones" style="display:none;">
+                  <path d="M 68 100 A 54 54 0 0 1 172 100" fill="none" stroke="#2F3542" stroke-width="6" stroke-linecap="round"/>
+                  <polygon points="86,64 74,42 98,54" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
+                  <polygon points="154,64 166,42 142,54" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
+                  <rect x="56" y="94" width="16" height="30" rx="8" fill="#FF5E8A" stroke="#2F3542" stroke-width="2.5"/>
+                  <rect x="168" y="94" width="16" height="30" rx="8" fill="#FF5E8A" stroke="#2F3542" stroke-width="2.5"/>
+                </g>
+
+                <!-- 9. Techwear-худи (30 дней) -->
+                <g id="acc-cyber_hoodie" style="display:none;">
+                  <path d="M 72 142 C 56 166, 58 196, 74 200 C 95 204, 145 204, 166 200 C 182 196, 184 166, 168 142 C 150 151, 90 151, 72 142 Z" fill="#1E272E" stroke="#00F2FE" stroke-width="1.5"/>
+                  <path d="M 88 136 Q 120 154 152 136" fill="none" stroke="#00F2FE" stroke-width="3"/>
+                  <line x1="94" y1="160" x2="94" y2="195" stroke="#FF5E8A" stroke-width="3"/>
+                  <line x1="146" y1="160" x2="146" y2="195" stroke="#FF5E8A" stroke-width="3"/>
+                  <rect x="110" y="170" width="20" height="12" rx="2" fill="#00F2FE" opacity="0.8"/>
+                </g>
+
+                <!-- 10. Кожаная косуха (50 дней) -->
+                <g id="acc-leather_jacket" style="display:none;">
+                  <path d="M 72 142 C 56 166, 58 196, 74 200 C 95 204, 145 204, 166 200 C 182 196, 184 166, 168 142 C 150 151, 90 151, 72 142 Z" fill="url(#leatherGrad)"/>
+                  <polygon points="90,136 108,162 86,155" fill="#57606F"/>
+                  <polygon points="150,136 132,162 154,155" fill="#57606F"/>
+                  <line x1="108" y1="150" x2="128" y2="200" stroke="#CED6E0" stroke-width="3"/>
+                  <circle cx="88" cy="142" r="1.8" fill="#FFF"/>
+                  <circle cx="152" cy="142" r="1.8" fill="#FFF"/>
+                </g>
+
+                <!-- 11. Неоновые рожки демона (50 дней) -->
+                <g id="acc-demon_horns" style="display:none;">
+                  <path d="M 64 42 Q 52 14 36 22 Q 48 36 60 48 Z" fill="#FF0844" filter="drop-shadow(0 0 8px #FF0844)"/>
+                  <path d="M 176 42 Q 188 14 204 22 Q 192 36 180 48 Z" fill="#FF0844" filter="drop-shadow(0 0 8px #FF0844)"/>
+                </g>
+
+                <!-- 12. Кибер-визор 2077 (100 дней) -->
+                <g id="acc-cybervisor" style="display:none;">
+                  <path d="M 74 108 L 166 108 L 158 126 L 82 126 Z" fill="url(#cyberNeonGrad)" opacity="0.9" filter="drop-shadow(0 0 8px #00F2FE)"/>
+                  <line x1="74" y1="117" x2="166" y2="117" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+                </g>
+
+                <!-- 13. Тёмное кимоно / Хаори (100 дней) -->
+                <g id="acc-samurai_haori" style="display:none;">
+                  <path d="M 70 140 C 50 165, 52 195, 70 200 C 95 204, 145 204, 170 200 C 188 195, 190 165, 170 140 Z" fill="#130F40"/>
+                  <line x1="88" y1="138" x2="135" y2="198" stroke="#F1C40F" stroke-width="3"/>
+                  <line x1="152" y1="138" x2="115" y2="185" stroke="#F1C40F" stroke-width="3"/>
+                </g>
+
+                <!-- 14. Скафандр NASA-Heart (150 дней) -->
+                <g id="acc-spacehelmet" style="display:none;">
+                  <path d="M 72 142 C 56 166, 58 196, 74 200 C 95 204, 145 204, 166 200 C 182 196, 184 166, 168 142 C 150 151, 90 151, 72 142 Z" fill="#FFFFFF" stroke="#74B9FF" stroke-width="2"/>
+                  <ellipse cx="120" cy="144" rx="36" ry="10" fill="#2F3542" stroke="#74B9FF" stroke-width="2"/>
+                  <rect x="94" y="162" width="14" height="10" rx="2" fill="#0984E3"/>
+                  <circle cx="101" cy="167" r="2.5" fill="#FF5E8A"/>
+                </g>
+
+                <!-- 15. Космические кольца Сатурна (200 дней) -->
+                <g id="acc-saturn_ring" style="display:none;">
+                  <ellipse cx="120" cy="62" rx="64" ry="16" fill="none" stroke="#FDCB6E" stroke-width="4.5" transform="rotate(-16 120 62)" filter="drop-shadow(0 0 6px #FDCB6E)"/>
+                </g>
+
+                <!-- 16. Парящий нимб Архангела (250 дней) -->
+                <g id="acc-angel_halo" style="display:none;">
+                  <ellipse cx="120" cy="22" rx="42" ry="12" fill="none" stroke="#FFD700" stroke-width="4" filter="drop-shadow(0 0 10px #FFD700)"/>
+                </g>
+
+                <!-- 17. VIP КОРОЛЕВСКАЯ КОРОНА -->
                 <g id="acc-crown" style="display:none;">
-                  <path d="M 96 52 L 102 32 L 112 44 L 120 26 L 128 44 L 138 32 L 144 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.5"/>
+                  <path d="M 96 52 L 102 32 L 112 44 L 120 26 L 128 44 L 138 32 L 144 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.5" filter="drop-shadow(0 0 8px rgba(255,215,0,0.8))"/>
                   <circle cx="102" cy="32" r="2.5" fill="#E53E3E"/>
                   <circle cx="120" cy="26" r="3" fill="#3182CE"/>
                   <circle cx="138" cy="32" r="2.5" fill="#38A169"/>
                 </g>
 
-                <g id="acc-bow" style="display:none;">
-                  <path d="M 64 52 L 78 62 L 64 72 Z M 92 52 L 78 62 L 92 72 Z" fill="#FF5E8A"/>
-                  <circle cx="78" cy="62" r="4.5" fill="#FFA06E"/>
-                </g>
-                <g id="acc-glasses" style="display:none;">
-                  <circle cx="95" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
-                  <circle cx="145" cy="115" r="17" fill="none" stroke="#2D3436" stroke-width="3"/>
-                  <line x1="112" y1="115" x2="128" y2="115" stroke="#2D3436" stroke-width="3"/>
-                </g>
-                <g id="acc-scarf" style="display:none;">
-                  <path d="M 80 140 Q 120 156 160 140 Q 164 150 152 158 Q 120 166 86 152 Z" fill="#E17055"/>
-                  <path d="M 136 150 L 140 184 L 154 182 L 150 150 Z" fill="#D63031"/>
-                </g>
-                <g id="acc-cap" style="display:none;">
-                  <path d="M 86 64 Q 120 34 154 64 Z" fill="#0984E3"/>
-                  <path d="M 144 62 Q 180 64 175 72 Q 146 68 140 62 Z" fill="#74B9FF"/>
-                </g>
-                <g id="acc-bandaid" style="display:none;">
-                  <rect x="68" y="122" width="20" height="9" rx="3.5" transform="rotate(-18 78 126)" fill="#FDCB6E" stroke="#E17055" stroke-width="1.2"/>
-                </g>
-                <g id="acc-sleepcap" style="display:none;">
-                  <path d="M 88 62 Q 120 40 150 62 Q 174 28 190 56 Q 164 48 142 58 Z" fill="#6C5CE7"/>
-                  <circle cx="190" cy="56" r="7.5" fill="#FFFFFF"/>
-                </g>
-                <g id="acc-mustache" style="display:none;">
-                  <path d="M 120 126 Q 104 119 96 128 Q 112 135 120 128 Q 128 135 144 128 Q 136 119 120 126 Z" fill="#2D3436"/>
-                </g>
-                <g id="acc-partyhat" style="display:none;">
-                  <polygon points="120,12 96,58 144,58" fill="#FD79A8"/>
-                  <circle cx="120" cy="12" r="5.5" fill="#FDCB6E"/>
-                </g>
-                <g id="acc-flower" style="display:none;">
-                  <path d="M 124 133 Q 146 138 158 128" fill="none" stroke="#00B894" stroke-width="3.5"/>
-                  <circle cx="162" cy="126" r="7" fill="#FF5E8A"/>
-                </g>
-                <g id="acc-sunglasses" style="display:none;">
-                  <path d="M 82 108 L 110 108 L 106 127 L 86 127 Z" fill="#1E142B"/>
-                  <path d="M 130 108 L 158 108 L 154 127 L 134 127 Z" fill="#1E142B"/>
-                  <line x1="108" y1="112" x2="132" y2="112" stroke="#1E142B" stroke-width="3.5"/>
-                </g>
-                <g id="acc-headphones" style="display:none;">
-                  <path d="M 70 100 A 52 52 0 0 1 170 100" fill="none" stroke="#00F2FE" stroke-width="5" stroke-linecap="round"/>
-                  <rect x="58" y="94" width="16" height="30" rx="8" fill="#1E142B" stroke="#00F2FE" stroke-width="3"/>
-                  <rect x="166" y="94" width="16" height="30" rx="8" fill="#1E142B" stroke="#00F2FE" stroke-width="3"/>
-                </g>
-                <g id="acc-witchhat" style="display:none;">
-                  <ellipse cx="120" cy="62" rx="48" ry="12" fill="#2C3A47"/>
-                  <path d="M 88 60 Q 120 10 148 40 Q 135 55 152 60 Z" fill="#1E142B"/>
-                </g>
-                <g id="acc-cybervisor" style="display:none;">
-                  <path d="M 76 108 L 164 108 L 158 125 L 82 125 Z" fill="url(#cyberGrad)" opacity="0.88"/>
-                </g>
-                <g id="acc-ninja" style="display:none;">
-                  <rect x="74" y="92" width="92" height="15" rx="4" fill="#2D3436"/>
-                  <circle cx="120" cy="99.5" r="4" fill="#FF7675"/>
-                </g>
-                <g id="acc-spacehelmet" style="display:none;">
-                  <circle cx="120" cy="120" r="54" fill="none" stroke="#74B9FF" stroke-width="3.5" opacity="0.8"/>
-                </g>
-                <g id="acc-saturn_ring" style="display:none;">
-                  <ellipse cx="120" cy="64" rx="60" ry="16" fill="none" stroke="#FDCB6E" stroke-width="4" transform="rotate(-15 120 64)"/>
-                </g>
-                <g id="acc-monocle" style="display:none;">
-                  <circle cx="95" cy="115" r="16" fill="none" stroke="#F1C40F" stroke-width="3"/>
-                </g>
-                <g id="acc-horns_fire" style="display:none;">
-                  <circle cx="62" cy="42" r="14" fill="url(#fireGrad)" opacity="0.6" filter="blur(3px)"/>
-                  <circle cx="178" cy="42" r="14" fill="url(#fireGrad)" opacity="0.6" filter="blur(3px)"/>
-                </g>
-                <g id="acc-dragon_wings" style="display:none;">
-                  <path d="M 64 125 Q 10 90 20 60 Q 40 85 58 100" fill="#4834D4" stroke="#6C5CE7" stroke-width="3"/>
-                  <path d="M 176 125 Q 230 90 220 60 Q 200 85 182 100" fill="#4834D4" stroke="#6C5CE7" stroke-width="3"/>
-                </g>
-                <g id="acc-phoenix_halo" style="display:none;">
-                  <ellipse cx="120" cy="28" rx="42" ry="12" fill="none" stroke="#FF7675" stroke-width="5" opacity="0.9"/>
-                </g>
               </g>
 
               <g class="feet">
