@@ -8,11 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3.5">
+  <link rel="stylesheet" href="style.css?v=4.0">
 </head>
-<body>
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
+<body id="app-body" class="theme-midnight">
+  <div class="ambient-glow glow-1" id="ambient-glow-1"></div>
+  <div class="ambient-glow glow-2" id="ambient-glow-2"></div>
 
   <div class="app-container">
     
@@ -54,89 +54,51 @@
     <div class="tab-screen active" id="screen-home">
       <main class="monster-stage">
         
-        <!-- Чип активной примерки на сцене -->
+        <!-- Чип активной примерки -->
         <div class="stage-tryon-chip" id="stage-tryon-chip" style="display: none;">
-          <span>👀 Примерка: <b id="stage-tryon-name">Вещь</b></span>
-          <button class="stage-tryon-close" id="btn-stage-cancel-tryon">✕</button>
+          <span>👀 Примерка: <b id="stage-tryon-name">Стиль</b></span>
+          <button class="stage-tryon-close" id="btn-stage-cancel-tryon" title="Отменить">✕</button>
         </div>
 
-        <!-- Кнопка гардероба на сцене -->
-        <button class="stage-wardrobe-btn" id="btn-open-wardrobe" title="Открыть гардероб">
-          <span class="btn-icon">🧢</span>
-          <span class="btn-label">Шкаф</span>
+        <!-- Кнопка смены стиля на сцене -->
+        <button class="stage-wardrobe-btn" id="btn-open-wardrobe" title="Сменить стиль">
+          <span class="btn-icon">🎨</span>
+          <span class="btn-label">Стиль</span>
         </button>
 
         <div class="speech-bubble" id="pet-speech">
           <span>Ррр-мяу! Жду наше общее фото 💖</span>
         </div>
 
+        <!-- Чистый монстрик без одежды -->
         <div class="monster-wrapper happy" id="monster-character">
-          <div class="monster-aura"></div>
+          <div class="monster-aura" id="monster-aura"></div>
 
           <svg class="monster-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <radialGradient id="monsterFur" cx="45%" cy="40%" r="65%">
-                <stop offset="0%" stop-color="#A29BFE" />
-                <stop offset="65%" stop-color="#6C5CE7" />
-                <stop offset="100%" stop-color="#4834D4" />
+                <stop id="fur-stop-0" offset="0%" stop-color="#A29BFE" />
+                <stop id="fur-stop-65" offset="65%" stop-color="#6C5CE7" />
+                <stop id="fur-stop-100" offset="100%" stop-color="#4834D4" />
               </radialGradient>
               <radialGradient id="bellyGrad" cx="50%" cy="40%" r="60%">
                 <stop offset="0%" stop-color="#FFEAA7" />
                 <stop offset="100%" stop-color="#FDCB6E" />
               </radialGradient>
               <linearGradient id="hornGrad" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stop-color="#FF7675" />
-                <stop offset="100%" stop-color="#FF5E8A" />
+                <stop id="horn-stop-0" offset="0%" stop-color="#FF7675" />
+                <stop id="horn-stop-1" offset="100%" stop-color="#FF5E8A" />
               </linearGradient>
               <radialGradient id="monsterShadow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#0F0A17" stop-opacity="0.7"/>
                 <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
               </radialGradient>
-
-              <!-- Градиенты материалов и металлов -->
-              <linearGradient id="hoodieCreamGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FFFFFF"/>
-                <stop offset="100%" stop-color="#E2E6EA"/>
-              </linearGradient>
-              <linearGradient id="retroSweaterGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2D3A4B"/>
-                <stop offset="100%" stop-color="#141A24"/>
-              </linearGradient>
-              <linearGradient id="varsityBodyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2D3748"/>
-                <stop offset="100%" stop-color="#1A202C"/>
-              </linearGradient>
-              <linearGradient id="leatherGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#3A3F47"/>
-                <stop offset="100%" stop-color="#111315"/>
-              </linearGradient>
-              <linearGradient id="chromeGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#FFFFFF"/>
-                <stop offset="40%" stop-color="#CBD5E1"/>
-                <stop offset="70%" stop-color="#64748B"/>
-                <stop offset="100%" stop-color="#F8FAFC"/>
-              </linearGradient>
-              <linearGradient id="cyberNeonGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#00F2FE"/>
-                <stop offset="100%" stop-color="#4FACFE"/>
-              </linearGradient>
-              <linearGradient id="goldCrownGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FFF275"/>
-                <stop offset="50%" stop-color="#FFD700"/>
-                <stop offset="100%" stop-color="#FFA500"/>
-              </linearGradient>
             </defs>
 
             <ellipse class="ground-shadow" cx="120" cy="222" rx="70" ry="14" fill="url(#monsterShadow)" />
 
-            <!-- Крылья Архангела (за спиной) -->
-            <g id="acc-celestial_wings" style="display:none;">
-              <path d="M 64 135 C 5 90, -5 35, 20 10 C 45 45, 55 85, 75 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 10px rgba(255,255,255,0.85))"/>
-              <path d="M 176 135 C 235 90, 245 35, 220 10 C 195 45, 185 85, 165 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 10px rgba(255,255,255,0.85))"/>
-            </g>
-
             <g class="monster-tail">
-              <path d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
+              <path id="monster-tail-path" d="M 160 170 Q 205 160 195 125" fill="none" stroke="#6C5CE7" stroke-width="12" stroke-linecap="round"/>
               <path class="tail-heart" d="M 195 125 C 190 118, 198 112, 202 116 C 206 112, 214 118, 209 125 L 202 132 Z" fill="#FF5E8A"/>
             </g>
 
@@ -144,20 +106,20 @@
               <g class="horns">
                 <g class="horn horn-left">
                   <path d="M 90 65 Q 75 35 62 42 Q 75 55 85 72" fill="url(#hornGrad)"/>
-                  <circle class="horn-glow-tip" cx="62" cy="42" r="6.5" fill="#FF5E8A"/>
+                  <circle id="horn-tip-left" class="horn-glow-tip" cx="62" cy="42" r="6.5" fill="#FF5E8A"/>
                 </g>
                 <g class="horn horn-right">
                   <path d="M 150 65 Q 165 35 178 42 Q 165 55 155 72" fill="url(#hornGrad)"/>
-                  <circle class="horn-glow-tip" cx="178" cy="42" r="6.5" fill="#FF5E8A"/>
+                  <circle id="horn-tip-right" class="horn-glow-tip" cx="178" cy="42" r="6.5" fill="#FF5E8A"/>
                 </g>
               </g>
 
               <g class="ears">
-                <path class="ear ear-l" d="M 68 95 C 40 85 45 125 70 115 Z" fill="#4834D4"/>
-                <path class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
+                <path id="monster-ear-l" class="ear ear-l" d="M 68 95 C 40 85 45 125 70 115 Z" fill="#4834D4"/>
+                <path id="monster-ear-r" class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
               </g>
 
-              <!-- Тело монстрика -->
+              <!-- Тело -->
               <path class="main-body" d="
                 M 120 58
                 C 168 58, 185 95, 184 148
@@ -188,266 +150,9 @@
                 <polygon class="tooth" points="122,129 126,129 124,135" fill="#FFFFFF"/>
               </g>
 
-              <!-- ============================================== -->
-              <!-- СЛОЙ ПРАВИЛЬНОЙ ОДЕЖДЫ И СТРИТВИРА -->
-              <!-- ============================================== -->
-              <g id="monster-accessories-layer">
-
-                <!-- 1. ПОЛНОРАЗМЕРНОЕ ОВЕРСАЙЗ-ХУДИ «КРЕМ» (0 ДНЕЙ) -->
-                <g id="acc-hoodie_cream" style="display:none;">
-                  <!-- Массивное оверсайз тело худи, закрывающее все бока от X=48 до X=192 -->
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="url(#hoodieCreamGrad)" stroke="#B8C1C8" stroke-width="1.8"/>
-                  
-                  <!-- Линии рукавов оверсайз -->
-                  <path d="M 68 135 C 58 152, 58 178, 64 196" fill="none" stroke="#CFD6DC" stroke-width="2"/>
-                  <path d="M 172 135 C 182 152, 182 178, 176 196" fill="none" stroke="#CFD6DC" stroke-width="2"/>
-
-                  <!-- Плотный воротник капюшона вплотную под подбородком -->
-                  <path d="M 68 130 Q 120 144 172 130 Q 150 144 120 144 Q 90 144 68 130 Z" fill="#FFFFFF" stroke="#B8C1C8" stroke-width="1.2"/>
-                  
-                  <!-- Широкий карман кенгуру -->
-                  <path d="M 82 168 L 158 168 L 166 196 L 74 196 Z" rx="3" fill="#D3D9DE" opacity="0.75"/>
-                  <line x1="82" y1="168" x2="74" y2="196" stroke="#B8C1C8" stroke-width="1.5"/>
-                  <line x1="158" y1="168" x2="166" y2="196" stroke="#B8C1C8" stroke-width="1.5"/>
-                  
-                  <!-- Шнурки с металлическими зажимами -->
-                  <path d="M 108 142 Q 104 158 107 172" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                  <rect x="105.5" y="171" width="3.2" height="7" rx="1.5" fill="#94A3B8"/>
-                  <path d="M 132 142 Q 136 158 133 172" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                  <rect x="131.5" y="171" width="3.2" height="7" rx="1.5" fill="#94A3B8"/>
-                  
-                  <!-- Нижняя трикотажная резинка -->
-                  <path d="M 50 193 Q 120 203 190 193 L 188 200 Q 120 205 52 200 Z" fill="#D3D9DE"/>
-                </g>
-
-                <!-- 2. ШАПКА-БИНИ С ПОДВОРОТОМ (0 ДНЕЙ) -->
-                <g id="acc-beanie" style="display:none;">
-                  <path d="M 80 62 C 82 30, 158 30, 160 62 Z" fill="#2D3748"/>
-                  <rect x="74" y="56" width="92" height="16" rx="5" fill="#1A202C" stroke="#4A5568" stroke-width="1.2"/>
-                  <rect x="114" y="60" width="12" height="9" rx="2" fill="#FF5E8A"/>
-                </g>
-
-                <!-- 3. ВИНТАЖНЫЙ СВИТЕР (7 ДНЕЙ) -->
-                <g id="acc-vintage_sweater" style="display:none;">
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="url(#retroSweaterGrad)"/>
-                  <!-- Воротник под горло -->
-                  <path d="M 70 130 Q 120 141 170 130 Q 152 142 120 143 Q 88 142 70 130 Z" fill="#ECCC68"/>
-                  <!-- Скандинавские ромбы по всей ширине груди -->
-                  <polygon points="76,162 86,150 96,162 86,174" fill="#ECCC68"/>
-                  <polygon points="102,162 112,150 122,162 112,174" fill="#FF7F50"/>
-                  <polygon points="128,162 138,150 148,162 138,174" fill="#ECCC68"/>
-                  <polygon points="154,162 164,150 174,162 164,174" fill="#FF7F50"/>
-                  <line x1="56" y1="180" x2="184" y2="180" stroke="#ECCC68" stroke-width="3" stroke-dasharray="6 3"/>
-                  <path d="M 50 193 Q 120 203 190 193 L 188 200 Q 120 205 52 200 Z" fill="#ECCC68"/>
-                </g>
-
-                <!-- 4. МАССИВНАЯ ДВОЙНАЯ СЕРЕБРЯНАЯ ЦЕПЬ (7 ДНЕЙ) -->
-                <g id="acc-silver_chain" style="display:none;">
-                  <!-- Верхний ярус: звенья вокруг шеи -->
-                  <path d="M 80 133 Q 120 152 160 133" fill="none" stroke="url(#chromeGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="7 4" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/>
-                  
-                  <!-- Нижний ярус: свисающая массивная цепь -->
-                  <path d="M 86 138 Q 120 170 154 138" fill="none" stroke="url(#chromeGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="8 4" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.5))"/>
-                  
-                  <!-- Тяжелый хромированный замок с гравировкой сердца -->
-                  <g transform="translate(120, 166)">
-                    <!-- Дужка замка -->
-                    <path d="M -7 -4 A 7 7 0 0 1 7 -4 L 7 2 L -7 2 Z" fill="none" stroke="url(#chromeGrad)" stroke-width="2.8"/>
-                    <!-- Корпус замка -->
-                    <rect x="-10" y="0" width="20" height="16" rx="4" fill="url(#chromeGrad)" stroke="#334155" stroke-width="1.2" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.6))"/>
-                    <!-- Выгравированное сердце -->
-                    <path d="M 0 5 C -3 2, -6 5, 0 11 C 6 5, 3 2, 0 5 Z" fill="#FF5E8A"/>
-                  </g>
-
-                  <!-- Алмазные блики-звёзды (Drip эффект) -->
-                  <path d="M 92 144 L 94 140 L 96 144 L 100 146 L 96 148 L 94 152 L 92 148 L 88 146 Z" fill="#FFFFFF"/>
-                  <path d="M 148 146 L 149 143 L 150 146 L 153 147 L 150 148 L 149 151 L 148 148 L 145 147 Z" fill="#FFFFFF"/>
-                </g>
-
-                <!-- 5. КЕПКА STREETWEAR С ПЛОСКИМ 3D КОЗЫРЬКОМ (7 ДНЕЙ) -->
-                <g id="acc-street_cap" style="display:none;">
-                  <!-- Тень под козырьком на лоб -->
-                  <ellipse cx="120" cy="74" rx="55" ry="8" fill="#0A0710" opacity="0.6"/>
-
-                  <!-- Купол кепки (глубокая посадка по всей ширине головы) -->
-                  <path d="
-                    M 68 70
-                    C 70 38, 170 38, 172 70
-                    Q 120 74, 68 70 Z
-                  " fill="#18191C" stroke="#2D3748" stroke-width="1.5"/>
-
-                  <!-- Вышитая 3D эмблема «M» по центру купола -->
-                  <text x="114" y="60" font-size="14" font-weight="900" fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">M</text>
-
-                  <!-- Пуговица на макушке -->
-                  <circle cx="120" cy="40" r="3.5" fill="#2D3748"/>
-
-                  <!-- Широкий плотный козырёк (Snapback Brim) -->
-                  <path d="
-                    M 60 70
-                    C 60 66, 180 66, 180 70
-                    C 186 78, 170 86, 120 86
-                    C 70 86, 54 78, 60 70 Z
-                  " fill="#25282F" stroke="#111315" stroke-width="1.2" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.6))"/>
-
-                  <!-- Золотой круглый голографический стикер на козырьке -->
-                  <circle cx="152" cy="77" r="5.5" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="0.8"/>
-                </g>
-
-                <!-- 6. УНИВЕРСИТЕТСКИЙ БОМБЕР (15 ДНЕЙ) -->
-                <g id="acc-varsity_jacket" style="display:none;">
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="url(#varsityBodyGrad)"/>
-                  <!-- Белые кожаные рукава по бокам -->
-                  <path d="M 68 133 C 48 152, 48 178, 52 195 Z" fill="#F8FAFC"/>
-                  <path d="M 172 133 C 192 152, 192 178, 188 195 Z" fill="#F8FAFC"/>
-                  <!-- Планка с кнопками -->
-                  <line x1="120" y1="135" x2="120" y2="200" stroke="#F8FAFC" stroke-width="3"/>
-                  <circle cx="120" cy="150" r="2.2" fill="#ECCC68"/>
-                  <circle cx="120" cy="166" r="2.2" fill="#ECCC68"/>
-                  <circle cx="120" cy="182" r="2.2" fill="#ECCC68"/>
-                  <text x="86" y="160" font-size="14" font-weight="900" fill="#ECCC68">L</text>
-                  <!-- Полосатый низ -->
-                  <path d="M 50 193 Q 120 203 190 193 L 188 200 Q 120 205 52 200 Z" fill="#F8FAFC"/>
-                </g>
-
-                <!-- 7. ПИКСЕЛЬНЫЕ ОЧКИ (15 ДНЕЙ) -->
-                <g id="acc-pixel_glasses" style="display:none;">
-                  <rect x="78" y="106" width="34" height="16" fill="#111"/>
-                  <rect x="128" y="106" width="34" height="16" fill="#111"/>
-                  <rect x="112" y="110" width="16" height="5" fill="#111"/>
-                  <rect x="82" y="108" width="5" height="4" fill="#FFF"/>
-                  <rect x="87" y="112" width="5" height="4" fill="#FFF"/>
-                  <rect x="132" y="108" width="5" height="4" fill="#FFF"/>
-                  <rect x="137" y="112" width="5" height="4" fill="#FFF"/>
-                </g>
-
-                <!-- 8. ГЕЙМЕРСКИЕ CAT-НАУШНИКИ (30 ДНЕЙ) -->
-                <g id="acc-cat_headphones" style="display:none;">
-                  <path d="M 66 102 A 56 56 0 0 1 174 102" fill="none" stroke="#2D3748" stroke-width="6" stroke-linecap="round"/>
-                  <polygon points="86,64 74,40 98,52" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
-                  <polygon points="154,64 166,40 142,52" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
-                  <rect x="54" y="92" width="16" height="32" rx="8" fill="#FF5E8A" stroke="#2D3748" stroke-width="2.5"/>
-                  <rect x="170" y="92" width="16" height="32" rx="8" fill="#FF5E8A" stroke="#2D3748" stroke-width="2.5"/>
-                </g>
-
-                <!-- 9. TECHWEAR-ХУДИ (30 ДНЕЙ) -->
-                <g id="acc-cyber_hoodie" style="display:none;">
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="#151719" stroke="#00F2FE" stroke-width="1.8"/>
-                  <path d="M 70 130 Q 120 142 170 130" fill="none" stroke="#00F2FE" stroke-width="3"/>
-                  <line x1="90" y1="148" x2="90" y2="194" stroke="#FF5E8A" stroke-width="3.5"/>
-                  <line x1="150" y1="148" x2="150" y2="194" stroke="#FF5E8A" stroke-width="3.5"/>
-                  <rect x="108" y="165" width="24" height="14" rx="3" fill="#00F2FE" opacity="0.9"/>
-                </g>
-
-                <!-- 10. КОЖАНАЯ КОСУХА (50 ДНЕЙ) -->
-                <g id="acc-leather_jacket" style="display:none;">
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="url(#leatherGrad)"/>
-                  <polygon points="76,131 106,160 84,156" fill="#475569"/>
-                  <polygon points="164,131 134,160 156,156" fill="#475569"/>
-                  <line x1="106" y1="145" x2="130" y2="198" stroke="#E2E8F0" stroke-width="3"/>
-                  <circle cx="82" cy="138" r="1.8" fill="#FFF"/>
-                  <circle cx="158" cy="138" r="1.8" fill="#FFF"/>
-                </g>
-
-                <!-- 11. НЕОНОВЫЕ РОЖКИ ДЕМОНА (50 ДНЕЙ) -->
-                <g id="acc-demon_horns" style="display:none;">
-                  <path d="M 64 42 Q 52 14 36 22 Q 48 36 60 48 Z" fill="#FF0844" filter="drop-shadow(0 0 8px #FF0844)"/>
-                  <path d="M 176 42 Q 188 14 204 22 Q 192 36 180 48 Z" fill="#FF0844" filter="drop-shadow(0 0 8px #FF0844)"/>
-                </g>
-
-                <!-- 12. КИБЕР-ВИЗОР 2077 (100 ДНЕЙ) -->
-                <g id="acc-cybervisor" style="display:none;">
-                  <path d="M 72 106 L 168 106 L 160 127 L 80 127 Z" fill="url(#cyberNeonGrad)" opacity="0.92" filter="drop-shadow(0 0 8px #00F2FE)"/>
-                  <line x1="72" y1="116" x2="168" y2="116" stroke="#FFFFFF" stroke-width="2.5" opacity="0.85"/>
-                </g>
-
-                <!-- 13. ТЁМНОЕ КИМОНО / ХАОРИ (100 ДНЕЙ) -->
-                <g id="acc-samurai_haori" style="display:none;">
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="#0F172A"/>
-                  <line x1="82" y1="131" x2="136" y2="198" stroke="#F1C40F" stroke-width="3.5"/>
-                  <line x1="158" y1="131" x2="114" y2="182" stroke="#F1C40F" stroke-width="3.5"/>
-                </g>
-
-                <!-- 14. СКАФАНДР NASA-HEART (150 ДНЕЙ) -->
-                <g id="acc-spacehelmet" style="display:none;">
-                  <path d="
-                    M 68 131
-                    C 46 146, 46 175, 50 193
-                    C 52 201, 74 203, 120 203
-                    C 166 203, 188 201, 190 193
-                    C 194 175, 194 146, 172 131
-                    Q 120 137, 68 131 Z
-                  " fill="#FFFFFF" stroke="#38BDF8" stroke-width="2"/>
-                  <ellipse cx="120" cy="134" rx="36" ry="9" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
-                  <rect x="90" y="156" width="16" height="12" rx="3" fill="#0284C7"/>
-                  <circle cx="98" cy="162" r="3" fill="#FF5E8A"/>
-                </g>
-
-                <!-- 15. КОСМИЧЕСКИЕ КОЛЬЦА САТУРНА (200 ДНЕЙ) -->
-                <g id="acc-saturn_ring" style="display:none;">
-                  <ellipse cx="120" cy="62" rx="64" ry="16" fill="none" stroke="#FDCB6E" stroke-width="5" transform="rotate(-16 120 62)" filter="drop-shadow(0 0 8px #FDCB6E)"/>
-                </g>
-
-                <!-- 16. ПАРЯЩИЙ НИМБ АРХАНГЕЛА (250 ДНЕЙ) -->
-                <g id="acc-angel_halo" style="display:none;">
-                  <ellipse cx="120" cy="22" rx="44" ry="13" fill="none" stroke="#FFD700" stroke-width="4.5" filter="drop-shadow(0 0 12px #FFD700)"/>
-                </g>
-
-                <!-- 17. VIP КОРОЛЕВСКАЯ КОРОНА -->
-                <g id="acc-crown" style="display:none;">
-                  <path d="M 94 52 L 102 30 L 112 44 L 120 24 L 128 44 L 138 30 L 146 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.6" filter="drop-shadow(0 0 10px rgba(255,215,0,0.85))"/>
-                  <circle cx="102" cy="30" r="2.8" fill="#E53E3E"/>
-                  <circle cx="120" cy="24" r="3.2" fill="#3182CE"/>
-                  <circle cx="138" cy="30" r="2.8" fill="#38A169"/>
-                </g>
-
-              </g>
-
               <g class="feet">
-                <ellipse cx="92" cy="202" rx="14" ry="9" fill="#4834D4"/>
-                <ellipse cx="148" cy="202" rx="14" ry="9" fill="#4834D4"/>
+                <ellipse id="monster-foot-l" cx="92" cy="202" rx="14" ry="9" fill="#4834D4"/>
+                <ellipse id="monster-foot-r" cx="148" cy="202" rx="14" ry="9" fill="#4834D4"/>
               </g>
             </g>
           </svg>
@@ -519,7 +224,7 @@
                 <span id="attempts-display" class="hearts-row">❤️❤️❤️</span>
               </div>
               <h3 id="overlay-title">Поймай сердца за 15 секунд!</h3>
-              <p id="overlay-sub">❤️ = +1 &nbsp;|&nbsp; 💛 = +3 &nbsp;|&nbsp; 💔 = -2<br><small style="color: #FDCB6E;">Очки зачисляются в банк для покупки шмоток!</small></p>
+              <p id="overlay-sub">❤️ = +1 &nbsp;|&nbsp; 💛 = +3 &nbsp;|&nbsp; 💔 = -2<br><small style="color: #FDCB6E;">Сердечки идут на покупку новых цветов и фонов!</small></p>
               <button class="cta-button play-btn" id="btn-start-arcade">
                 <span>Начать игру ▶️</span>
               </button>
@@ -624,10 +329,10 @@
               <div class="vip-item-badge gold">Эксклюзив</div>
             </div>
             <h4 class="vip-item-title">Королевский VIP</h4>
-            <p class="vip-item-desc">Золотая корона монстрику, сияющая аура и бесконечные попытки в играх.</p>
+            <p class="vip-item-desc">Золотой скин монстрика, королевский фон и бесконечные попытки в играх.</p>
             <div class="vip-item-footer">
               <span class="vip-stock gold" id="vip-perk-label">Навсегда</span>
-              <button class="vip-buy-btn gold-btn" id="btn-buy-vip" data-code="vip" data-stars="75" data-title="Королевский VIP" data-desc="Золотая корона, бесконечные попытки и VIP-статус">
+              <button class="vip-buy-btn gold-btn" id="btn-buy-vip" data-code="vip" data-stars="75" data-title="Королевский VIP" data-desc="Золотой скин, королевский фон и VIP-статус">
                 <span>75 ⭐</span>
               </button>
             </div>
@@ -636,13 +341,13 @@
           <div class="glass-card vip-item-card">
             <div class="vip-item-header">
               <span class="vip-item-ico">💖</span>
-              <div class="vip-item-badge">Гардероб</div>
+              <div class="vip-item-badge">Коллекция</div>
             </div>
             <h4 class="vip-item-title">Мешок 500 ❤️</h4>
-            <p class="vip-item-desc">Мгновенный запас сердечек для покупки любых шмоток в шкафу.</p>
+            <p class="vip-item-desc">Запас сердечек для мгновенного открытия любых скинов и фонов.</p>
             <div class="vip-item-footer">
               <span class="vip-stock">+500 очков</span>
-              <button class="vip-buy-btn" data-code="coins" data-stars="15" data-title="Мешок 500 сердец" data-desc="500 сердечек для гардероба питомца">
+              <button class="vip-buy-btn" data-code="coins" data-stars="15" data-title="Мешок 500 сердец" data-desc="500 сердечек для кастомизации">
                 <span>15 ⭐</span>
               </button>
             </div>
@@ -665,7 +370,7 @@
 
   </div>
 
-  <!-- ШТОРКА ГАРДЕРОБА -->
+  <!-- ШТОРКА КАСТОМИЗАЦИИ (СТИЛЬ И ФОНЫ) -->
   <div class="wardrobe-sheet" id="wardrobe-sheet">
     <div class="wardrobe-backdrop" id="wardrobe-backdrop"></div>
     <div class="wardrobe-content glass-card">
@@ -673,8 +378,8 @@
       
       <div class="wardrobe-head">
         <div>
-          <h3>Гардероб питомца 🧢</h3>
-          <p class="wardrobe-sub">Открывай наряды за стрик и покупай за сердечки</p>
+          <h3>Стиль и окружение 🎨</h3>
+          <p class="wardrobe-sub">Открывай цвета и темы за стрик и сердечки</p>
         </div>
         <div class="heart-coin-badge">
           <span>❤️</span>
@@ -682,11 +387,18 @@
         </div>
       </div>
 
-      <div class="wardrobe-grid" id="wardrobe-grid"></div>
+      <!-- Переключатель подвкладок внутри шторки -->
+      <div class="style-subtabs">
+        <button class="style-subtab-btn active" id="tab-style-colors">🐾 Цвет питомца</button>
+        <button class="style-subtab-btn" id="tab-style-backgrounds">🌄 Фон меню</button>
+      </div>
+
+      <!-- Сетка элементов -->
+      <div class="wardrobe-grid" id="style-grid"></div>
     </div>
   </div>
 
-  <!-- Меню -->
+  <!-- Нижнее меню -->
   <nav class="bottom-dock">
     <div class="dock-inner glass-card">
       <button class="dock-item active" id="tab-home">
@@ -729,6 +441,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=3.5"></script>
+  <script src="app.js?v=4.0"></script>
 </body>
 </html>

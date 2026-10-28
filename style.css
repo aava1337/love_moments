@@ -1,7 +1,6 @@
 :root {
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --bg-dark: #100C16;
-  --bg-gradient: linear-gradient(180deg, #181124 0%, #0D0914 100%);
   --coral-pink: #FF5E8A;
   --sunset-orange: #FFA06E;
   --gold-glow: #FDCB6E;
@@ -27,11 +26,74 @@ html, body {
 
 body {
   background: var(--bg-dark);
-  background-image: var(--bg-gradient);
   color: var(--text-white);
   display: flex;
   justify-content: center;
   position: relative;
+  transition: background 0.5s ease;
+}
+
+/* ======================================================== */
+/* ТЕМАТИЧЕСКИЕ ФОНЫ ГЛАВНОГО МЕНЮ */
+/* ======================================================== */
+body.theme-midnight {
+  background: linear-gradient(180deg, #181124 0%, #0D0914 100%);
+}
+body.theme-midnight .glow-1 {
+  background: radial-gradient(circle, rgba(108, 92, 231, 0.55) 0%, transparent 70%);
+}
+body.theme-midnight .glow-2 {
+  background: radial-gradient(circle, rgba(255, 94, 138, 0.45) 0%, transparent 70%);
+}
+
+body.theme-space {
+  background: radial-gradient(circle at 50% 20%, #151632 0%, #060714 80%);
+}
+body.theme-space .glow-1 {
+  background: radial-gradient(circle, rgba(69, 123, 255, 0.5) 0%, transparent 70%);
+}
+body.theme-space .glow-2 {
+  background: radial-gradient(circle, rgba(165, 94, 234, 0.45) 0%, transparent 70%);
+}
+
+body.theme-sunset {
+  background: linear-gradient(180deg, #2D1438 0%, #541936 50%, #200E1D 100%);
+}
+body.theme-sunset .glow-1 {
+  background: radial-gradient(circle, rgba(255, 121, 121, 0.55) 0%, transparent 70%);
+}
+body.theme-sunset .glow-2 {
+  background: radial-gradient(circle, rgba(255, 160, 110, 0.5) 0%, transparent 70%);
+}
+
+body.theme-cyberpunk {
+  background: linear-gradient(180deg, #090A0F 0%, #140826 100%);
+}
+body.theme-cyberpunk .glow-1 {
+  background: radial-gradient(circle, rgba(0, 242, 254, 0.45) 0%, transparent 70%);
+}
+body.theme-cyberpunk .glow-2 {
+  background: radial-gradient(circle, rgba(255, 8, 68, 0.4) 0%, transparent 70%);
+}
+
+body.theme-sakura {
+  background: linear-gradient(180deg, #281726 0%, #170F1A 100%);
+}
+body.theme-sakura .glow-1 {
+  background: radial-gradient(circle, rgba(253, 121, 168, 0.55) 0%, transparent 70%);
+}
+body.theme-sakura .glow-2 {
+  background: radial-gradient(circle, rgba(225, 112, 85, 0.35) 0%, transparent 70%);
+}
+
+body.theme-royal {
+  background: radial-gradient(circle at 50% 30%, #290B19 0%, #0D0308 90%);
+}
+body.theme-royal .glow-1 {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.38) 0%, transparent 70%);
+}
+body.theme-royal .glow-2 {
+  background: radial-gradient(circle, rgba(214, 48, 49, 0.45) 0%, transparent 70%);
 }
 
 .ambient-glow {
@@ -40,19 +102,18 @@ body {
   filter: blur(95px);
   z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.55;
+  transition: all 0.6s ease;
 }
 .glow-1 {
   width: 260px;
   height: 260px;
-  background: radial-gradient(circle, rgba(108, 92, 231, 0.55) 0%, transparent 70%);
   top: -40px;
   left: -40px;
 }
 .glow-2 {
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(255, 94, 138, 0.45) 0%, transparent 70%);
   bottom: 80px;
   right: -50px;
 }
@@ -80,7 +141,7 @@ body {
 }
 
 /* ======================================================== */
-/* ШАПКА ПАРЫ */
+/* ШАПКА */
 /* ======================================================== */
 .header-bar {
   padding: 10px 14px;
@@ -241,7 +302,7 @@ body {
 }
 
 /* ======================================================== */
-/* ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ */
+/* ВКЛАДКИ ЭКРАНОВ */
 /* ======================================================== */
 .tab-screen {
   display: none !important;
@@ -256,7 +317,7 @@ body {
 }
 
 /* ======================================================== */
-/* ЭКРАН 1: ДОМ И МОНСТРИК */
+/* ЭКРАН 1: ДОМ */
 /* ======================================================== */
 .monster-stage {
   flex: 1;
@@ -301,6 +362,7 @@ body {
   background: radial-gradient(circle, rgba(108, 92, 231, 0.45) 0%, transparent 70%);
   filter: blur(24px);
   z-index: 1;
+  transition: all 0.5s ease;
 }
 
 .monster-svg {
@@ -359,7 +421,7 @@ body {
   font-size: 13px;
 }
 
-/* Кнопка гардероба на сцене (справа от монстрика) */
+/* Кнопка стиля на сцене */
 .stage-wardrobe-btn {
   position: absolute;
   right: 10px;
@@ -396,17 +458,17 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* Плашка примерки на сцене */
+/* Плашка активной примерки */
 .stage-tryon-chip {
   position: absolute;
   top: 6px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 12;
-  background: rgba(253, 203, 110, 0.2);
+  background: rgba(253, 203, 110, 0.22);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px dashed rgba(253, 203, 110, 0.5);
+  border: 1px dashed rgba(253, 203, 110, 0.6);
   border-radius: 14px;
   padding: 6px 14px;
   font-size: 11.5px;
@@ -431,7 +493,7 @@ body {
   justify-content: center;
 }
 
-/* Карточка статуса монстрика */
+/* Сытость */
 .status-card {
   padding: 12px 16px;
   flex-shrink: 0;
@@ -598,7 +660,7 @@ body {
 }
 
 /* ======================================================== */
-/* ЭКРАН 3: ИГРЫ (АРКАДА + ВОПРОС ДНЯ) */
+/* ЭКРАН 3: ИГРЫ */
 /* ======================================================== */
 .games-container {
   flex: 1;
@@ -647,7 +709,7 @@ body {
   min-height: 0;
 }
 
-/* Ловец сердец */
+/* Аркада */
 .scoreboard-card {
   padding: 12px 20px;
   display: flex;
@@ -790,6 +852,13 @@ body {
   animation: heartPop 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
+@keyframes heartPop {
+  0% { transform: scale(0.2); opacity: 0; }
+  20% { transform: scale(1.15); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
 .heart-splash {
   position: absolute;
   font-size: 17px;
@@ -797,6 +866,11 @@ body {
   pointer-events: none;
   animation: splashFloat 0.6s ease-out forwards;
   z-index: 999;
+}
+
+@keyframes splashFloat {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
 }
 
 /* Вопрос дня */
@@ -923,7 +997,7 @@ body {
 }
 
 /* ======================================================== */
-/* ЭКРАН 4: ВИТРИНА VIP */
+/* ЭКРАН 4: VIP */
 /* ======================================================== */
 .vip-container {
   flex: 1;
@@ -1092,7 +1166,7 @@ body {
   box-shadow: 0 4px 16px rgba(253, 203, 110, 0.5);
 }
 
-/* Карточка обратной связи */
+/* Обратная связь */
 .feedback-card {
   margin-top: 10px;
   padding: 12px 14px;
@@ -1141,7 +1215,7 @@ body {
 }
 
 /* ======================================================== */
-/* ШТОРКА ГАРДЕРОБА */
+/* ШТОРКА КАСТОМИЗАЦИИ (ЦВЕТА И ФОНЫ) */
 /* ======================================================== */
 .wardrobe-sheet {
   position: fixed;
@@ -1218,18 +1292,50 @@ body {
   color: #FFA06E;
 }
 
+/* Вкладки стилей внутри шторки */
+.style-subtabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.style-subtab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.style-subtab-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text-white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .wardrobe-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   overflow-y: auto;
-  max-height: 52vh;
+  max-height: 50vh;
   padding-bottom: 8px;
 }
 
 .wardrobe-card {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 10px;
   display: flex;
@@ -1241,16 +1347,29 @@ body {
 
 .wardrobe-card.equipped {
   border-color: #00B894;
-  background: rgba(0, 184, 148, 0.08);
+  background: rgba(0, 184, 148, 0.1);
 }
 
 .wardrobe-card.locked {
   opacity: 0.6;
 }
 
-.item-ico {
-  font-size: 34px;
-  margin-bottom: 4px;
+.color-preview-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.bg-preview-rect {
+  width: 60px;
+  height: 38px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 .item-name {
@@ -1310,16 +1429,16 @@ body {
   cursor: pointer;
 }
 
-.btn-unequip {
+.btn-equipped-tag {
   width: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #FFA06E;
+  background: rgba(0, 184, 148, 0.2);
+  border: 1px solid #00B894;
+  color: #55EFC4;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 800;
   padding: 6px;
-  cursor: pointer;
+  text-align: center;
 }
 
 .btn-locked {
@@ -1451,9 +1570,7 @@ body {
   font-size: 28px;
 }
 
-/* ======================================================== */
-/* МОДАЛЬНОЕ ОКНО ПРОСМОТРА ФОТО */
-/* ======================================================== */
+/* Модальное окно фото */
 .modal-viewer {
   position: fixed;
   inset: 0;
@@ -1515,9 +1632,7 @@ body {
   text-align: center;
 }
 
-/* ======================================================== */
-/* АНИМАЦИИ */
-/* ======================================================== */
+/* Анимации */
 @keyframes monsterBreathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.03, 0.97) translateY(2px); }
@@ -1556,16 +1671,4 @@ body {
 @keyframes slideUpSheet {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
-}
-
-@keyframes heartPop {
-  0% { transform: scale(0.2); opacity: 0; }
-  20% { transform: scale(1.15); opacity: 1; }
-  80% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0); opacity: 0; }
-}
-
-@keyframes splashFloat {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
 }
