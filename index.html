@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3.1">
+  <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
   <div class="ambient-glow glow-1"></div>
@@ -93,22 +93,28 @@
                 <stop offset="100%" stop-color="#0F0A17" stop-opacity="0"/>
               </radialGradient>
 
-              <!-- Градиенты тканей и материалов -->
+              <!-- Градиенты материалов и металлов -->
               <linearGradient id="hoodieCreamGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#FFFFFF"/>
-                <stop offset="100%" stop-color="#E4E7EB"/>
+                <stop offset="100%" stop-color="#E2E6EA"/>
               </linearGradient>
               <linearGradient id="retroSweaterGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2C3A47"/>
-                <stop offset="100%" stop-color="#130F40"/>
+                <stop offset="0%" stop-color="#2D3A4B"/>
+                <stop offset="100%" stop-color="#141A24"/>
               </linearGradient>
               <linearGradient id="varsityBodyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2C344A"/>
-                <stop offset="100%" stop-color="#181E2C"/>
+                <stop offset="0%" stop-color="#2D3748"/>
+                <stop offset="100%" stop-color="#1A202C"/>
               </linearGradient>
               <linearGradient id="leatherGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#343A40"/>
-                <stop offset="100%" stop-color="#121416"/>
+                <stop offset="0%" stop-color="#3A3F47"/>
+                <stop offset="100%" stop-color="#111315"/>
+              </linearGradient>
+              <linearGradient id="chromeGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFFFFF"/>
+                <stop offset="40%" stop-color="#CBD5E1"/>
+                <stop offset="70%" stop-color="#64748B"/>
+                <stop offset="100%" stop-color="#F8FAFC"/>
               </linearGradient>
               <linearGradient id="cyberNeonGrad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#00F2FE"/>
@@ -125,8 +131,8 @@
 
             <!-- Крылья Архангела (за спиной) -->
             <g id="acc-celestial_wings" style="display:none;">
-              <path d="M 68 135 C 10 90, 0 40, 25 15 C 45 45, 55 85, 75 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 8px rgba(255,255,255,0.8))"/>
-              <path d="M 172 135 C 230 90, 240 40, 215 15 C 195 45, 185 85, 165 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 8px rgba(255,255,255,0.8))"/>
+              <path d="M 64 135 C 5 90, -5 35, 20 10 C 45 45, 55 85, 75 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 10px rgba(255,255,255,0.85))"/>
+              <path d="M 176 135 C 235 90, 245 35, 220 10 C 195 45, 185 85, 165 118 Z" fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 0 10px rgba(255,255,255,0.85))"/>
             </g>
 
             <g class="monster-tail">
@@ -151,7 +157,7 @@
                 <path class="ear ear-r" d="M 172 95 C 200 85 195 125 170 115 Z" fill="#4834D4"/>
               </g>
 
-              <!-- Тело -->
+              <!-- Тело монстрика -->
               <path class="main-body" d="
                 M 120 58
                 C 168 58, 185 95, 184 148
@@ -164,7 +170,7 @@
               <ellipse class="belly" cx="120" cy="154" rx="42" ry="36" fill="url(#bellyGrad)" />
               <path d="M 120 152 C 117 148, 112 150, 114 154 L 120 160 L 126 154 C 128 150, 123 148, 120 152 Z" fill="#FF7675" opacity="0.8"/>
 
-              <!-- Личико -->
+              <!-- Мордочка -->
               <g class="face">
                 <circle cx="95" cy="115" r="13" fill="#1E142B"/>
                 <circle cx="91" cy="111" r="5" fill="#FFFFFF"/>
@@ -183,224 +189,258 @@
               </g>
 
               <!-- ============================================== -->
-              <!-- СЛОЙ ПРАВИЛЬНО ПОСАЖЕННОЙ ОДЕЖДЫ -->
+              <!-- СЛОЙ ПРАВИЛЬНОЙ ОДЕЖДЫ И СТРИТВИРА -->
               <!-- ============================================== -->
               <g id="monster-accessories-layer">
 
-                <!-- 1. Оверсайз-худи «Крем» (0 дней) -->
+                <!-- 1. ПОЛНОРАЗМЕРНОЕ ОВЕРСАЙЗ-ХУДИ «КРЕМ» (0 ДНЕЙ) -->
                 <g id="acc-hoodie_cream" style="display:none;">
-                  <!-- Основа худи: повторяет плечи и туловище -->
+                  <!-- Массивное оверсайз тело худи, закрывающее все бока от X=48 до X=192 -->
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 140 136, 120 137
-                    Q 100 136, 78 134 Z
-                  " fill="url(#hoodieCreamGrad)" stroke="#CAD3C8" stroke-width="1.8"/>
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
+                  " fill="url(#hoodieCreamGrad)" stroke="#B8C1C8" stroke-width="1.8"/>
                   
-                  <!-- Воротник капюшона плотно под подбородком -->
-                  <path d="M 76 132 Q 120 142 164 132 Q 152 144 120 144 Q 88 144 76 132 Z" fill="#F8F9FA" stroke="#CAD3C8" stroke-width="1.2"/>
+                  <!-- Линии рукавов оверсайз -->
+                  <path d="M 68 135 C 58 152, 58 178, 64 196" fill="none" stroke="#CFD6DC" stroke-width="2"/>
+                  <path d="M 172 135 C 182 152, 182 178, 176 196" fill="none" stroke="#CFD6DC" stroke-width="2"/>
+
+                  <!-- Плотный воротник капюшона вплотную под подбородком -->
+                  <path d="M 68 130 Q 120 144 172 130 Q 150 144 120 144 Q 90 144 68 130 Z" fill="#FFFFFF" stroke="#B8C1C8" stroke-width="1.2"/>
                   
-                  <!-- Карман кенгуру -->
-                  <path d="M 94 170 L 146 170 L 152 194 L 88 194 Z" rx="3" fill="#DCDDE1" opacity="0.6"/>
+                  <!-- Широкий карман кенгуру -->
+                  <path d="M 82 168 L 158 168 L 166 196 L 74 196 Z" rx="3" fill="#D3D9DE" opacity="0.75"/>
+                  <line x1="82" y1="168" x2="74" y2="196" stroke="#B8C1C8" stroke-width="1.5"/>
+                  <line x1="158" y1="168" x2="166" y2="196" stroke="#B8C1C8" stroke-width="1.5"/>
                   
-                  <!-- Шнурки с наконечниками -->
-                  <path d="M 112 144 Q 110 156 112 165" stroke="#718093" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-                  <circle cx="112" cy="166" r="1.8" fill="#CAD3C8"/>
-                  <path d="M 128 144 Q 130 156 128 165" stroke="#718093" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-                  <circle cx="128" cy="166" r="1.8" fill="#CAD3C8"/>
+                  <!-- Шнурки с металлическими зажимами -->
+                  <path d="M 108 142 Q 104 158 107 172" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                  <rect x="105.5" y="171" width="3.2" height="7" rx="1.5" fill="#94A3B8"/>
+                  <path d="M 132 142 Q 136 158 133 172" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                  <rect x="131.5" y="171" width="3.2" height="7" rx="1.5" fill="#94A3B8"/>
+                  
+                  <!-- Нижняя трикотажная резинка -->
+                  <path d="M 50 193 Q 120 203 190 193 L 188 200 Q 120 205 52 200 Z" fill="#D3D9DE"/>
                 </g>
 
-                <!-- 2. Шапка-бини с подворотом (0 дней) -->
+                <!-- 2. ШАПКА-БИНИ С ПОДВОРОТОМ (0 ДНЕЙ) -->
                 <g id="acc-beanie" style="display:none;">
-                  <path d="M 84 62 C 86 34, 154 34, 156 62 Z" fill="#2F3542"/>
-                  <rect x="80" y="58" width="80" height="15" rx="5" fill="#1E272E" stroke="#57606F" stroke-width="1.2"/>
-                  <rect x="114" y="61" width="12" height="9" rx="2" fill="#FF5E8A"/>
+                  <path d="M 80 62 C 82 30, 158 30, 160 62 Z" fill="#2D3748"/>
+                  <rect x="74" y="56" width="92" height="16" rx="5" fill="#1A202C" stroke="#4A5568" stroke-width="1.2"/>
+                  <rect x="114" y="60" width="12" height="9" rx="2" fill="#FF5E8A"/>
                 </g>
 
-                <!-- 3. Винтажный свитер (7 дней) -->
+                <!-- 3. ВИНТАЖНЫЙ СВИТЕР (7 ДНЕЙ) -->
                 <g id="acc-vintage_sweater" style="display:none;">
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 120 137, 78 134 Z
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
                   " fill="url(#retroSweaterGrad)"/>
                   <!-- Воротник под горло -->
-                  <path d="M 80 133 Q 120 140 160 133 Q 152 142 120 143 Q 88 142 80 133 Z" fill="#ECCC68"/>
-                  <!-- Ретро ромбики -->
-                  <polygon points="90,160 98,150 106,160 98,170" fill="#ECCC68"/>
-                  <polygon points="112,160 120,150 128,160 120,170" fill="#FF7F50"/>
-                  <polygon points="134,160 142,150 150,160 142,170" fill="#ECCC68"/>
-                  <line x1="66" y1="178" x2="174" y2="178" stroke="#ECCC68" stroke-width="2.5"/>
+                  <path d="M 70 130 Q 120 141 170 130 Q 152 142 120 143 Q 88 142 70 130 Z" fill="#ECCC68"/>
+                  <!-- Скандинавские ромбы по всей ширине груди -->
+                  <polygon points="76,162 86,150 96,162 86,174" fill="#ECCC68"/>
+                  <polygon points="102,162 112,150 122,162 112,174" fill="#FF7F50"/>
+                  <polygon points="128,162 138,150 148,162 138,174" fill="#ECCC68"/>
+                  <polygon points="154,162 164,150 174,162 164,174" fill="#FF7F50"/>
+                  <line x1="56" y1="180" x2="184" y2="180" stroke="#ECCC68" stroke-width="3" stroke-dasharray="6 3"/>
+                  <path d="M 50 193 Q 120 203 190 193 L 188 200 Q 120 205 52 200 Z" fill="#ECCC68"/>
                 </g>
 
-                <!-- 4. Серебряная цепь с замком (7 дней) -->
+                <!-- 4. МАССИВНАЯ ДВОЙНАЯ СЕРЕБРЯНАЯ ЦЕПЬ (7 ДНЕЙ) -->
                 <g id="acc-silver_chain" style="display:none;">
-                  <path d="M 88 135 Q 120 164 152 135" fill="none" stroke="#CED6E0" stroke-width="3" stroke-dasharray="5 3"/>
-                  <rect x="116" y="154" width="8" height="9" rx="2" fill="#A4B0BE" stroke="#718093" stroke-width="1"/>
-                  <circle cx="120" cy="153" r="2.5" fill="none" stroke="#718093" stroke-width="1.2"/>
+                  <!-- Верхний ярус: звенья вокруг шеи -->
+                  <path d="M 80 133 Q 120 152 160 133" fill="none" stroke="url(#chromeGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="7 4" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/>
+                  
+                  <!-- Нижний ярус: свисающая массивная цепь -->
+                  <path d="M 86 138 Q 120 170 154 138" fill="none" stroke="url(#chromeGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="8 4" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.5))"/>
+                  
+                  <!-- Тяжелый хромированный замок с гравировкой сердца -->
+                  <g transform="translate(120, 166)">
+                    <!-- Дужка замка -->
+                    <path d="M -7 -4 A 7 7 0 0 1 7 -4 L 7 2 L -7 2 Z" fill="none" stroke="url(#chromeGrad)" stroke-width="2.8"/>
+                    <!-- Корпус замка -->
+                    <rect x="-10" y="0" width="20" height="16" rx="4" fill="url(#chromeGrad)" stroke="#334155" stroke-width="1.2" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.6))"/>
+                    <!-- Выгравированное сердце -->
+                    <path d="M 0 5 C -3 2, -6 5, 0 11 C 6 5, 3 2, 0 5 Z" fill="#FF5E8A"/>
+                  </g>
+
+                  <!-- Алмазные блики-звёзды (Drip эффект) -->
+                  <path d="M 92 144 L 94 140 L 96 144 L 100 146 L 96 148 L 94 152 L 92 148 L 88 146 Z" fill="#FFFFFF"/>
+                  <path d="M 148 146 L 149 143 L 150 146 L 153 147 L 150 148 L 149 151 L 148 148 L 145 147 Z" fill="#FFFFFF"/>
                 </g>
 
-                <!-- 5. Бейсболка Streetwear (7 дней) -->
+                <!-- 5. КЕПКА STREETWEAR С ПЛОСКИМ 3D КОЗЫРЬКОМ (7 ДНЕЙ) -->
                 <g id="acc-street_cap" style="display:none;">
-                  <path d="M 84 64 Q 120 38 156 64 Z" fill="#1E272E"/>
-                  <path d="M 136 62 Q 182 62, 178 72 Q 146 67, 134 62 Z" fill="#2F3542" stroke="#111" stroke-width="1"/>
-                  <text x="114" y="56" font-size="11" font-weight="900" fill="#FFFFFF">M</text>
+                  <!-- Тень под козырьком на лоб -->
+                  <ellipse cx="120" cy="74" rx="55" ry="8" fill="#0A0710" opacity="0.6"/>
+
+                  <!-- Купол кепки (глубокая посадка по всей ширине головы) -->
+                  <path d="
+                    M 68 70
+                    C 70 38, 170 38, 172 70
+                    Q 120 74, 68 70 Z
+                  " fill="#18191C" stroke="#2D3748" stroke-width="1.5"/>
+
+                  <!-- Вышитая 3D эмблема «M» по центру купола -->
+                  <text x="114" y="60" font-size="14" font-weight="900" fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">M</text>
+
+                  <!-- Пуговица на макушке -->
+                  <circle cx="120" cy="40" r="3.5" fill="#2D3748"/>
+
+                  <!-- Широкий плотный козырёк (Snapback Brim) -->
+                  <path d="
+                    M 60 70
+                    C 60 66, 180 66, 180 70
+                    C 186 78, 170 86, 120 86
+                    C 70 86, 54 78, 60 70 Z
+                  " fill="#25282F" stroke="#111315" stroke-width="1.2" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.6))"/>
+
+                  <!-- Золотой круглый голографический стикер на козырьке -->
+                  <circle cx="152" cy="77" r="5.5" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="0.8"/>
                 </g>
 
-                <!-- 6. Университетский бомбер (15 дней) -->
+                <!-- 6. УНИВЕРСИТЕТСКИЙ БОМБЕР (15 ДНЕЙ) -->
                 <g id="acc-varsity_jacket" style="display:none;">
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 120 137, 78 134 Z
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
                   " fill="url(#varsityBodyGrad)"/>
                   <!-- Белые кожаные рукава по бокам -->
-                  <path d="M 76 136 C 60 152, 56 174, 58 188 Z" fill="#F8F9FA"/>
-                  <path d="M 164 136 C 180 152, 184 174, 182 188 Z" fill="#F8F9FA"/>
-                  <!-- Застежка и кнопки -->
-                  <line x1="120" y1="138" x2="120" y2="197" stroke="#F8F9FA" stroke-width="2.5"/>
-                  <circle cx="120" cy="152" r="1.8" fill="#ECCC68"/>
-                  <circle cx="120" cy="168" r="1.8" fill="#ECCC68"/>
-                  <circle cx="120" cy="184" r="1.8" fill="#ECCC68"/>
-                  <text x="94" y="160" font-size="12" font-weight="900" fill="#ECCC68">L</text>
+                  <path d="M 68 133 C 48 152, 48 178, 52 195 Z" fill="#F8FAFC"/>
+                  <path d="M 172 133 C 192 152, 192 178, 188 195 Z" fill="#F8FAFC"/>
+                  <!-- Планка с кнопками -->
+                  <line x1="120" y1="135" x2="120" y2="200" stroke="#F8FAFC" stroke-width="3"/>
+                  <circle cx="120" cy="150" r="2.2" fill="#ECCC68"/>
+                  <circle cx="120" cy="166" r="2.2" fill="#ECCC68"/>
+                  <circle cx="120" cy="182" r="2.2" fill="#ECCC68"/>
+                  <text x="86" y="160" font-size="14" font-weight="900" fill="#ECCC68">L</text>
+                  <!-- Полосатый низ -->
+                  <path d="M 50 193 Q 120 203 190 193 L 188 200 Q 120 205 52 200 Z" fill="#F8FAFC"/>
                 </g>
 
-                <!-- 7. Пиксельные очки (15 дней) -->
+                <!-- 7. ПИКСЕЛЬНЫЕ ОЧКИ (15 ДНЕЙ) -->
                 <g id="acc-pixel_glasses" style="display:none;">
-                  <rect x="80" y="106" width="32" height="16" fill="#111"/>
-                  <rect x="128" y="106" width="32" height="16" fill="#111"/>
+                  <rect x="78" y="106" width="34" height="16" fill="#111"/>
+                  <rect x="128" y="106" width="34" height="16" fill="#111"/>
                   <rect x="112" y="110" width="16" height="5" fill="#111"/>
-                  <rect x="84" y="108" width="5" height="4" fill="#FFF"/>
-                  <rect x="89" y="112" width="5" height="4" fill="#FFF"/>
+                  <rect x="82" y="108" width="5" height="4" fill="#FFF"/>
+                  <rect x="87" y="112" width="5" height="4" fill="#FFF"/>
                   <rect x="132" y="108" width="5" height="4" fill="#FFF"/>
                   <rect x="137" y="112" width="5" height="4" fill="#FFF"/>
                 </g>
 
-                <!-- 8. Геймерские Cat-наушники (30 дней) -->
+                <!-- 8. ГЕЙМЕРСКИЕ CAT-НАУШНИКИ (30 ДНЕЙ) -->
                 <g id="acc-cat_headphones" style="display:none;">
-                  <path d="M 68 102 A 54 54 0 0 1 172 102" fill="none" stroke="#2F3542" stroke-width="6" stroke-linecap="round"/>
-                  <polygon points="86,64 74,42 98,54" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
-                  <polygon points="154,64 166,42 142,54" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
-                  <rect x="56" y="94" width="16" height="30" rx="8" fill="#FF5E8A" stroke="#2F3542" stroke-width="2.5"/>
-                  <rect x="168" y="94" width="16" height="30" rx="8" fill="#FF5E8A" stroke="#2F3542" stroke-width="2.5"/>
+                  <path d="M 66 102 A 56 56 0 0 1 174 102" fill="none" stroke="#2D3748" stroke-width="6" stroke-linecap="round"/>
+                  <polygon points="86,64 74,40 98,52" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
+                  <polygon points="154,64 166,40 142,52" fill="#FF5E8A" filter="drop-shadow(0 0 6px #FF5E8A)"/>
+                  <rect x="54" y="92" width="16" height="32" rx="8" fill="#FF5E8A" stroke="#2D3748" stroke-width="2.5"/>
+                  <rect x="170" y="92" width="16" height="32" rx="8" fill="#FF5E8A" stroke="#2D3748" stroke-width="2.5"/>
                 </g>
 
-                <!-- 9. Techwear-худи (30 дней) -->
+                <!-- 9. TECHWEAR-ХУДИ (30 ДНЕЙ) -->
                 <g id="acc-cyber_hoodie" style="display:none;">
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 120 137, 78 134 Z
-                  " fill="#18191A" stroke="#00F2FE" stroke-width="1.5"/>
-                  <path d="M 80 133 Q 120 142 160 133" fill="none" stroke="#00F2FE" stroke-width="2.5"/>
-                  <line x1="94" y1="150" x2="94" y2="192" stroke="#FF5E8A" stroke-width="3"/>
-                  <line x1="146" y1="150" x2="146" y2="192" stroke="#FF5E8A" stroke-width="3"/>
-                  <rect x="110" y="166" width="20" height="12" rx="2" fill="#00F2FE" opacity="0.85"/>
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
+                  " fill="#151719" stroke="#00F2FE" stroke-width="1.8"/>
+                  <path d="M 70 130 Q 120 142 170 130" fill="none" stroke="#00F2FE" stroke-width="3"/>
+                  <line x1="90" y1="148" x2="90" y2="194" stroke="#FF5E8A" stroke-width="3.5"/>
+                  <line x1="150" y1="148" x2="150" y2="194" stroke="#FF5E8A" stroke-width="3.5"/>
+                  <rect x="108" y="165" width="24" height="14" rx="3" fill="#00F2FE" opacity="0.9"/>
                 </g>
 
-                <!-- 10. Кожаная косуха (50 дней) -->
+                <!-- 10. КОЖАНАЯ КОСУХА (50 ДНЕЙ) -->
                 <g id="acc-leather_jacket" style="display:none;">
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 120 137, 78 134 Z
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
                   " fill="url(#leatherGrad)"/>
-                  <!-- Лацканы косухи -->
-                  <polygon points="82,133 104,158 86,155" fill="#4B6584"/>
-                  <polygon points="158,133 136,158 154,155" fill="#4B6584"/>
-                  <!-- Диагональная молния -->
-                  <line x1="104" y1="146" x2="128" y2="196" stroke="#CED6E0" stroke-width="2.8"/>
-                  <circle cx="86" cy="140" r="1.6" fill="#FFF"/>
-                  <circle cx="154" cy="140" r="1.6" fill="#FFF"/>
+                  <polygon points="76,131 106,160 84,156" fill="#475569"/>
+                  <polygon points="164,131 134,160 156,156" fill="#475569"/>
+                  <line x1="106" y1="145" x2="130" y2="198" stroke="#E2E8F0" stroke-width="3"/>
+                  <circle cx="82" cy="138" r="1.8" fill="#FFF"/>
+                  <circle cx="158" cy="138" r="1.8" fill="#FFF"/>
                 </g>
 
-                <!-- 11. Неоновые рожки демона (50 дней) -->
+                <!-- 11. НЕОНОВЫЕ РОЖКИ ДЕМОНА (50 ДНЕЙ) -->
                 <g id="acc-demon_horns" style="display:none;">
                   <path d="M 64 42 Q 52 14 36 22 Q 48 36 60 48 Z" fill="#FF0844" filter="drop-shadow(0 0 8px #FF0844)"/>
                   <path d="M 176 42 Q 188 14 204 22 Q 192 36 180 48 Z" fill="#FF0844" filter="drop-shadow(0 0 8px #FF0844)"/>
                 </g>
 
-                <!-- 12. Кибер-визор 2077 (100 дней) -->
+                <!-- 12. КИБЕР-ВИЗОР 2077 (100 ДНЕЙ) -->
                 <g id="acc-cybervisor" style="display:none;">
-                  <path d="M 74 106 L 166 106 L 158 126 L 82 126 Z" fill="url(#cyberNeonGrad)" opacity="0.9" filter="drop-shadow(0 0 8px #00F2FE)"/>
-                  <line x1="74" y1="116" x2="166" y2="116" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+                  <path d="M 72 106 L 168 106 L 160 127 L 80 127 Z" fill="url(#cyberNeonGrad)" opacity="0.92" filter="drop-shadow(0 0 8px #00F2FE)"/>
+                  <line x1="72" y1="116" x2="168" y2="116" stroke="#FFFFFF" stroke-width="2.5" opacity="0.85"/>
                 </g>
 
-                <!-- 13. Тёмное кимоно / Хаори (100 дней) -->
+                <!-- 13. ТЁМНОЕ КИМОНО / ХАОРИ (100 ДНЕЙ) -->
                 <g id="acc-samurai_haori" style="display:none;">
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 120 137, 78 134 Z
-                  " fill="#130F40"/>
-                  <!-- Золотой запах кимоно -->
-                  <line x1="86" y1="134" x2="134" y2="196" stroke="#F1C40F" stroke-width="3"/>
-                  <line x1="154" y1="134" x2="116" y2="182" stroke="#F1C40F" stroke-width="3"/>
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
+                  " fill="#0F172A"/>
+                  <line x1="82" y1="131" x2="136" y2="198" stroke="#F1C40F" stroke-width="3.5"/>
+                  <line x1="158" y1="131" x2="114" y2="182" stroke="#F1C40F" stroke-width="3.5"/>
                 </g>
 
-                <!-- 14. Скафандр NASA-Heart (150 дней) -->
+                <!-- 14. СКАФАНДР NASA-HEART (150 ДНЕЙ) -->
                 <g id="acc-spacehelmet" style="display:none;">
                   <path d="
-                    M 78 134
-                    C 60 148, 56 172, 58 186
-                    C 59 196, 72 198, 86 198
-                    C 98 198, 110 197, 120 197
-                    C 130 197, 142 198, 154 198
-                    C 168 198, 181 196, 182 186
-                    C 184 172, 180 148, 162 134
-                    Q 120 137, 78 134 Z
-                  " fill="#FFFFFF" stroke="#74B9FF" stroke-width="1.8"/>
-                  <ellipse cx="120" cy="136" rx="34" ry="8" fill="#2F3542" stroke="#74B9FF" stroke-width="2"/>
-                  <rect x="94" y="156" width="14" height="10" rx="2" fill="#0984E3"/>
-                  <circle cx="101" cy="161" r="2.5" fill="#FF5E8A"/>
+                    M 68 131
+                    C 46 146, 46 175, 50 193
+                    C 52 201, 74 203, 120 203
+                    C 166 203, 188 201, 190 193
+                    C 194 175, 194 146, 172 131
+                    Q 120 137, 68 131 Z
+                  " fill="#FFFFFF" stroke="#38BDF8" stroke-width="2"/>
+                  <ellipse cx="120" cy="134" rx="36" ry="9" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
+                  <rect x="90" y="156" width="16" height="12" rx="3" fill="#0284C7"/>
+                  <circle cx="98" cy="162" r="3" fill="#FF5E8A"/>
                 </g>
 
-                <!-- 15. Космические кольца Сатурна (200 дней) -->
+                <!-- 15. КОСМИЧЕСКИЕ КОЛЬЦА САТУРНА (200 ДНЕЙ) -->
                 <g id="acc-saturn_ring" style="display:none;">
-                  <ellipse cx="120" cy="62" rx="64" ry="16" fill="none" stroke="#FDCB6E" stroke-width="4.5" transform="rotate(-16 120 62)" filter="drop-shadow(0 0 6px #FDCB6E)"/>
+                  <ellipse cx="120" cy="62" rx="64" ry="16" fill="none" stroke="#FDCB6E" stroke-width="5" transform="rotate(-16 120 62)" filter="drop-shadow(0 0 8px #FDCB6E)"/>
                 </g>
 
-                <!-- 16. Парящий нимб Архангела (250 дней) -->
+                <!-- 16. ПАРЯЩИЙ НИМБ АРХАНГЕЛА (250 ДНЕЙ) -->
                 <g id="acc-angel_halo" style="display:none;">
-                  <ellipse cx="120" cy="22" rx="42" ry="12" fill="none" stroke="#FFD700" stroke-width="4" filter="drop-shadow(0 0 10px #FFD700)"/>
+                  <ellipse cx="120" cy="22" rx="44" ry="13" fill="none" stroke="#FFD700" stroke-width="4.5" filter="drop-shadow(0 0 12px #FFD700)"/>
                 </g>
 
                 <!-- 17. VIP КОРОЛЕВСКАЯ КОРОНА -->
                 <g id="acc-crown" style="display:none;">
-                  <path d="M 96 52 L 102 32 L 112 44 L 120 26 L 128 44 L 138 32 L 144 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.5" filter="drop-shadow(0 0 8px rgba(255,215,0,0.8))"/>
-                  <circle cx="102" cy="32" r="2.5" fill="#E53E3E"/>
-                  <circle cx="120" cy="26" r="3" fill="#3182CE"/>
-                  <circle cx="138" cy="32" r="2.5" fill="#38A169"/>
+                  <path d="M 94 52 L 102 30 L 112 44 L 120 24 L 128 44 L 138 30 L 146 52 Z" fill="url(#goldCrownGrad)" stroke="#B7791F" stroke-width="1.6" filter="drop-shadow(0 0 10px rgba(255,215,0,0.85))"/>
+                  <circle cx="102" cy="30" r="2.8" fill="#E53E3E"/>
+                  <circle cx="120" cy="24" r="3.2" fill="#3182CE"/>
+                  <circle cx="138" cy="30" r="2.8" fill="#38A169"/>
                 </g>
 
               </g>
@@ -610,7 +650,7 @@
 
         </div>
 
-        <!-- КАРТОЧКА ОБРАТНОЙ СВЯЗИ ВНУТРИ VIP-ЭКРАНА -->
+        <!-- КАРТОЧКА ОБРАТНОЙ СВЯЗИ -->
         <div class="glass-card feedback-card" id="btn-feedback">
           <div class="feedback-ico">💌</div>
           <div class="feedback-info">
@@ -689,6 +729,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=3.2"></script>
+  <script src="app.js?v=3.5"></script>
 </body>
 </html>
