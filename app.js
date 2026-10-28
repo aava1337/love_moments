@@ -51,6 +51,7 @@ function showTab(tabName) {
   }
 }
 
+// По умолчанию открываем «Дом»
 showTab('home');
 
 tabHome?.addEventListener('click', () => {
@@ -111,7 +112,6 @@ const paramU2User = urlParams.get('u2_user') || '';
 const paramU1Sent = urlParams.get('u1_sent') === '1';
 const paramU2Sent = urlParams.get('u2_sent') === '1';
 
-// Кэширование фото: если в ссылке есть новые фото — сохраняем их в память, если нет — достаем из памяти
 let paramPhotos = urlParams.get('photos') || '';
 if (paramPhotos) {
   localStorage.setItem('cached_photos_list', paramPhotos);
@@ -141,7 +141,266 @@ const partnerName = isUser1 ? paramU2Name : paramU1Name;
 const partnerId = isUser1 ? paramU2Id : paramU1Id;
 
 // ==========================================
-// 4. ВКЛАДКА «VIP», TELEGRAM STARS И ОБРАТНАЯ СВЯЗЬ
+// 4. НОВЫЙ СТИЛЬНЫЙ КАТАЛОГ ГАРДЕРОБА
+// ==========================================
+const WARDROBE_ITEMS = [
+  // VIP эксклюзив
+  { id: 'crown', name: 'Золотая корона', ico: '👑', reqStreak: 0, price: 9999, svgId: 'acc-crown' },
+
+  // 0 дней (Базовый стритвир)
+  { id: 'hoodie_cream', name: 'Худи «Крем»', ico: '🧶', reqStreak: 0, price: 30, svgId: 'acc-hoodie_cream' },
+  { id: 'beanie', name: 'Шапка-бини', ico: '🧢', reqStreak: 0, price: 25, svgId: 'acc-beanie' },
+
+  // 7+ дней
+  { id: 'vintage_sweater', name: 'Винтаж свитер', ico: '☕', reqStreak: 7, price: 70, svgId: 'acc-vintage_sweater' },
+  { id: 'silver_chain', name: 'Серебряная цепь', ico: '⛓️', reqStreak: 7, price: 55, svgId: 'acc-silver_chain' },
+  { id: 'street_cap', name: 'Кепка Streetwear', ico: '🧢', reqStreak: 7, price: 65, svgId: 'acc-street_cap' },
+
+  // 15+ дней
+  { id: 'varsity_jacket', name: 'Колледж-бомбер', ico: '🏈', reqStreak: 15, price: 110, svgId: 'acc-varsity_jacket' },
+  { id: 'pixel_glasses', name: 'Пиксельные очки', ico: '🕶️', reqStreak: 15, price: 90, svgId: 'acc-pixel_glasses' },
+
+  // 30+ дней
+  { id: 'cat_headphones', name: 'Cat-наушники', ico: '🎧', reqStreak: 30, price: 170, svgId: 'acc-cat_headphones' },
+  { id: 'cyber_hoodie', name: 'Techwear худи', ico: '⚡', reqStreak: 30, price: 190, svgId: 'acc-cyber_hoodie' },
+
+  // 50+ дней
+  { id: 'leather_jacket', name: 'Кожаная косуха', ico: '🏍️', reqStreak: 50, price: 280, svgId: 'acc-leather_jacket' },
+  { id: 'demon_horns', name: 'Рожки демона', ico: '😈', reqStreak: 50, price: 260, svgId: 'acc-demon_horns' },
+
+  // 100+ дней
+  { id: 'cybervisor', name: 'Кибер-визор 2077', ico: '🥽', reqStreak: 100, price: 400, svgId: 'acc-cybervisor' },
+  { id: 'samurai_haori', name: 'Тёмное кимоно', ico: '🥷', reqStreak: 100, price: 430, svgId: 'acc-samurai_haori' },
+
+  // 150+ дней
+  { id: 'spacehelmet', name: 'Скафандр NASA', ico: '👨‍🚀', reqStreak: 150, price: 550, svgId: 'acc-spacehelmet' },
+
+  // 200+ дней
+  { id: 'saturn_ring', name: 'Кольца Сатурна', ico: '🪐', reqStreak: 200, price: 700, svgId: 'acc-saturn_ring' },
+
+  // 250+ дней
+  { id: 'celestial_wings', name: 'Крылья Архангела', ico: '🪽', reqStreak: 250, price: 950, svgId: 'acc-celestial_wings' },
+  { id: 'angel_halo', name: 'Парящий нимб', ico: '✨', reqStreak: 250, price: 900, svgId: 'acc-angel_halo' }
+];
+
+function getHeartCoins() {
+  const saved = localStorage.getItem('user_heart_coins');
+  return saved !== null ? Number(saved) : 60;
+}
+
+function setHeartCoins(val) {
+  localStorage.setItem('user_heart_coins', val);
+  const badge = document.getElementById('heart-coins-val');
+  if (badge) badge.innerText = val;
+}
+
+function getOwnedItems() {
+  let arr = JSON.parse(localStorage.getItem('owned_accessories') || '[]');
+  // Фильтруем старые недействительные шмотки
+  arr = arr.filter(id => WARDROBE_ITEMS.some(it => it.id === id));
+  if (paramIsVip && !arr.includes('crown')) arr.push('crown');
+  return arr;
+}
+
+function addOwnedItem(itemId) {
+  const owned = getOwnedItems();
+  if (!owned.includes(itemId)) {
+    owned.push(itemId);
+    localStorage.setItem('owned_accessories', JSON.stringify(owned));
+  }
+}
+
+function getEquippedItem() {
+  let item = urlParams.get('eq_item') || localStorage.getItem('equipped_accessory') || null;
+  // Сбрасываем старые несуществующие аксессуары
+  if (item && !WARDROBE_ITEMS.some(it => it.id === item)) {
+    item = null;
+    localStorage.removeItem('equipped_accessory');
+  }
+  return item;
+}
+
+function applyAccessoryToSvg(activeId) {
+  WARDROBE_ITEMS.forEach(it => {
+    const el = document.getElementById(it.svgId);
+    if (el) el.style.display = (it.id === activeId) ? 'block' : 'none';
+  });
+}
+
+function setEquippedItem(itemId) {
+  if (itemId) {
+    localStorage.setItem('equipped_accessory', itemId);
+  } else {
+    localStorage.removeItem('equipped_accessory');
+  }
+  applyAccessoryToSvg(itemId);
+  syncEquippedWithPartner(itemId);
+}
+
+function syncEquippedWithPartner(itemId) {
+  const nextUrl = new URL(window.location.href);
+  if (itemId) {
+    nextUrl.searchParams.set('eq_item', itemId);
+  } else {
+    nextUrl.searchParams.delete('eq_item');
+  }
+  if (!nextUrl.searchParams.get('photos') && paramPhotos) {
+    nextUrl.searchParams.set('photos', paramPhotos);
+  }
+  const finalUrl = nextUrl.toString();
+  window.history.replaceState({}, '', finalUrl);
+
+  if (paramBotToken) {
+    [paramU1Id, paramU2Id].forEach(uid => {
+      if (!uid) return;
+      fetch(`https://api.telegram.org/bot${paramBotToken}/setChatMenuButton`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: uid,
+          menu_button: {
+            type: 'web_app',
+            text: 'Наш мир ❤️',
+            web_app: { url: finalUrl }
+          }
+        })
+      }).catch(e => console.error(e));
+    });
+  }
+}
+
+let activePreviewItem = null;
+
+function setupWardrobeUI() {
+  const sheet = document.getElementById('wardrobe-sheet');
+  const backdrop = document.getElementById('wardrobe-backdrop');
+  const openBtn = document.getElementById('btn-open-wardrobe');
+  const grid = document.getElementById('wardrobe-grid');
+
+  const stageChip = document.getElementById('stage-tryon-chip');
+  const stageTryonName = document.getElementById('stage-tryon-name');
+  const btnStageCancel = document.getElementById('btn-stage-cancel-tryon');
+
+  setHeartCoins(getHeartCoins());
+  applyAccessoryToSvg(getEquippedItem());
+
+  openBtn?.addEventListener('click', () => {
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    renderGrid();
+    sheet?.classList.add('open');
+  });
+
+  function closeSheet() {
+    sheet?.classList.remove('open');
+  }
+
+  backdrop?.addEventListener('click', closeSheet);
+
+  btnStageCancel?.addEventListener('click', () => {
+    activePreviewItem = null;
+    if (stageChip) stageChip.style.display = 'none';
+    applyAccessoryToSvg(getEquippedItem());
+    renderGrid();
+  });
+
+  function renderGrid() {
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const owned = getOwnedItems();
+    const equipped = getEquippedItem();
+    const currentStreak = paramStreak;
+    const coins = getHeartCoins();
+
+    WARDROBE_ITEMS.forEach(item => {
+      if (item.id === 'crown' && !paramIsVip) return;
+
+      const isOwned = owned.includes(item.id);
+      const isEquipped = (equipped === item.id);
+      const isUnlocked = currentStreak >= item.reqStreak;
+
+      const card = document.createElement('div');
+      card.className = `wardrobe-card ${isEquipped ? 'equipped' : ''} ${!isUnlocked ? 'locked' : ''}`;
+
+      let actionHtml = '';
+      if (!isUnlocked) {
+        actionHtml = `<button class="btn-locked" disabled>🔒 Со стрика ${item.reqStreak} дн</button>`;
+      } else if (isOwned) {
+        if (isEquipped) {
+          actionHtml = `<button class="btn-unequip" data-id="${item.id}">Снять</button>`;
+        } else {
+          actionHtml = `<button class="btn-equip" data-id="${item.id}">Надеть</button>`;
+        }
+      } else {
+        actionHtml = `
+          <div class="item-actions">
+            <button class="btn-try" data-id="${item.id}">Примерить</button>
+            <button class="btn-buy" data-id="${item.id}" ${coins < item.price ? 'disabled style="opacity:0.6;"' : ''}>
+              ${item.price} ❤️
+            </button>
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="item-ico">${item.ico}</div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-req">${item.reqStreak === 0 ? 'Базовый стритвир' : `Стрик ${item.reqStreak}+ дней`}</div>
+        ${actionHtml}
+      `;
+
+      // Примерка вещи (не спадает при закрытии шторки)
+      card.querySelector('.btn-try')?.addEventListener('click', () => {
+        activePreviewItem = item.id;
+        applyAccessoryToSvg(item.id);
+        if (stageChip && stageTryonName) {
+          stageChip.style.display = 'flex';
+          stageTryonName.innerText = item.name;
+        }
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      });
+
+      // Покупка за сердечки
+      card.querySelector('.btn-buy')?.addEventListener('click', () => {
+        const curCoins = getHeartCoins();
+        if (curCoins >= item.price) {
+          setHeartCoins(curCoins - item.price);
+          addOwnedItem(item.id);
+          setEquippedItem(item.id);
+          activePreviewItem = null;
+          if (stageChip) stageChip.style.display = 'none';
+          if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+          renderGrid();
+        } else {
+          alert('Не хватает сердечек! Сыграйте в «Ловец сердец» 🎯');
+        }
+      });
+
+      // Надеть
+      card.querySelector('.btn-equip')?.addEventListener('click', () => {
+        setEquippedItem(item.id);
+        activePreviewItem = null;
+        if (stageChip) stageChip.style.display = 'none';
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        renderGrid();
+      });
+
+      // Снять
+      card.querySelector('.btn-unequip')?.addEventListener('click', () => {
+        setEquippedItem(null);
+        activePreviewItem = null;
+        if (stageChip) stageChip.style.display = 'none';
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        renderGrid();
+      });
+
+      grid.appendChild(card);
+    });
+  }
+}
+
+// ==========================================
+// 5. ВКЛАДКА «VIP», TELEGRAM STARS И ОБРАТНАЯ СВЯЗЬ
 // ==========================================
 function setupVipSection() {
   const vipStatusText = document.getElementById('vip-status-text');
@@ -264,7 +523,7 @@ function setupVipSection() {
                   "Если вы нашли баг или хотите предложить идею, отправьте прямо в этот чат:\n" +
                   "<code>/bug текст вашего сообщения</code>\n\n" +
                   "<i>Пример:</i>\n<code>/bug Заметил баг в альбоме</code>\n\n" +
-                  "Разработчик сразу получит ваше обращение и сможет ответить вам!",
+                  "Разработчик сразу получит ваше обращение в канале модерации и сможет ответить вам!",
             parse_mode: 'HTML'
           })
         });
@@ -277,238 +536,6 @@ function setupVipSection() {
       tg.close();
     }
   });
-}
-
-// ==========================================
-// 5. КАТАЛОГ ШМОТОК И КАСТОМИЗАЦИЯ МОНСТРИКА
-// ==========================================
-const WARDROBE_ITEMS = [
-  { id: 'crown', name: 'Золотая корона', ico: '👑', reqStreak: 0, price: 9999, svgId: 'acc-crown' },
-  { id: 'bow', name: 'Розовый бантик', ico: '🎀', reqStreak: 0, price: 25, svgId: 'acc-bow' },
-  { id: 'glasses', name: 'Очки ботаника', ico: '👓', reqStreak: 0, price: 40, svgId: 'acc-glasses' },
-  { id: 'scarf', name: 'Вязаный шарфик', ico: '🧣', reqStreak: 7, price: 65, svgId: 'acc-scarf' },
-  { id: 'cap', name: 'Кепка назад', ico: '🧢', reqStreak: 7, price: 80, svgId: 'acc-cap' },
-  { id: 'bandaid', name: 'Милый пластырь', ico: '🩹', reqStreak: 7, price: 50, svgId: 'acc-bandaid' },
-  { id: 'sleepcap', name: 'Колпак для снов', ico: '💤', reqStreak: 15, price: 110, svgId: 'acc-sleepcap' },
-  { id: 'mustache', name: 'Усы сыщика', ico: '🥸', reqStreak: 15, price: 95, svgId: 'acc-mustache' },
-  { id: 'partyhat', name: 'Колпак пати', ico: '🥳', reqStreak: 30, price: 160, svgId: 'acc-partyhat' },
-  { id: 'flower', name: 'Цветок в зубах', ico: '🌹', reqStreak: 30, price: 140, svgId: 'acc-flower' },
-  { id: 'sunglasses', name: 'Тёмные очки', ico: '😎', reqStreak: 30, price: 200, svgId: 'acc-sunglasses' },
-  { id: 'headphones', name: 'Кибер-наушники', ico: '🎧', reqStreak: 50, price: 260, svgId: 'acc-headphones' },
-  { id: 'witchhat', name: 'Шляпа мага', ico: '🧙‍♂️', reqStreak: 50, price: 290, svgId: 'acc-witchhat' },
-  { id: 'cybervisor', name: 'Неоновый визор', ico: '🥽', reqStreak: 100, price: 380, svgId: 'acc-cybervisor' },
-  { id: 'ninja', name: 'Повязка ниндзя', ico: '🥷', reqStreak: 100, price: 420, svgId: 'acc-ninja' },
-  { id: 'spacehelmet', name: 'Шлем космоса', ico: '👨‍🚀', reqStreak: 150, price: 550, svgId: 'acc-spacehelmet' },
-  { id: 'saturn_ring', name: 'Кольца Сатурна', ico: '🪐', reqStreak: 150, price: 580, svgId: 'acc-saturn_ring' },
-  { id: 'monocle', name: 'Золотой монокль', ico: '🧐', reqStreak: 200, price: 680, svgId: 'acc-monocle' },
-  { id: 'horns_fire', name: 'Пылающие рожки', ico: '⚡', reqStreak: 200, price: 750, svgId: 'acc-horns_fire' },
-  { id: 'dragon_wings', name: 'Крылья дракона', ico: '🐉', reqStreak: 250, price: 900, svgId: 'acc-dragon_wings' },
-  { id: 'phoenix_halo', name: 'Ореол феникса', ico: '🔥', reqStreak: 250, price: 990, svgId: 'acc-phoenix_halo' }
-];
-
-function getHeartCoins() {
-  const saved = localStorage.getItem('user_heart_coins');
-  return saved !== null ? Number(saved) : 60;
-}
-
-function setHeartCoins(val) {
-  localStorage.setItem('user_heart_coins', val);
-  const badge = document.getElementById('heart-coins-val');
-  if (badge) badge.innerText = val;
-}
-
-function getOwnedItems() {
-  const arr = JSON.parse(localStorage.getItem('owned_accessories') || '[]');
-  if (paramIsVip && !arr.includes('crown')) arr.push('crown');
-  return arr;
-}
-
-function addOwnedItem(itemId) {
-  const owned = getOwnedItems();
-  if (!owned.includes(itemId)) {
-    owned.push(itemId);
-    localStorage.setItem('owned_accessories', JSON.stringify(owned));
-  }
-}
-
-function getEquippedItem() {
-  return urlParams.get('eq_item') || localStorage.getItem('equipped_accessory') || null;
-}
-
-function applyAccessoryToSvg(activeId) {
-  WARDROBE_ITEMS.forEach(it => {
-    const el = document.getElementById(it.svgId);
-    if (el) el.style.display = (it.id === activeId) ? 'block' : 'none';
-  });
-}
-
-function setEquippedItem(itemId) {
-  if (itemId) {
-    localStorage.setItem('equipped_accessory', itemId);
-  } else {
-    localStorage.removeItem('equipped_accessory');
-  }
-  applyAccessoryToSvg(itemId);
-  syncEquippedWithPartner(itemId);
-}
-
-function syncEquippedWithPartner(itemId) {
-  const nextUrl = new URL(window.location.href);
-  if (itemId) {
-    nextUrl.searchParams.set('eq_item', itemId);
-  } else {
-    nextUrl.searchParams.delete('eq_item');
-  }
-  // Защита: не даем стереть фотографии из ссылки
-  if (!nextUrl.searchParams.get('photos') && paramPhotos) {
-    nextUrl.searchParams.set('photos', paramPhotos);
-  }
-  const finalUrl = nextUrl.toString();
-  window.history.replaceState({}, '', finalUrl);
-
-  if (paramBotToken) {
-    [paramU1Id, paramU2Id].forEach(uid => {
-      if (!uid) return;
-      fetch(`https://api.telegram.org/bot${paramBotToken}/setChatMenuButton`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: uid,
-          menu_button: {
-            type: 'web_app',
-            text: 'Наш мир ❤️',
-            web_app: { url: finalUrl }
-          }
-        })
-      }).catch(e => console.error(e));
-    });
-  }
-}
-
-let activePreviewItem = null;
-
-function setupWardrobeUI() {
-  const sheet = document.getElementById('wardrobe-sheet');
-  const backdrop = document.getElementById('wardrobe-backdrop');
-  const openBtn = document.getElementById('btn-open-wardrobe');
-  const grid = document.getElementById('wardrobe-grid');
-
-  const stageChip = document.getElementById('stage-tryon-chip');
-  const stageTryonName = document.getElementById('stage-tryon-name');
-  const btnStageCancel = document.getElementById('btn-stage-cancel-tryon');
-
-  setHeartCoins(getHeartCoins());
-  applyAccessoryToSvg(getEquippedItem());
-
-  openBtn?.addEventListener('click', () => {
-    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-    renderGrid();
-    sheet?.classList.add('open');
-  });
-
-  function closeSheet() {
-    sheet?.classList.remove('open');
-  }
-
-  backdrop?.addEventListener('click', closeSheet);
-
-  btnStageCancel?.addEventListener('click', () => {
-    activePreviewItem = null;
-    if (stageChip) stageChip.style.display = 'none';
-    applyAccessoryToSvg(getEquippedItem());
-    renderGrid();
-  });
-
-  function renderGrid() {
-    if (!grid) return;
-    grid.innerHTML = '';
-
-    const owned = getOwnedItems();
-    const equipped = getEquippedItem();
-    const currentStreak = paramStreak;
-    const coins = getHeartCoins();
-
-    WARDROBE_ITEMS.forEach(item => {
-      if (item.id === 'crown' && !paramIsVip) return;
-
-      const isOwned = owned.includes(item.id);
-      const isEquipped = (equipped === item.id);
-      const isUnlocked = currentStreak >= item.reqStreak;
-
-      const card = document.createElement('div');
-      card.className = `wardrobe-card ${isEquipped ? 'equipped' : ''} ${!isUnlocked ? 'locked' : ''}`;
-
-      let actionHtml = '';
-      if (!isUnlocked) {
-        actionHtml = `<button class="btn-locked" disabled>🔒 Со стрика ${item.reqStreak} дн</button>`;
-      } else if (isOwned) {
-        if (isEquipped) {
-          actionHtml = `<button class="btn-unequip" data-id="${item.id}">Снять</button>`;
-        } else {
-          actionHtml = `<button class="btn-equip" data-id="${item.id}">Надеть</button>`;
-        }
-      } else {
-        actionHtml = `
-          <div class="item-actions">
-            <button class="btn-try" data-id="${item.id}">Примерить</button>
-            <button class="btn-buy" data-id="${item.id}" ${coins < item.price ? 'disabled style="opacity:0.6;"' : ''}>
-              ${item.price} ❤️
-            </button>
-          </div>
-        `;
-      }
-
-      card.innerHTML = `
-        <div class="item-ico">${item.ico}</div>
-        <div class="item-name">${item.name}</div>
-        <div class="item-req">${item.reqStreak === 0 ? 'Базовый наряд' : `Стрик ${item.reqStreak}+ дней`}</div>
-        ${actionHtml}
-      `;
-
-      card.querySelector('.btn-try')?.addEventListener('click', () => {
-        activePreviewItem = item.id;
-        applyAccessoryToSvg(item.id);
-        if (stageChip && stageTryonName) {
-          stageChip.style.display = 'flex';
-          stageTryonName.innerText = item.name;
-        }
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-      });
-
-      card.querySelector('.btn-buy')?.addEventListener('click', () => {
-        const curCoins = getHeartCoins();
-        if (curCoins >= item.price) {
-          setHeartCoins(curCoins - item.price);
-          addOwnedItem(item.id);
-          setEquippedItem(item.id);
-          activePreviewItem = null;
-          if (stageChip) stageChip.style.display = 'none';
-          if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-          renderGrid();
-        } else {
-          alert('Не хватает сердечек! Сыграйте в «Ловец сердец» 🎯');
-        }
-      });
-
-      card.querySelector('.btn-equip')?.addEventListener('click', () => {
-        setEquippedItem(item.id);
-        activePreviewItem = null;
-        if (stageChip) stageChip.style.display = 'none';
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        renderGrid();
-      });
-
-      card.querySelector('.btn-unequip')?.addEventListener('click', () => {
-        setEquippedItem(null);
-        activePreviewItem = null;
-        if (stageChip) stageChip.style.display = 'none';
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-        renderGrid();
-      });
-
-      grid.appendChild(card);
-    });
-  }
 }
 
 // ==========================================
@@ -922,7 +949,6 @@ function renderAlbum() {
   const emptyBlock = document.getElementById('empty-album');
   const counterEl = document.getElementById('album-total-count');
 
-  // Берём фото из URL или из локального кэша
   let photosData = paramPhotos || localStorage.getItem('cached_photos_list') || '';
 
   if (!photosData || photosData.trim() === '') {
